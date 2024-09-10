@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class launcher extends StatefulWidget {
@@ -12,15 +10,32 @@ class launcher extends StatefulWidget {
   
  }
 
+
 class _launcherState extends State<launcher>{
+  bool enabeBottom = false;
+
+
+  void enableSheet(DragStartDetails) {
+    setState(() {
+       enabeBottom = !enabeBottom;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomSheet: BottomSheet(
-        onClosing: onClosed, 
-        builder: (BuildContext context) {
-        return Text("data");
-      })
+    return Column(
+      children: [
+        GestureDetector(
+          onVerticalDragStart: enableSheet,
+          child: SearchBar(),
+        ),
+        Visibility(
+          visible: enabeBottom,
+          child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
+            return Text("test");
+          })
+        )
+      ],
     );
   }
 }
