@@ -38,6 +38,8 @@
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
     <queries>
         <intent>
+            <category android:name="android.intent.category.HOME"/>
+            <category android:name="android.intent.category.DEFAULT"/>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
