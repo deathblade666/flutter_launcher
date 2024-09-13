@@ -6,6 +6,8 @@ void main(){
 }
 
 class search_Launcher extends StatelessWidget {
+  const search_Launcher({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
