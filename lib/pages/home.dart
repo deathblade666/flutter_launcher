@@ -1,5 +1,6 @@
-import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
+import 'package:installed_apps/app_info.dart';
+import 'package:installed_apps/installed_apps.dart';
 
 class launcher extends StatefulWidget {
   const launcher({super.key});
@@ -12,19 +13,17 @@ class launcher extends StatefulWidget {
   
   }
   
-  @override
-  void initState(){
-    onLoad();
-  }
 
-  void onLoad() async {
-    List<Application> apps = await DeviceApps.getInstalledApplications();
-  }
 
 class _launcherState extends State<launcher>{
   bool enabeBottom = false;
   bool showAppList = false;
   final TextEditingController _searchController = TextEditingController();
+  List<AppInfo> apps = [];
+
+  @override
+  void initState(){
+  }
 
   void enableSheet(DragStartDetails) {
     setState(() {
@@ -34,16 +33,34 @@ class _launcherState extends State<launcher>{
 
 // Search function
   void searching(value){
-    print(_searchController.text);
+    //onLoad();
+    String s = _searchController.text;
+    if (apps.contains(s)){
+    }
 
   }
 
   void appList(){
     setState(() {
       showAppList = !showAppList;
-      print(showAppList);
     });
   }
+
+  void launchApp(value) async {
+    List<AppInfo> apps = await InstalledApps.getInstalledApps();
+    String userInput = _searchController.text.toLowerCase();
+    List<AppInfo> matchedApps = apps.where(
+      (app) => app.name.toLowerCase().contains(userInput),
+    ).toList();
+
+    if (matchedApps.isNotEmpty) {
+      InstalledApps.startApp(matchedApps.first.packageName);
+    } else {
+      print("No App Found!");
+    }
+  } 
+      
+  
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +84,8 @@ class _launcherState extends State<launcher>{
             children: [
               SearchBar(
                 onChanged: searching,
-                //onTap: appList,
+                onTap: appList,
+                onSubmitted: launchApp,
                 controller: _searchController,
               )
              ],
@@ -75,13 +93,18 @@ class _launcherState extends State<launcher>{
        ),
         Visibility(
           visible: showAppList,
-          child:
-              ListView(
-                children: const [
-                  //apps
-                ],
-              )
-            
+          child: 
+          SizedBox(
+            height: 200,
+            width: 200,
+            child: ListView.builder( itemCount: apps.length, itemBuilder: (context, index){
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+              //key: ValueKey(apps[index]),
+              child: Text(apps[index].name),
+              );
+            })
+          )
         ), 
          // For Wallpaper
         //Image(image: image),

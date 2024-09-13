@@ -11,7 +11,7 @@ class search_Launcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: launcher(),
+      home: const launcher(),
       theme: ThemeData(
         useMaterial3: true,
       ),
