@@ -19,10 +19,18 @@ class _launcherState extends State<launcher>{
   bool enabeBottom = false;
   bool showAppList = false;
   final TextEditingController _searchController = TextEditingController();
-  List<AppInfo> apps = [];
+  List<String> installedApps = [];
 
   @override
   void initState(){
+    fetchApps();
+  }
+
+  void fetchApps() async {
+    List<AppInfo> apps = await InstalledApps.getInstalledApps();
+    setState(() {
+      installedApps = apps.map((app) => app.name).toList();
+    });
   }
 
   void enableSheet(DragStartDetails) {
@@ -30,13 +38,6 @@ class _launcherState extends State<launcher>{
        enabeBottom = !enabeBottom;
     });
   }
-
-  void appList(){
-    setState(() {
-      showAppList = !showAppList;
-    });
-  }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +62,22 @@ class _launcherState extends State<launcher>{
             children: [
               SearchBar(
                 elevation: const WidgetStatePropertyAll(0.0),
-                onChanged: (String value) async {
+                onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                   String s = _searchController.text;
-                  if (apps.contains(s)){
-                  }
+                  //if (apps.contains(s)){
+                  //}
                 },
-                onTap: appList,
-                onSubmitted: (String value) async {
+                onTapOutside: (PointerDownEvent) {
+                  setState(() {
+                    showAppList = false;
+                  });
+                },
+                onTap: () {
+                  setState(() {
+                    showAppList = true;
+                  });
+                },
+                onSubmitted: (String value) async {          //TODO: Implement non app related text functions (ie. Web searches, contact search, etc)
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
                   String userInput = _searchController.text.toLowerCase();
                   List<AppInfo> matchedApps = apps.where(
@@ -90,17 +100,17 @@ class _launcherState extends State<launcher>{
              ],
           ),
        ),
-        Visibility(                 // TODO: List not showing, need to figure out how to populate the list to display
+        Visibility(              // TODO: implement gesture controller to register item press to launch app
           visible: showAppList,
           child: 
           SizedBox(
-            height: 200,
-            width: 200,
-            child: ListView.builder( itemCount: apps.length, itemBuilder: (context, index){
+            height: 500,
+            width: 300,
+            child: ListView.builder( itemCount: installedApps.length, itemBuilder: (context, index){
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               //key: ValueKey(apps[index]),
-              child: Text(apps[index].name),
+              child: Text(installedApps[index]),
               );
             })
           )

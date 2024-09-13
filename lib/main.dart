@@ -12,7 +12,7 @@ class search_Launcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const launcher(),
-      theme: ThemeData(
+      theme: ThemeData(      //TODO: set background to be transparent
         useMaterial3: true,
       ),
     );
