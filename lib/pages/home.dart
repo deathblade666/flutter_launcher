@@ -31,35 +31,11 @@ class _launcherState extends State<launcher>{
     });
   }
 
-// Search function
-  void searching(value){
-    //onLoad();
-    String s = _searchController.text;
-    if (apps.contains(s)){
-    }
-
-  }
-
   void appList(){
     setState(() {
       showAppList = !showAppList;
     });
   }
-
-  void launchApp(value) async {
-    List<AppInfo> apps = await InstalledApps.getInstalledApps();
-    String userInput = _searchController.text.toLowerCase();
-    List<AppInfo> matchedApps = apps.where(
-      (app) => app.name.toLowerCase().contains(userInput),
-    ).toList();
-
-    if (matchedApps.isNotEmpty) {
-      InstalledApps.startApp(matchedApps.first.packageName);
-    } else {
-      print("No App Found!");
-    }
-  } 
-      
   
 
   @override
@@ -72,6 +48,7 @@ class _launcherState extends State<launcher>{
           child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
             return const Column(
               children: [
+                // TODO: Scrollable grid for widget
                 Text("This is where widgets will live... When i can figure out how")
               ],
             );
@@ -83,15 +60,37 @@ class _launcherState extends State<launcher>{
           child: Column(
             children: [
               SearchBar(
-                onChanged: searching,
+                elevation: const WidgetStatePropertyAll(0.0),
+                onChanged: (String value) async {
+                  String s = _searchController.text;
+                  if (apps.contains(s)){
+                  }
+                },
                 onTap: appList,
-                onSubmitted: launchApp,
+                onSubmitted: (String value) async {
+                  List<AppInfo> apps = await InstalledApps.getInstalledApps();
+                  String userInput = _searchController.text.toLowerCase();
+                  List<AppInfo> matchedApps = apps.where(
+                    (app) => app.name.toLowerCase().contains(userInput),
+                  ).toList();
+
+                  if (matchedApps.isNotEmpty) {
+                    InstalledApps.startApp(matchedApps.first.packageName);
+                  } else {
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        title: const Text("Error"),
+                        content: Text("$userInput was not found!"),
+                      );
+                    });
+                  }
+                },
                 controller: _searchController,
               )
              ],
           ),
        ),
-        Visibility(
+        Visibility(                 // TODO: List not showing, need to figure out how to populate the list to display
           visible: showAppList,
           child: 
           SizedBox(
@@ -106,8 +105,6 @@ class _launcherState extends State<launcher>{
             })
           )
         ), 
-         // For Wallpaper
-        //Image(image: image),
       ],
     );
   }
