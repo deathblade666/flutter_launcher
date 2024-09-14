@@ -82,15 +82,15 @@ class _launcherState extends State<launcher>{
                 child: Icon(Icons.call),
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
-                String s = value;
+                String s = _searchController.text;
                 print(installedApps.contains(s));
-                if (installedApps.contains(s)){
+                //if (installedApps.contains(s)){
                   setState(() {
                     _filteredItems = installedApps.where(
                       (app) => app.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
                   });
-                }
+                //}
               },
               onTap: () {
                 setState(() {
