@@ -117,26 +117,24 @@ class _launcherState extends State<launcher>{
               controller: _searchController,
             )
           ),
-          Visibility(              // TODO: implement gesture controller to register item press to launch app
+          Visibility(
             visible: showAppList,
             child: SizedBox(
               height: 300,
               child: ListView.builder( itemCount: _filteredItems.length, itemBuilder: (context, index){
                 AppInfo app = _app[index];
-                return //(
-                  //color: Colors.transparent,
-                  //elevation: 0,
-                  //shadowColor: Colors.transparent,
-                  //margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  //child: Text(_filteredItems[index]),
-                //);
-                 ListTile(
-                  leading: app.icon != null
-                      ? Image.memory(app.icon!)
+                return Container(
+                  height: 50,
+                  child: ListTile(
+                    onTap: () {
+                      InstalledApps.startApp(app.packageName);
+                    },
+                    leading: app.icon != null
+                      ? Image.memory(app.icon!, height: 30,)
                       : Icon(Icons.android),
-                  title: Text(app.name),
-                  subtitle: Text(app.packageName)
-                 );
+                    title: Text(app.name),
+                   )
+                );
               })
             )
           ),       
