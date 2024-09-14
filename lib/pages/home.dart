@@ -20,7 +20,7 @@ class _launcherState extends State<launcher>{
   bool showAppList = false;
   final TextEditingController _searchController = TextEditingController();
   List<String> installedApps = [];
-  List<String> _filteredItems = [];
+  List<AppInfo> _filteredItems = [];
   List<AppInfo> _app = [];
 
 
@@ -34,8 +34,8 @@ class _launcherState extends State<launcher>{
     List<AppInfo> apps = await InstalledApps.getInstalledApps(true,true);
     setState(() {
       installedApps = apps.map((app) => app.name).toList();
-      _filteredItems = installedApps;
       _app = apps;
+      _filteredItems = _app;
     });
   }
 
@@ -55,11 +55,11 @@ class _launcherState extends State<launcher>{
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          Padding(padding: EdgeInsets.all(5)),
+          const Padding(padding: EdgeInsets.all(5)),
           Visibility(
             visible: enabeBottom,
             child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
-              return Text("Widgets will go here");
+              return const Text("Widgets will go here");
                   // TODO: Scrollable grid for widget
             }),
           ),
@@ -74,7 +74,7 @@ class _launcherState extends State<launcher>{
             )
           ),
           Container( 
-            padding: EdgeInsets.only(right: 15, left: 15, bottom: 5),
+            padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5),
             child: SearchBar(
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
@@ -86,8 +86,8 @@ class _launcherState extends State<launcher>{
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
                 setState(() {
-                  _filteredItems = installedApps.where(
-                    (app) => app.toLowerCase().contains(s.toLowerCase()),
+                  _filteredItems = _app.where(
+                    (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                     ).toList();
                 });
               },
@@ -122,7 +122,7 @@ class _launcherState extends State<launcher>{
             child: SizedBox(
               height: 300,
               child: ListView.builder( itemCount: _filteredItems.length, itemBuilder: (context, index){
-                AppInfo app = _app[index];
+                AppInfo app = _filteredItems[index];
                 return Container(
                   height: 50,
                   child: ListTile(
