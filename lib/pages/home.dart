@@ -128,13 +128,7 @@ class _launcherState extends State<launcher>{
                 );
               })
             )
-          ),
-          Container(
-            child: GestureDetector(
-            onVerticalDragEnd: (DragEndDetails) => focusOnSearch.requestFocus(),
-            ),
-          )
-          
+          ),       
         ]
       )
     );
