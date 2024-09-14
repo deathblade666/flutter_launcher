@@ -119,9 +119,10 @@ class _launcherState extends State<launcher>{
           ),
           Visibility(
             visible: showAppList,
-            child: SizedBox(
-              height: 300,
-              child: ListView.builder( itemCount: _filteredItems.length, itemBuilder: (context, index){
+            child: //SizedBox(
+              //height: 300,
+              //child: 
+              ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
                 AppInfo app = _filteredItems[index];
                 return Container(
                   height: 50,
@@ -136,7 +137,7 @@ class _launcherState extends State<launcher>{
                    )
                 );
               })
-            )
+           // )
           ),       
         ]
       )
