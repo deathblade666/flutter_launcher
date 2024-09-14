@@ -48,6 +48,7 @@ class _launcherState extends State<launcher>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
       body: Column(
         verticalDirection: VerticalDirection.up,
@@ -123,6 +124,8 @@ class _launcherState extends State<launcher>{
               height: 300,
               child: ListView.builder( itemCount: _filteredItems.length, itemBuilder: (context, index){
                 return Card(
+                  elevation: 0,
+                  shadowColor: Colors.transparent,
                   margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: Text(_filteredItems[index]),
                 );
