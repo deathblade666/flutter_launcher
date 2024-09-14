@@ -48,7 +48,7 @@ class _launcherState extends State<launcher>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      //backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
       body: Column(
         verticalDirection: VerticalDirection.up,
