@@ -59,7 +59,7 @@ class _launcherState extends State<launcher>{
             }),
           ),
           GestureDetector(
-            onVerticalDragUpdate: enableSheet,
+            onVerticalDragEnd: enableSheet,
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
