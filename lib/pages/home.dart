@@ -50,6 +50,7 @@ class _launcherState extends State<launcher>{
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
+          Padding(padding: EdgeInsets.all(10)),
           Visibility(
             visible: enabeBottom,
             child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
