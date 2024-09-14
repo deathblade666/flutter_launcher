@@ -50,7 +50,7 @@ class _launcherState extends State<launcher>{
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          Padding(padding: EdgeInsets.all(10)),
+          Padding(padding: EdgeInsets.all(5)),
           Visibility(
             visible: enabeBottom,
             child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
@@ -69,7 +69,7 @@ class _launcherState extends State<launcher>{
             )
           ),
           Container( 
-            padding: EdgeInsets.only(right: 15, left: 15, bottom: 10),
+            padding: EdgeInsets.only(right: 15, left: 15, bottom: 5),
             child: SearchBar(
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
