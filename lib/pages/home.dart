@@ -30,7 +30,7 @@ class _launcherState extends State<launcher>{
   }
 
   void fetchApps() async {
-    List<AppInfo> apps = await InstalledApps.getInstalledApps();
+    List<AppInfo> apps = await InstalledApps.getInstalledApps(false,true);
     setState(() {
       installedApps = apps.map((app) => app.name).toList();
       _filteredItems = installedApps;
@@ -83,14 +83,11 @@ class _launcherState extends State<launcher>{
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
-                print(installedApps.contains(s));
-                //if (installedApps.contains(s)){
-                  setState(() {
-                    _filteredItems = installedApps.where(
-                      (app) => app.toLowerCase().contains(s.toLowerCase()),
-                      ).toList();
-                  });
-                //}
+                setState(() {
+                  _filteredItems = installedApps.where(
+                    (app) => app.toLowerCase().contains(s.toLowerCase()),
+                    ).toList();
+                });
               },
               onTap: () {
                 setState(() {
