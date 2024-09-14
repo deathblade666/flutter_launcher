@@ -21,6 +21,7 @@ class _launcherState extends State<launcher>{
   final TextEditingController _searchController = TextEditingController();
   List<String> installedApps = [];
   List<String> _filteredItems = [];
+  late FocusNode focusOnSearch;
 
   @override
   void initState(){
@@ -71,6 +72,7 @@ class _launcherState extends State<launcher>{
           Container( 
             padding: EdgeInsets.only(right: 15, left: 15, bottom: 5),
             child: SearchBar(
+              focusNode: focusOnSearch,
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
                 onTap: (){
@@ -126,7 +128,10 @@ class _launcherState extends State<launcher>{
                 );
               })
             )
-          ) 
+          ),
+          GestureDetector(
+            onVerticalDragEnd: (DragEndDetails) => focusOnSearch.requestFocus(),
+          )
         ]
       )
     );
