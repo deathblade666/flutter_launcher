@@ -64,7 +64,7 @@ class _launcherState extends State<launcher>{
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(padding: EdgeInsets.only(top:8)),
+                Padding(padding: EdgeInsets.only(top:10)),
                 Icon(Icons.keyboard_arrow_up,)
               ],
             )
