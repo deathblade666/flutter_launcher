@@ -69,7 +69,7 @@ class _launcherState extends State<launcher>{
             )
           ),
           Container( 
-            padding: EdgeInsets.only(right: 15, left: 15, bottom: 15),
+            padding: EdgeInsets.only(right: 15, left: 15, bottom: 10),
             child: SearchBar(
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
