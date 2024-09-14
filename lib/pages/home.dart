@@ -65,12 +65,11 @@ class _launcherState extends State<launcher>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.keyboard_arrow_up,),
-                Padding(padding: EdgeInsets.only(top:10)),
               ],
             )
           ),
           Container( 
-            padding: EdgeInsets.only(right: 15, left: 15),
+            padding: EdgeInsets.only(right: 15, left: 15, bottom: 15),
             child: SearchBar(
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
