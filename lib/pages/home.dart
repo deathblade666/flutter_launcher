@@ -90,21 +90,21 @@ class _launcherState extends State<launcher>{
                   // TODO: Scrollable grid for widget
             }),
           ),
-          Visibility(
-            visible: handle,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onVerticalDragEnd: enableSheet,
-              child: const Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.keyboard_arrow_up),
-                  ],
-                )
-              ) 
-            )
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onVerticalDragEnd: enableSheet,
+            child: Padding(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: handle,
+                    child: const Icon(Icons.keyboard_arrow_up),
+                  ),
+                ],
+              )
+            ) 
           ),
           Container( 
             padding: const EdgeInsets.only(right: 15, left: 15),
