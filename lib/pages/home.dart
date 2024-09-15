@@ -119,6 +119,10 @@ class _launcherState extends State<launcher>{
                     );
                   });
                 }
+                _searchController.clear();
+                setState(() {
+                  showAppList = false;
+                });
               },
               controller: _searchController,
             )
@@ -149,12 +153,12 @@ class _launcherState extends State<launcher>{
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: Text("Dynamic Date Widget"),
               ),
-              Expanded(child: Padding(padding: EdgeInsets.all(1))),
+              const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               Container(
-                padding: EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(right: 15),
                 child: Text("Time"),
               ),
             ],
