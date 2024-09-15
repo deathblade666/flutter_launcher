@@ -63,26 +63,30 @@ class _launcherState extends State<launcher>{
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          const Padding(padding: EdgeInsets.all(5)),
           Visibility(
             visible: enabeBottom,
-            child: BottomSheet(onClosing: onClosed, builder: (BuildContext Context){
-              return const Text("Widgets will go here");
+            child: BottomSheet( elevation: 50 ,backgroundColor: Theme.of(context).colorScheme.surface,onClosing: onClosed, builder: (BuildContext Context){
+              return Text("                         Widgets will go here                         ");
                   // TODO: Scrollable grid for widget
             }),
           ),
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onVerticalDragEnd: enableSheet,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.keyboard_arrow_up),
-              ],
-            )
+            child: const Padding(
+              padding: EdgeInsets.only(top: 5, bottom: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(padding: EdgeInsets.only(bottom: 20)),
+                  Icon(Icons.keyboard_arrow_up),
+                  Padding(padding: EdgeInsets.only(top: 5))
+                ],
+              )
+            ) 
           ),
           Container( 
-            padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5),
+            padding: const EdgeInsets.only(right: 15, left: 15),
             child: SearchBar(
               focusNode: focusOnSearch,
               constraints: const BoxConstraints(
