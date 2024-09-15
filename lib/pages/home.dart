@@ -22,6 +22,7 @@ class _launcherState extends State<launcher>{
   List<String> installedApps = [];
   List<AppInfo> _filteredItems = [];
   List<AppInfo> _app = [];
+  bool hideDateTime = true;
 
 
   @override
@@ -41,7 +42,6 @@ class _launcherState extends State<launcher>{
 
   void enableSheet(DragStartDetails) {
     setState(() {
-      showAppList = false;
       enabeBottom = !enabeBottom;
        
     });
@@ -76,24 +76,30 @@ class _launcherState extends State<launcher>{
           Container( 
             padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5),
             child: SearchBar(
+              constraints: const BoxConstraints(
+                maxHeight: 40,
+                minHeight: 40
+              ),
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
                 onTap: (){
                   InstalledApps.startApp("com.google.android.dialer");
                 },
-                child: Icon(Icons.call),
+                child: Icon(Icons.call, size: 25,),
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
+                print("Text Value: $value");
                 setState(() {
                   _filteredItems = _app.where(
                     (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                     ).toList();
-                });
-              },
-              onTap: () {
-                setState(() {
-                  showAppList = !showAppList;
+                    if (value.isNotEmpty){
+                      showAppList = true;
+                    } else {
+                      showAppList=false;
+                    }
+                    
                 });
               },
               onSubmitted: (String value) async {          //TODO: Implement non app related text functions (ie. Web searches, contact search, etc)
@@ -119,10 +125,8 @@ class _launcherState extends State<launcher>{
           ),
           Visibility(
             visible: showAppList,
-            child: //SizedBox(
-              //height: 300,
-              //child: 
-              ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
+            child: Expanded(
+              child: ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
                 AppInfo app = _filteredItems[index];
                 return Container(
                   height: 50,
@@ -132,13 +136,30 @@ class _launcherState extends State<launcher>{
                     },
                     leading: app.icon != null
                       ? Image.memory(app.icon!, height: 30,)
-                      : Icon(Icons.android),
+                      : const Icon(Icons.android),
                     title: Text(app.name),
                    )
                 );
               })
-           // )
-          ),       
+            )
+          ),
+          const Padding(padding: EdgeInsets.all(5)),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 15),
+                child: Text("Dynamic Date Widget"),
+              ),
+              Expanded(child: Padding(padding: EdgeInsets.all(1))),
+              Container(
+                padding: EdgeInsets.only(right: 15),
+                child: Text("Time"),
+              ),
+            ],
+          ),
+          //GestureDetector()  
         ]
       )
     );
