@@ -155,6 +155,11 @@ class _launcherState extends State<launcher>{
                 });
               },
               controller: _searchController,
+              onTap: () {
+                setState(() {
+                  showAppList = !showAppList;
+                });
+              },
             )
           ),
           Visibility(
