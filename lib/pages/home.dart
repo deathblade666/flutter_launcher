@@ -69,7 +69,7 @@ class _launcherState extends State<launcher>{
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.keyboard_arrow_up, color: Colors.white,),
+                Icon(Icons.keyboard_arrow_up),
               ],
             )
           ),
@@ -85,7 +85,7 @@ class _launcherState extends State<launcher>{
                 onTap: (){
                   InstalledApps.startApp("com.google.android.dialer");
                 },
-                child: Icon(Icons.call, size: 25,color: Colors.white,),
+                child: Icon(Icons.call, size: 25),
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
