@@ -25,15 +25,28 @@ class _launcherState extends State<launcher>{
   bool hideDateTime = true;
   FocusNode focusOnSearch = FocusNode();
   String date = "";
+  bool handle = true;
 
-
+ focusListener(){
+    if (focusOnSearch.hasFocus){
+      setState(() {
+        handle = false;
+      });
+    } else if (!focusOnSearch.hasFocus){
+      setState(() {
+        handle = true;
+      });
+    }
+  }
   @override
   void initState(){
     super.initState();
     fetchApps();
     dateTime();
+    focusOnSearch.addListener(focusListener);
   }
 
+ 
   void dateTime(){
     String month = DateTime.now().month.toString();
     String day = DateTime.now().day.toString();
@@ -56,6 +69,13 @@ class _launcherState extends State<launcher>{
   }
 
   @override
+  void dispose() {
+    focusOnSearch.dispose();
+    focusOnSearch.removeListener(focusListener);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -70,20 +90,21 @@ class _launcherState extends State<launcher>{
                   // TODO: Scrollable grid for widget
             }),
           ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onVerticalDragEnd: enableSheet,
-            child: const Padding(
-              padding: EdgeInsets.only(top: 5, bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(padding: EdgeInsets.only(bottom: 20)),
-                  Icon(Icons.keyboard_arrow_up),
-                  Padding(padding: EdgeInsets.only(top: 5))
-                ],
-              )
-            ) 
+          Visibility(
+            visible: handle,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onVerticalDragEnd: enableSheet,
+              child: const Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.keyboard_arrow_up),
+                  ],
+                )
+              ) 
+            )
           ),
           Container( 
             padding: const EdgeInsets.only(right: 15, left: 15),
