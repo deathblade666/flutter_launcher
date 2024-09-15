@@ -24,14 +24,22 @@ class _launcherState extends State<launcher>{
   List<AppInfo> _app = [];
   bool hideDateTime = true;
   FocusNode focusOnSearch = FocusNode();
+  String date = "";
 
 
   @override
   void initState(){
     super.initState();
     fetchApps();
+    dateTime();
   }
 
+  void dateTime(){
+    String month = DateTime.now().month.toString();
+    String day = DateTime.now().day.toString();
+    String year = DateTime.now().year.toString();
+    date = "$month/$day/$year";
+  }
   void fetchApps() async {
     List<AppInfo> apps = await InstalledApps.getInstalledApps(true,true);
     setState(() {
@@ -154,7 +162,7 @@ class _launcherState extends State<launcher>{
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 15),
-                child: const Text("Dynamic Date Widget",),
+                child: Text(date),
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               Container(
