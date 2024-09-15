@@ -43,7 +43,6 @@ class _launcherState extends State<launcher>{
   void enableSheet(DragStartDetails) {
     setState(() {
       enabeBottom = !enabeBottom;
-       
     });
   }
 
@@ -178,6 +177,46 @@ class _launcherState extends State<launcher>{
                     title: Text("You long pressed!"),
                   );
                 });
+              },
+              onVerticalDragUpdate: (details) {
+                int sensitivity = 3;
+                if (details.delta.dy > sensitivity){
+                  // Do a thing on down swipe
+                  print("down: $details");
+                  showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You swiped down!"),
+                  );
+                });
+                } else if (details.delta.dy < sensitivity) {
+                  // do a thing on up swipe
+                  print("up: $details");
+                  showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You swipe up!"),
+                  );
+                });
+                }
+              },
+              onHorizontalDragUpdate: (details) {
+                int sensitivity = 3;
+                if (details.delta.dx > sensitivity){
+                  // Do a thing on down swipe
+                  print("Right: $details");
+                  showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You swiped Right!"),
+                  );
+                });
+                } else if (details.delta.dx < sensitivity) {
+                  // do a thing on up swipe
+                  print("Left: $details");
+                  showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You swiped Left!"),
+                  );
+                });
+                }
               },
             )
           )  
