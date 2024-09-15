@@ -69,7 +69,7 @@ class _launcherState extends State<launcher>{
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.keyboard_arrow_up,),
+                Icon(Icons.keyboard_arrow_up, color: Colors.white,),
               ],
             )
           ),
@@ -85,11 +85,10 @@ class _launcherState extends State<launcher>{
                 onTap: (){
                   InstalledApps.startApp("com.google.android.dialer");
                 },
-                child: Icon(Icons.call, size: 25,),
+                child: Icon(Icons.call, size: 25,color: Colors.white,),
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
-                print("Text Value: $value");
                 setState(() {
                   _filteredItems = _app.where(
                     (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
@@ -154,12 +153,12 @@ class _launcherState extends State<launcher>{
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 15),
-                child: Text("Dynamic Date Widget"),
+                child: const Text("Dynamic Date Widget",),
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               Container(
                 padding: const EdgeInsets.only(right: 15),
-                child: Text("Time"),
+                child: const Text("Time"),
               ),
             ],
           ),
