@@ -162,7 +162,25 @@ class _launcherState extends State<launcher>{
               ),
             ],
           ),
-          //GestureDetector()  
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: (){
+                showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You Tapped!"),
+                  );
+                });
+              },
+              onLongPress: (){
+                showDialog(context: context, builder: (BuildContext context){
+                  return const AlertDialog(
+                    title: Text("You long pressed!"),
+                  );
+                });
+              },
+            )
+          )  
         ]
       )
     );
