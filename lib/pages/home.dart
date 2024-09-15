@@ -93,15 +93,12 @@ class _launcherState extends State<launcher>{
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onVerticalDragEnd: enableSheet,
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Visibility(
-                    visible: handle,
-                    child: const Icon(Icons.keyboard_arrow_up),
-                  ),
+                  Icon(Icons.keyboard_arrow_up),
                 ],
               )
             ) 
