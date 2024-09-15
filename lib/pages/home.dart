@@ -199,7 +199,7 @@ class _launcherState extends State<launcher>{
                 }
               },
               onHorizontalDragUpdate: (details) {
-                int sensitivity = 3;
+                int sensitivity = 2;
                 if (details.delta.dx > sensitivity){
                   // Do a thing on Right swipe
                   showDialog(context: context, builder: (BuildContext context){
