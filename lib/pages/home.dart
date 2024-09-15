@@ -23,6 +23,7 @@ class _launcherState extends State<launcher>{
   List<AppInfo> _filteredItems = [];
   List<AppInfo> _app = [];
   bool hideDateTime = true;
+  FocusNode focusOnSearch = FocusNode();
 
 
   @override
@@ -75,6 +76,7 @@ class _launcherState extends State<launcher>{
           Container( 
             padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5),
             child: SearchBar(
+              focusNode: focusOnSearch,
               constraints: const BoxConstraints(
                 maxHeight: 40,
                 minHeight: 40
@@ -190,18 +192,13 @@ class _launcherState extends State<launcher>{
                 });
                 } else if (details.delta.dy < sensitivity) {
                   // do a thing on up swipe
-                  print("up: $details");
-                  showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You swipe up!"),
-                  );
-                });
+                  focusOnSearch.requestFocus();
                 }
               },
               onHorizontalDragUpdate: (details) {
                 int sensitivity = 3;
                 if (details.delta.dx > sensitivity){
-                  // Do a thing on down swipe
+                  // Do a thing on Right swipe
                   print("Right: $details");
                   showDialog(context: context, builder: (BuildContext context){
                   return const AlertDialog(
@@ -209,8 +206,7 @@ class _launcherState extends State<launcher>{
                   );
                 });
                 } else if (details.delta.dx < sensitivity) {
-                  // do a thing on up swipe
-                  print("Left: $details");
+                  // do a thing on Left swipe
                   showDialog(context: context, builder: (BuildContext context){
                   return const AlertDialog(
                     title: Text("You swiped Left!"),
