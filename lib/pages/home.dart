@@ -166,13 +166,6 @@ class _launcherState extends State<launcher>{
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: (){
-                showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You Tapped!"),
-                  );
-                });
-              },
               onLongPress: (){
                 showDialog(context: context, builder: (BuildContext context){
                   return const AlertDialog(
@@ -180,11 +173,13 @@ class _launcherState extends State<launcher>{
                   );
                 });
               },
+              onTap: (){
+                focusOnSearch.unfocus();
+              },
               onVerticalDragUpdate: (details) {
                 int sensitivity = 3;
                 if (details.delta.dy > sensitivity){
                   // Do a thing on down swipe
-                  print("down: $details");
                   showDialog(context: context, builder: (BuildContext context){
                   return const AlertDialog(
                     title: Text("You swiped down!"),
@@ -199,7 +194,6 @@ class _launcherState extends State<launcher>{
                 int sensitivity = 3;
                 if (details.delta.dx > sensitivity){
                   // Do a thing on Right swipe
-                  print("Right: $details");
                   showDialog(context: context, builder: (BuildContext context){
                   return const AlertDialog(
                     title: Text("You swiped Right!"),
