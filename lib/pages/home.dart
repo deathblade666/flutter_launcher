@@ -27,6 +27,7 @@ class _launcherState extends State<launcher>{
   String date = "";
   bool handle = true;
   bool hideDate = true;
+  bool hideMainGesture = true;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -128,6 +129,7 @@ class _launcherState extends State<launcher>{
                     if (value.isNotEmpty){
                       showAppList = true;
                       hideDate = false;
+                      hideMainGesture = false;
                     } else {
                       showAppList=false;
                       hideDate = true;
@@ -155,6 +157,7 @@ class _launcherState extends State<launcher>{
                 _searchController.clear();
                 setState(() {
                   showAppList = false;
+                  hideMainGesture = true;
                   hideDate = true;
                 });
               },
@@ -164,8 +167,10 @@ class _launcherState extends State<launcher>{
                   showAppList = !showAppList;
                   if (showAppList == true){
                     hideDate = false;
+                    hideMainGesture = false;
                   } else {
                     hideDate = true;
+                    hideMainGesture = true;
                   }
                 });
               },
@@ -210,53 +215,56 @@ class _launcherState extends State<launcher>{
             ],
           ),
           ),
-          Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onLongPress: (){
-                showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You long pressed!"),
-                  );
-                });
-              },
-              onTap: (){
-                focusOnSearch.unfocus();
-              },
-              onVerticalDragUpdate: (details) {
-                int sensitivity = 3;
-                if (details.delta.dy > sensitivity){
-                  // Do a thing on down swipe
+          Visibility(
+            visible: hideMainGesture,
+            child: Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onLongPress: (){
                   showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You swiped down!"),
-                  );
-                });
-                } else if (details.delta.dy < sensitivity) {
-                  // do a thing on up swipe
-                  focusOnSearch.requestFocus();
-                }
-              },
-              onHorizontalDragUpdate: (details) {
-                int sensitivity = 2;
-                if (details.delta.dx > sensitivity){
-                  // Do a thing on Right swipe
-                  showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You swiped Right!"),
-                  );
-                });
-                } else if (details.delta.dx < sensitivity) {
-                  // do a thing on Left swipe
-                  showDialog(context: context, builder: (BuildContext context){
-                  return const AlertDialog(
-                    title: Text("You swiped Left!"),
-                  );
-                });
-                }
-              },
+                    return const AlertDialog(
+                      title: Text("You long pressed!"),
+                    );
+                  });
+                },
+                onTap: (){
+                  focusOnSearch.unfocus();
+                },
+                onVerticalDragUpdate: (details) {
+                  int sensitivity = 3;
+                  if (details.delta.dy > sensitivity){
+                    // Do a thing on down swipe
+                    showDialog(context: context, builder: (BuildContext context){
+                    return const AlertDialog(
+                      title: Text("You swiped down!"),
+                    );
+                  });
+                  } else if (details.delta.dy < sensitivity) {
+                    // do a thing on up swipe
+                    focusOnSearch.requestFocus();
+                  }
+                },
+                onHorizontalDragUpdate: (details) {
+                  int sensitivity = 2;
+                  if (details.delta.dx > sensitivity){
+                     // Do a thing on Right swipe
+                    showDialog(context: context, builder: (BuildContext context){
+                    return const AlertDialog(
+                      title: Text("You swiped Right!"),
+                    );
+                  });
+                  } else if (details.delta.dx < sensitivity) {
+                    // do a thing on Left swipe
+                    showDialog(context: context, builder: (BuildContext context){
+                    return const AlertDialog(
+                      title: Text("You swiped Left!"),
+                    );
+                  });
+                  }
+                },
+              )
             )
-          )  
+          )
         ]
       )
     );
