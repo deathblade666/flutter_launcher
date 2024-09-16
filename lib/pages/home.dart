@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
+import 'package:string_validator/string_validator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -188,13 +190,14 @@ class _launcherState extends State<launcher>{
 
                 if (matchedApps.isNotEmpty) {
                   InstalledApps.startApp(matchedApps.first.packageName);
-                } else {
-                  showDialog(context: context, builder: (BuildContext context){
-                    return AlertDialog(
-                      title: const Text("Error"),
-                      content: Text("$userInput was not found!"),
-                    );
-                  });
+                } else if  (userInput.isURL()) {
+                  String inputURL = "https://$userInput";
+                    final Uri url = Uri.parse(inputURL);
+                    await launchUrl(url);
+                } else {  //TODO: make user configurable search engine
+                  String Search = "$userInput";
+                  final Uri searchURL = Uri.parse(Search);
+                  await launchUrl(searchURL);
                 }
                 _searchController.clear();
                 setState(() {
