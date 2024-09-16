@@ -36,6 +36,7 @@ class _launcherState extends State<launcher>{
   bool hideDate = true;
   bool hideMainGesture = true;
   static const platform = MethodChannel('notification_shade');
+  static const widgetplatform = MethodChannel('widget_channel');
   
 
  focusListener(){
@@ -102,13 +103,24 @@ class _launcherState extends State<launcher>{
                 Icon(Icons.keyboard_arrow_up, size: 30,)
               ],
             ),
-            onVerticalDragEnd: (details) {
+            onVerticalDragStart: (details) {
               showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
-                return const SizedBox.expand(
+                return SizedBox.expand(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Click here to add your widgets"),
+                      GestureDetector.new(
+                        child:Text("Click here to add your widgets"),
+                        onTap: () async {
+                          //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
+                          showDialog(context: context, builder: (BuildContext context){
+                            return const AlertDialog(
+                              title: Text("To be Implemented"),
+                            );
+                          });
+                        },
+                        
+                        ),
                     ],
                   )  
                 );
@@ -284,7 +296,6 @@ class _launcherState extends State<launcher>{
                   int sensitivity = 3;
                   if (details.delta.dy > sensitivity) {
                     // Do a thing on down swipe
-                    print("DOWN");
                     await platform.invokeMethod('openNotificationShade');
                   } else if (details.delta.dy < sensitivity) {
                     // do a thing on up swipe
