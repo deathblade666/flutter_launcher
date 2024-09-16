@@ -249,7 +249,7 @@ class _launcherState extends State<launcher>{
               })
             )
           ),
-          const Padding(padding: EdgeInsets.all(2)),
+          const Padding(padding: EdgeInsets.all(3)),
           Visibility(
             visible: hideDate,
             child: IntrinsicHeight(
@@ -258,11 +258,11 @@ class _launcherState extends State<launcher>{
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(left: 15),
                     child: Text(
                       weekDay + '\n$monthDay',
                       textScaler: MediaQuery.textScalerOf(context),
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18), 
+                      style: TextStyle( fontWeight: FontWeight.w500, fontSize: 18), 
                     ),
                   ),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1))),
