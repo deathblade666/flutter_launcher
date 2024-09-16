@@ -24,13 +24,13 @@ class search_Launcher extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: launcher(),
         theme: ThemeData(
-            colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+          useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
             useMaterial3: true,
-            ),
-            darkTheme: ThemeData(
-              colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-              useMaterial3: true,
-            ),
+          ),
         themeMode: ThemeMode.system,
         );
     });

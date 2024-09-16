@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:one_clock/one_clock.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -161,8 +160,8 @@ class _launcherState extends State<launcher>{
             child: SearchBar(
               focusNode: focusOnSearch,
               constraints: const BoxConstraints(
-                maxHeight: 40,
-                minHeight: 40
+                maxHeight: 30,
+                minHeight: 30
               ),
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
@@ -260,11 +259,11 @@ class _launcherState extends State<launcher>{
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.only(left: 30),
                     child: Text(
                       weekDay + '\n$monthDay',
                       textScaler: MediaQuery.textScalerOf(context),
-                      style: TextStyle( fontWeight: FontWeight.w500, fontSize: 20), 
+                      style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20), 
                     ),
                   ),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1))),
