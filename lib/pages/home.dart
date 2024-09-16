@@ -260,8 +260,8 @@ class _launcherState extends State<launcher>{
                 padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   weekDay + '\n$monthDay',
-                   
-                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                   textScaler: MediaQuery.textScalerOf(context),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18), 
                   ),
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
@@ -271,6 +271,7 @@ class _launcherState extends State<launcher>{
                   digitalClockTextColor: Theme.of(context).colorScheme.primary,
                   datetime: DateTime.now(),
                   showSeconds: false,
+                  textScaleFactor: 1.5,
                 ),
               ),
             ],
