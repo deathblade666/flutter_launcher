@@ -20,7 +20,7 @@ class launcher extends StatefulWidget {
 
 
 class _launcherState extends State<launcher>{
-  bool enabeBottom = false;
+  bool enabeBottom = true;
   bool showAppList = false;
   final TextEditingController _searchController = TextEditingController();
   List<String> installedApps = [];
@@ -88,29 +88,54 @@ class _launcherState extends State<launcher>{
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
+      bottomSheet: BottomSheet(onClosing: onClosed, builder: (BuildContext context){
+        return GestureDetector(
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.keyboard_arrow_up)
+            ],
+          ),
+          onVerticalDragEnd: (details) {
+            showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
+              return const SizedBox.expand(
+                child: Text("Click here to add your widgets"),
+              );
+
+            });
+          },
+        );
+      }),
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          Visibility(
-            visible: enabeBottom,
-            child: BottomSheet( elevation: 50 ,backgroundColor: Theme.of(context).colorScheme.surface,onClosing: onClosed, builder: (BuildContext Context){
-              return Text("                         Widgets will go here                         ");
-                  // TODO: Scrollable grid for widget
-            }),
-          ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onVerticalDragEnd: enableSheet,
-            child: const Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.keyboard_arrow_up),
-                ],
-              )
-            ) 
-          ),
+          Padding(padding: EdgeInsets.only(bottom: 30)),
+         // Visibility(            // TODO: Scrollable grid for widget
+         //   visible: enabeBottom,
+         //   child: BottomSheet( elevation: 50 ,backgroundColor: Theme.of(context).colorScheme.surface,onClosing: onClosed, builder: (BuildContext Context){
+         //     return GestureDetector(
+         //       behavior: HitTestBehavior.opaque,
+         //       onVerticalDragEnd: enableSheet,
+         //       child: const Padding(
+         //         padding: EdgeInsets.only(top: 5, bottom: 5),
+         //         child: Column(
+         //           mainAxisAlignment: MainAxisAlignment.center,
+         //           children: [
+         //             Row(
+         //               mainAxisAlignment: MainAxisAlignment.center,
+         //               children: [
+         //               Icon(Icons.keyboard_arrow_up),
+         //             ],)
+                      
+                      //Text("Clich here to add a widget"),
+                      
+         //           ],
+         //         )
+         //       ) 
+         //     );
+         //   }),
+         // ),
+          
           Container( 
             padding: const EdgeInsets.only(right: 15, left: 15),
             child: SearchBar(
