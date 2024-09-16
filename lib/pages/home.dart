@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:one_clock/one_clock.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 
 
@@ -262,7 +264,7 @@ class _launcherState extends State<launcher>{
                     child: Text(
                       weekDay + '\n$monthDay',
                       textScaler: MediaQuery.textScalerOf(context),
-                      style: TextStyle( fontWeight: FontWeight.w500, fontSize: 18), 
+                      style: TextStyle( fontWeight: FontWeight.w500, fontSize: 20), 
                     ),
                   ),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1))),
@@ -276,7 +278,8 @@ class _launcherState extends State<launcher>{
                       digitalClockTextColor: Theme.of(context).colorScheme.primary,
                       datetime: DateTime.now(),
                       showSeconds: false,
-                      textScaleFactor: 1.5,
+                      textScaleFactor: 1.8,
+                      format: "h:m",
                     ),
                   ),
                 ],
