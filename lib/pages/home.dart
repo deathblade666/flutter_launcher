@@ -128,7 +128,7 @@ class _launcherState extends State<launcher>{
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          Padding(padding: EdgeInsets.only(bottom: 40)),
+          const Padding(padding: EdgeInsets.only(bottom: 38)),
          // Visibility(            // TODO: Scrollable grid for widget
          //   visible: enabeBottom,
          //   child: BottomSheet( elevation: 50 ,backgroundColor: Theme.of(context).colorScheme.surface,onClosing: onClosed, builder: (BuildContext Context){
@@ -160,8 +160,8 @@ class _launcherState extends State<launcher>{
             child: SearchBar(
               focusNode: focusOnSearch,
               constraints: const BoxConstraints(
-                maxHeight: 30,
-                minHeight: 30
+                maxHeight: 35,
+                minHeight: 35
               ),
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
@@ -263,7 +263,7 @@ class _launcherState extends State<launcher>{
                     child: Text(
                       weekDay + '\n$monthDay',
                       textScaler: MediaQuery.textScalerOf(context),
-                      style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20), 
+                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20), 
                     ),
                   ),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1))),
