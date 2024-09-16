@@ -137,6 +137,9 @@ class _launcherState extends State<launcher>{
                     
                 });
               },
+              onTapOutside: (value){
+                focusOnSearch.unfocus();
+              },
               onSubmitted: (String value) async {          //TODO: Implement non app related text functions (ie. Web searches, contact search, etc)
                 List<AppInfo> apps = await InstalledApps.getInstalledApps();
                 String userInput = _searchController.text.toLowerCase();
