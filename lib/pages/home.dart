@@ -58,6 +58,7 @@ class _launcherState extends State<launcher>{
   void initState(){
     super.initState();
     fetchApps();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     focusOnSearch.addListener(focusListener);
   }
 
@@ -160,8 +161,8 @@ class _launcherState extends State<launcher>{
             child: SearchBar(
               focusNode: focusOnSearch,
               constraints: const BoxConstraints(
-                maxHeight: 35,
-                minHeight: 35
+                maxHeight: 40,
+                minHeight: 40
               ),
               elevation: const WidgetStatePropertyAll(0.0),
               leading: GestureDetector(
