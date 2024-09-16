@@ -32,7 +32,7 @@ class _launcherState extends State<launcher>{
   bool handle = true;
   bool hideDate = true;
   bool hideMainGesture = true;
-  static const platform = MethodChannel('com.example/notification_shade');
+  static const platform = MethodChannel('notification_shade');
   
 
  focusListener(){
