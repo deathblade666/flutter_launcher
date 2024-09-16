@@ -155,6 +155,7 @@ class _launcherState extends State<launcher>{
                 _searchController.clear();
                 setState(() {
                   showAppList = false;
+                  hideDate = true;
                 });
               },
               controller: _searchController,
@@ -164,7 +165,7 @@ class _launcherState extends State<launcher>{
                   if (showAppList == true){
                     hideDate = false;
                   } else {
-                    hideDate = false;
+                    hideDate = true;
                   }
                 });
               },
