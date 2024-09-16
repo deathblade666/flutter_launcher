@@ -26,6 +26,7 @@ class _launcherState extends State<launcher>{
   FocusNode focusOnSearch = FocusNode();
   String date = "";
   bool handle = true;
+  bool hideDate = false;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -126,8 +127,10 @@ class _launcherState extends State<launcher>{
                     ).toList();
                     if (value.isNotEmpty){
                       showAppList = true;
+                      hideDate = false;
                     } else {
                       showAppList=false;
+                      hideDate = true;
                     }
                     
                 });
@@ -158,6 +161,11 @@ class _launcherState extends State<launcher>{
               onTap: () {
                 setState(() {
                   showAppList = !showAppList;
+                  if (showAppList == true){
+                    hideDate = false;
+                  } else {
+                    hideDate = false;
+                  }
                 });
               },
             )
@@ -183,7 +191,9 @@ class _launcherState extends State<launcher>{
             )
           ),
           const Padding(padding: EdgeInsets.all(5)),
-          Row(
+          Visibility(
+            visible: hideDate,
+            child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -197,6 +207,7 @@ class _launcherState extends State<launcher>{
                 child: const Text("Time"),
               ),
             ],
+          ),
           ),
           Expanded(
             child: GestureDetector(
