@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -37,6 +38,8 @@ class _launcherState extends State<launcher>{
   bool hideMainGesture = true;
   static const platform = MethodChannel('notification_shade');
   static const widgetplatform = MethodChannel('widget_channel');
+  String weekDay = formatDate(DateTime.now(),[DD,]);
+  String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
   
 
  focusListener(){
@@ -54,17 +57,9 @@ class _launcherState extends State<launcher>{
   void initState(){
     super.initState();
     fetchApps();
-    dateTime();
     focusOnSearch.addListener(focusListener);
   }
 
- 
-  void dateTime(){
-    String month = DateTime.now().month.toString();
-    String day = DateTime.now().day.toString();
-    String year = DateTime.now().year.toString();
-    date = "$month/$day/$year";
-  }
   void fetchApps() async {
     List<AppInfo> apps = await InstalledApps.getInstalledApps(true,true);
     setState(() {
@@ -263,7 +258,11 @@ class _launcherState extends State<launcher>{
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 15),
-                child: Text(date, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
+                child: Text(
+                  weekDay + '\n$monthDay',
+                   
+                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                  ),
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               Container(
