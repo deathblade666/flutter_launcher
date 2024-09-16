@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
+import 'package:flutter/services.dart';
+
+
 
 class launcher extends StatefulWidget {
   const launcher({super.key});
+  
 
   @override
   State<StatefulWidget> createState() => _launcherState();
@@ -28,6 +32,8 @@ class _launcherState extends State<launcher>{
   bool handle = true;
   bool hideDate = true;
   bool hideMainGesture = true;
+  static const platform = MethodChannel('com.example/notification_shade');
+  
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -233,15 +239,12 @@ class _launcherState extends State<launcher>{
                 onTap: (){
                   focusOnSearch.unfocus();
                 },
-                onVerticalDragUpdate: (details) {
+                onVerticalDragUpdate: (details) async {
                   int sensitivity = 3;
-                  if (details.delta.dy > sensitivity){
+                  if (details.delta.dy > sensitivity) {
                     // Do a thing on down swipe
-                    showDialog(context: context, builder: (BuildContext context){
-                    return const AlertDialog(
-                      title: Text("You swiped down!"),
-                    );
-                  });
+                    print("DOWN");
+                    await platform.invokeMethod('openNotificationShade');
                   } else if (details.delta.dy < sensitivity) {
                     // do a thing on up swipe
                     focusOnSearch.requestFocus();
