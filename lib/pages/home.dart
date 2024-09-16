@@ -26,7 +26,7 @@ class _launcherState extends State<launcher>{
   FocusNode focusOnSearch = FocusNode();
   String date = "";
   bool handle = true;
-  bool hideDate = false;
+  bool hideDate = true;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
