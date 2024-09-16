@@ -249,33 +249,39 @@ class _launcherState extends State<launcher>{
               })
             )
           ),
-          const Padding(padding: EdgeInsets.all(5)),
+          const Padding(padding: EdgeInsets.all(2)),
           Visibility(
             visible: hideDate,
-            child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text(
-                  weekDay + '\n$monthDay',
-                   textScaler: MediaQuery.textScalerOf(context),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18), 
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Text(
+                      weekDay + '\n$monthDay',
+                      textScaler: MediaQuery.textScalerOf(context),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18), 
+                    ),
                   ),
+                  const Expanded(child: Padding(padding: EdgeInsets.all(1))),
+                  VerticalDivider(
+                    color: Theme.of(context).colorScheme.primary,
+                    thickness: 1.5,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: DigitalClock(
+                      digitalClockTextColor: Theme.of(context).colorScheme.primary,
+                      datetime: DateTime.now(),
+                      showSeconds: false,
+                      textScaleFactor: 1.5,
+                    ),
+                  ),
+                ],
               ),
-              const Expanded(child: Padding(padding: EdgeInsets.all(1))),
-              Container(
-                padding: const EdgeInsets.only(right: 15),
-                child: DigitalClock(
-                  digitalClockTextColor: Theme.of(context).colorScheme.primary,
-                  datetime: DateTime.now(),
-                  showSeconds: false,
-                  textScaleFactor: 1.5,
-                ),
-              ),
-            ],
-          ),
+            )
           ),
           Visibility(
             visible: hideMainGesture,
