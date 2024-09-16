@@ -88,28 +88,36 @@ class _launcherState extends State<launcher>{
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
-      bottomSheet: BottomSheet(onClosing: onClosed, builder: (BuildContext context){
-        return GestureDetector(
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.keyboard_arrow_up)
-            ],
-          ),
-          onVerticalDragEnd: (details) {
-            showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
-              return const SizedBox.expand(
-                child: Text("Click here to add your widgets"),
-              );
-
-            });
-          },
-        );
-      }),
+      bottomSheet: BottomSheet(
+        onClosing: onClosed, 
+        builder: (BuildContext context){
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.keyboard_arrow_up, size: 30,)
+              ],
+            ),
+            onVerticalDragEnd: (details) {
+              showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
+                return const SizedBox.expand(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Click here to add your widgets"),
+                    ],
+                  )  
+                );
+              });
+            },
+          );
+        }
+      ),
       body: Column(
         verticalDirection: VerticalDirection.up,
         children: [
-          Padding(padding: EdgeInsets.only(bottom: 30)),
+          Padding(padding: EdgeInsets.only(bottom: 40)),
          // Visibility(            // TODO: Scrollable grid for widget
          //   visible: enabeBottom,
          //   child: BottomSheet( elevation: 50 ,backgroundColor: Theme.of(context).colorScheme.surface,onClosing: onClosed, builder: (BuildContext Context){
