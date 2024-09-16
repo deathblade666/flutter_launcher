@@ -281,7 +281,7 @@ class _launcherState extends State<launcher>{
                       datetime: DateTime.now(),
                       showSeconds: false,
                       textScaleFactor: 1.8,
-                      format: "h:m",
+                      format: "h:mm",
                     ),
                   ),
                 ],
