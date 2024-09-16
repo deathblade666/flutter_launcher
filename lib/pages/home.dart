@@ -58,7 +58,9 @@ class _launcherState extends State<launcher>{
   void initState(){
     super.initState();
     fetchApps();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.bottom
+    ]);
     focusOnSearch.addListener(focusListener);
   }
 
