@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
+import 'package:one_clock/one_clock.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -159,7 +160,7 @@ class _launcherState extends State<launcher>{
                 onTap: (){
                   InstalledApps.startApp("com.google.android.dialer");
                 },
-                child: Icon(Icons.call, size: 25),
+                child: Icon(Icons.call, size: 25, color: Theme.of(context).colorScheme.primary,),
               ),
               onChanged: (String value) async {            // TODO: Implement function to filter app list based on user input
                 String s = _searchController.text;
@@ -250,12 +251,16 @@ class _launcherState extends State<launcher>{
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 15),
-                child: Text(date),
+                child: Text(date, style: TextStyle(color: Theme.of(context).colorScheme.primary),),
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               Container(
                 padding: const EdgeInsets.only(right: 15),
-                child: const Text("Time"),
+                child: DigitalClock(
+                  digitalClockTextColor: Theme.of(context).colorScheme.primary,
+                  datetime: DateTime.now(),
+                  showSeconds: false,
+                ),
               ),
             ],
           ),
