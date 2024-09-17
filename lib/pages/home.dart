@@ -325,11 +325,12 @@ class _launcherState extends State<launcher>{
                   print("Tap Position: $_tapPosition");
                 },
                 onLongPress: () async {
-                  double left = _tapPosition.dx;
+                  double left = _tapPosition.dx - 110;
                   double top = _tapPosition.dy;
+                  double right = _tapPosition.dx;
                   await showMenu(
                     context: context,
-                    position: RelativeRect.fromLTRB(left, top, left, 0),
+                    position: RelativeRect.fromLTRB(left, top, right, 0),
                     items: [
                       PopupMenuItem(
                         child: const Text("Settings"),

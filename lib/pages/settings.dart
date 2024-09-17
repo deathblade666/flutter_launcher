@@ -43,7 +43,7 @@ class settingeMenu extends StatelessWidget {
                           onPressed: () {
                             Navigator.pop(context);
                           }, 
-                          child: Text("Cancel")
+                          child: const Text("Cancel")
                         ),
                         const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
                         TextButton(
@@ -53,7 +53,7 @@ class settingeMenu extends StatelessWidget {
                             prefs.setString("provider", provider);
                             Navigator.pop(context);
                           }, 
-                          child: Text("Save")
+                          child: const Text("Save")
                         ),
                       ],
                     ),
@@ -61,7 +61,7 @@ class settingeMenu extends StatelessWidget {
                 );
               });
             }, 
-            child: Text("Set Custom Search Provider",)
+            child: const Text("Set Custom Search Provider",)
           ),
           Row(
             children: [
@@ -78,7 +78,7 @@ class settingeMenu extends StatelessWidget {
                 onPressed: () {
                   prefs.clear();
                 }, 
-                child: Text("Reset")
+                child: const Text("Reset")
               ),
               
             ],
