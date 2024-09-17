@@ -47,7 +47,7 @@ class _launcherState extends State<launcher>{
   String engine = "";
   var _tapPosition;
   bool widgetVis = true;
-  
+  String pinnedAppInfo = "";
   
 
  focusListener(){
@@ -75,6 +75,7 @@ class _launcherState extends State<launcher>{
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
     bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
+    String? App = widget.prefs.getString("Pinned App");
     if (provider != null){
       searchProvider(provider);
     } else {
@@ -86,6 +87,9 @@ class _launcherState extends State<launcher>{
     }
     if (widgetsEnabled != null){
       widgetToggle(widgetsEnabled);
+    }
+    if (App != null){
+      pinnedApp(App);
     }
   }
 
@@ -138,6 +142,13 @@ class _launcherState extends State<launcher>{
         widgetVis = widgetsEnabled;
       });
   }
+
+  void pinnedApp(App){
+    setState(() {
+      pinnedAppInfo = App;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +212,7 @@ class _launcherState extends State<launcher>{
                 elevation: const WidgetStatePropertyAll(0.0),
                 leading: GestureDetector(
                   onTap: (){
-                    InstalledApps.startApp("com.google.android.dialer");
+                    InstalledApps.startApp(pinnedAppInfo);
                   },
                   child: Icon(Icons.call, size: 25, color: Theme.of(context).colorScheme.primary,),
                 ),
@@ -342,7 +353,7 @@ class _launcherState extends State<launcher>{
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar,enableWidgets: widgetToggle,)),
+                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,)),
                             );
                           },
                         )

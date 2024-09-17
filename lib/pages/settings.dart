@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_launcher/pages/home.dart';
+import 'package:installed_apps/app_info.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs,{required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
+  settingeMenu(this.prefs, this._app,{ required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
   final void Function(bool widgetsEnabled) enableWidgets;
+  final void Function(String App ) onPinnedApp;
   SharedPreferences prefs;
+  List<AppInfo> _app;
+
 
   @override
   State<settingeMenu> createState() => _settingeMenuState();
@@ -46,28 +51,8 @@ class _settingeMenuState extends State<settingeMenu> {
       child: Scaffold(
         body: Column(
           children: [
-            SwitchListTile(
-              value: widgetsEnabled,
-              title: const Text("Enable Widgets"),
-              onChanged: (value) {
-                setState(() {
-                  widgetsEnabled = !widgetsEnabled;
-                });
-                widget.enableWidgets(widgetsEnabled);
-                widget.prefs.setBool('EnableWidgets', value);
-              }
-            ),
-            SwitchListTile(
-              value: statusBarToggle, 
-              onChanged: (value) {
-                bool toggleStats = value;
-                setState(() {
-                  statusBarToggle = !statusBarToggle;
-                });
-                widget.onStatusBarToggle(toggleStats);
-                widget.prefs.setBool('StatusBar', value);
-              },
-              title: Text("Hide Status Bar"),
+            const Center(
+              child: Text("Search Options"),
             ),
             TextButton(
               onPressed: () {
@@ -110,8 +95,75 @@ class _settingeMenuState extends State<settingeMenu> {
                   );
                 });
               }, 
-              child: const Text("Set Custom Search Provider",)
+              child: const Align(
+                alignment: Alignment.centerLeft, 
+                child: Text("Set Custom Search Provider")
+              )
             ),
+            const Divider(),
+            const Text("Favorites"),
+            Align(
+              alignment: Alignment.centerLeft, 
+              child: TextButton(
+                onPressed: () {
+                  showDialog(context: context, builder: (BuildContext context){
+                    return  AlertDialog(
+                      title: Text("Pin app to Search Bar"),
+                      actions: [
+                        SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
+                          AppInfo app = widget._app[index];
+                            return Container(
+                              height: 50,
+                              child: ListTile(
+                                onTap: () {
+                                  String App = app.packageName;
+                                  var iCon = app.icon;
+                                  widget.prefs.setString("Pinned App", App);
+                                  widget.onPinnedApp(App);
+                                },
+                                leading: app.icon != null
+                                  ? Image.memory(app.icon!, height: 30,)
+                                  : const Icon(Icons.android),
+                                  title: Text(app.name),
+                              )
+                            );
+                        })
+                      )
+                      ],
+                    );
+                  });
+                }, 
+                child: Text("Select your pinned app"))
+            ),
+            const Divider(),
+            const Text("UI Options"),
+            SwitchListTile(
+              value: widgetsEnabled,
+              title: const Text("Enable Widgets"),
+              onChanged: (value) {
+                setState(() {
+                  widgetsEnabled = !widgetsEnabled;
+                });
+                widget.enableWidgets(widgetsEnabled);
+                widget.prefs.setBool('EnableWidgets', value);
+              }
+            ),
+            SwitchListTile(
+              value: statusBarToggle, 
+              onChanged: (value) {
+                bool toggleStats = value;
+                setState(() {
+                  statusBarToggle = !statusBarToggle;
+                });
+                widget.onStatusBarToggle(toggleStats);
+                widget.prefs.setBool('StatusBar', value);
+              },
+              title: const Text("Hide Status Bar"),
+            ),
+            const Divider(),
             Row(
               children: [
                 BackButton(
