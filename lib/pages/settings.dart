@@ -36,6 +36,7 @@ class _settingeMenuState extends State<settingeMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Column(
         children: [
           SwitchListTile(
