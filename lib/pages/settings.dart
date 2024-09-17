@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_launcher/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class settingeMenu extends StatelessWidget {
+class settingeMenu extends StatefulWidget {
   settingeMenu(this.prefs,{required this.onProviderSet,super.key});
-  TextEditingController searchProvider = TextEditingController();
   final void Function(String provider) onProviderSet;
   SharedPreferences prefs;
+
+  @override
+  State<settingeMenu> createState() => _settingeMenuState();
+}
+
+
+class _settingeMenuState extends State<settingeMenu> {
+  TextEditingController searchProvider = TextEditingController();
+
+  @override
+  void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.bottom
+    ]);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +38,8 @@ class settingeMenu extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              prefs.reload();
-              String? engine = prefs.getString("provider");
+              widget.prefs.reload();
+              String? engine = widget.prefs.getString("provider");
               engine ??= "duckduckgo.com/?q=";
               showDialog(context: context, builder: (BuildContext context){
                 return AlertDialog(
@@ -49,8 +65,8 @@ class settingeMenu extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             String provider = searchProvider.text;
-                            onProviderSet(provider);
-                            prefs.setString("provider", provider);
+                            widget.onProviderSet(provider);
+                            widget.prefs.setString("provider", provider);
                             Navigator.pop(context);
                           }, 
                           child: const Text("Save")
@@ -69,14 +85,14 @@ class settingeMenu extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => launcher(prefs)),
+                    MaterialPageRoute(builder: (context) => launcher(widget.prefs)),
                   );
                 },
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
               TextButton(
                 onPressed: () {
-                  prefs.clear();
+                  widget.prefs.clear();
                 }, 
                 child: const Text("Reset")
               ),
