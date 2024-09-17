@@ -45,6 +45,8 @@ class _launcherState extends State<launcher>{
   String weekDay = formatDate(DateTime.now(),[DD,]);
   String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
   String engine = "";
+  var _tapPosition;
+  
   
 
  focusListener(){
@@ -60,6 +62,7 @@ class _launcherState extends State<launcher>{
   }
   @override
   void initState(){
+    _tapPosition = Offset(0.0, 0.0);
     super.initState();
     fetchApps();
     loadPrefs();
@@ -315,13 +318,21 @@ class _launcherState extends State<launcher>{
             child: Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
+                onTapDown: (TapDownDetails details){
+                  setState(() {
+                    _tapPosition = details.globalPosition;
+                  });
+                  
+                },
                 onLongPress: () async {
+                  double left = _tapPosition.dx;
+                  double top = _tapPosition.dy;
                   return showMenu(
                     context: context,
-                    position: RelativeRect.fromLTRB(110, 250, 125, 50),
+                    position: RelativeRect.fromLTRB(left, top, 0, 0),
                     items: [
                       PopupMenuItem(
-                        child: Text("Settings"),
+                        child: const Text("Settings"),
                         onTap: () {
                           Navigator.push(
                             context,
