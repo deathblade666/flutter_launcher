@@ -41,6 +41,8 @@ dependencies:
   url_launcher: ^6.3.0
   one_clock: ^2.0.1
   date_format: ^2.0.9
+  flutter_context_menu: ^0.2.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:

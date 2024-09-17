@@ -1,9 +1,11 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/pages/settings.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,7 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class launcher extends StatefulWidget {
-  const launcher({super.key});
+  launcher(this.prefs,{super.key});
+  SharedPreferences prefs;
   
 
   @override
@@ -41,6 +44,7 @@ class _launcherState extends State<launcher>{
   static const widgetplatform = MethodChannel('widget_channel');
   String weekDay = formatDate(DateTime.now(),[DD,]);
   String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
+  String engine = "";
   
 
  focusListener(){
@@ -58,10 +62,22 @@ class _launcherState extends State<launcher>{
   void initState(){
     super.initState();
     fetchApps();
+    loadPrefs();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
       SystemUiOverlay.bottom
     ]);
     focusOnSearch.addListener(focusListener);
+  }
+
+  void loadPrefs() {
+    widget.prefs.reload();
+    String? provider = widget.prefs.getString('provider');
+    if (provider != null){
+      searchProvider(provider);
+    } else {
+      provider = "duckduckgo.com/?q=";
+      searchProvider(provider);
+    }
   }
 
   void fetchApps() async {
@@ -84,6 +100,12 @@ class _launcherState extends State<launcher>{
     focusOnSearch.dispose();
     focusOnSearch.removeListener(focusListener);
     super.dispose();
+  }
+
+  void searchProvider(provider){
+    setState(() {
+      engine = provider;
+    });
   }
 
   @override
@@ -207,7 +229,7 @@ class _launcherState extends State<launcher>{
                     final Uri url = Uri.parse(inputURL);
                     await launchUrl(url);
                 } else {  //TODO: make user configurable search engine
-                  String Search = "$userInput";
+                  String Search = "https://$engine$userInput";
                   final Uri searchURL = Uri.parse(Search);
                   await launchUrl(searchURL);
                 }
@@ -266,7 +288,7 @@ class _launcherState extends State<launcher>{
                     child: Text(
                       weekDay + '\n$monthDay',
                       textScaler: MediaQuery.textScalerOf(context),
-                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20), 
+                      style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 20), 
                     ),
                   ),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1))),
@@ -293,12 +315,22 @@ class _launcherState extends State<launcher>{
             child: Expanded(
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onLongPress: (){
-                  showDialog(context: context, builder: (BuildContext context){
-                    return const AlertDialog(
-                      title: Text("You long pressed!"),
-                    );
-                  });
+                onLongPress: () async {
+                  return showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(110, 250, 125, 50),
+                    items: [
+                      PopupMenuItem(
+                        child: Text("Settings"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs)),
+                          );
+                        },
+                      )
+                    ]
+                  );
                 },
                 onTap: (){
                   focusOnSearch.unfocus();
