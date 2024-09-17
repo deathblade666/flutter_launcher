@@ -5,10 +5,10 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+  WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
       SystemUiOverlay.bottom
     ]);
-  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(search_Launcher(prefs));
 }
