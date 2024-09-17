@@ -134,11 +134,10 @@ class _launcherState extends State<launcher>{
     }
   }
   void widgetToggle(widgetsEnabled) {
-    if (widgetsEnabled == true) {
       setState(() {
         widgetVis = widgetsEnabled;
       });
-    } 
+      print(widgetVis); 
   }
 
   @override
