@@ -137,12 +137,11 @@ class _launcherState extends State<launcher>{
       setState(() {
         widgetVis = widgetsEnabled;
       });
-      print(widgetVis); 
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  SafeArea(child: Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
       bottomSheet: Visibility(
@@ -411,6 +410,7 @@ class _launcherState extends State<launcher>{
           )
         ]
       )
+    )
     );
   }
 }

@@ -42,7 +42,7 @@ class _settingeMenuState extends State<settingeMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       body: Column(
         children: [
           SwitchListTile(
@@ -134,6 +134,7 @@ class _settingeMenuState extends State<settingeMenu> {
           
         ],
       ),
+    )
     );
   }
 }
