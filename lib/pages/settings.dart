@@ -43,101 +43,96 @@ class _settingeMenuState extends State<settingeMenu> {
   @override
   Widget build(BuildContext context) {
 
-    final double statusBarHeight = MediaQuery.of(context).padding.top;
-
     return SafeArea(
       child: Scaffold(
-        body:  Padding(
-      padding: EdgeInsets.only(top: -statusBarHeight),
-      child:Column(
-        children: [
-          SwitchListTile(
-            value: widgetsEnabled,
-            title: const Text("Enable Widgets"),
-            onChanged: (value) {
-              setState(() {
-                widgetsEnabled = !widgetsEnabled;
-              });
-              widget.enableWidgets(widgetsEnabled);
-              widget.prefs.setBool('EnableWidgets', value);
-            }
-          ),
-          SwitchListTile(
-            value: statusBarToggle, 
-            onChanged: (value) {
-              bool toggleStats = value;
-              setState(() {
-                statusBarToggle = !statusBarToggle;
-              });
-              widget.onStatusBarToggle(toggleStats);
-              widget.prefs.setBool('StatusBar', value);
-            },
-            title: Text("Hide Status Bar"),
-          ),
-          TextButton(
-            onPressed: () {
-              widget.prefs.reload();
-              String? engine = widget.prefs.getString("provider");
-              engine ??= "duckduckgo.com/?q=";
-              showDialog(context: context, builder: (BuildContext context){
-                return AlertDialog(
-                  title: const Text("Enter Search Provider URL", style: TextStyle(fontSize: 15),),
-                  actions: [
-                    Row(
-                      children: [
-                        Text("example:"+"\n$engine", style: const TextStyle(fontSize: 12), textAlign: TextAlign.left,),
-                      ],
-                    ),
-                    TextField(
-                      controller: searchProvider,
-                    ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          }, 
-                          child: const Text("Cancel")
-                        ),
-                        const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
-                        TextButton(
-                          onPressed: () {
-                            String provider = searchProvider.text;
-                            widget.onProviderSet(provider);
-                            widget.prefs.setString("provider", provider);
-                            Navigator.pop(context);
-                          }, 
-                          child: const Text("Save")
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              });
-            }, 
-            child: const Text("Set Custom Search Provider",)
-          ),
-          Row(
-            children: [
-              BackButton(
-                onPressed: () {
-                    Navigator.pop(context);
-                },
-              ),
-              const Expanded(child: Padding(padding: EdgeInsets.all(1))),
-              TextButton(
-                onPressed: () {
-                  widget.prefs.clear();
-                }, 
-                child: const Text("Reset")
-              ),
-              
-            ],
-          )
-          
-        ],
-      ),
-    )
+        body: Column(
+          children: [
+            SwitchListTile(
+              value: widgetsEnabled,
+              title: const Text("Enable Widgets"),
+              onChanged: (value) {
+                setState(() {
+                  widgetsEnabled = !widgetsEnabled;
+                });
+                widget.enableWidgets(widgetsEnabled);
+                widget.prefs.setBool('EnableWidgets', value);
+              }
+            ),
+            SwitchListTile(
+              value: statusBarToggle, 
+              onChanged: (value) {
+                bool toggleStats = value;
+                setState(() {
+                  statusBarToggle = !statusBarToggle;
+                });
+                widget.onStatusBarToggle(toggleStats);
+                widget.prefs.setBool('StatusBar', value);
+              },
+              title: Text("Hide Status Bar"),
+            ),
+            TextButton(
+              onPressed: () {
+                widget.prefs.reload();
+                String? engine = widget.prefs.getString("provider");
+                engine ??= "duckduckgo.com/?q=";
+                showDialog(context: context, builder: (BuildContext context){
+                  return AlertDialog(
+                    title: const Text("Enter Search Provider URL", style: TextStyle(fontSize: 15),),
+                    actions: [
+                      Row(
+                        children: [
+                          Text("example:"+"\n$engine", style: const TextStyle(fontSize: 12), textAlign: TextAlign.left,),
+                        ],
+                      ),
+                      TextField(
+                        controller: searchProvider,
+                      ),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            }, 
+                            child: const Text("Cancel")
+                          ),
+                          const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                          TextButton(
+                            onPressed: () {
+                              String provider = searchProvider.text;
+                              widget.onProviderSet(provider);
+                              widget.prefs.setString("provider", provider);
+                              Navigator.pop(context);
+                            }, 
+                            child: const Text("Save")
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                });
+              }, 
+              child: const Text("Set Custom Search Provider",)
+            ),
+            Row(
+              children: [
+                BackButton(
+                  onPressed: () {
+                      Navigator.pop(context);
+                  },
+                ),
+                const Expanded(child: Padding(padding: EdgeInsets.all(1))),
+                TextButton(
+                  onPressed: () {
+                    widget.prefs.clear();
+                  }, 
+                  child: const Text("Reset")
+                ),
+                
+              ],
+            )
+            
+          ],
+        )
       )
     );
   }
