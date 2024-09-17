@@ -42,7 +42,6 @@ class _settingeMenuState extends State<settingeMenu> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -127,10 +126,8 @@ class _settingeMenuState extends State<settingeMenu> {
                   }, 
                   child: const Text("Reset")
                 ),
-                
               ],
             )
-            
           ],
         )
       )
