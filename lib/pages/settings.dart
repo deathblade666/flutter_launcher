@@ -15,35 +15,53 @@ class settingeMenu extends StatelessWidget {
         children: [
           SwitchListTile(
             value: false,
-            title: Text("Enable Widgets"),
+            title: const Text("Enable Widgets"),
             onChanged: (value) {
               return null;
             }
           ),
           TextButton(
             onPressed: () {
+              prefs.reload();
+              String? engine = prefs.getString("provider");
+              engine ??= "duckduckgo.com/?q=";
               showDialog(context: context, builder: (BuildContext context){
                 return AlertDialog(
-                  title: const Text("Enter Search Provider URL:"),
-                  actionsAlignment: MainAxisAlignment.center,
-                  actions: [ 
+                  title: const Text("Enter Search Provider URL", style: TextStyle(fontSize: 15),),
+                  actions: [
+                    Row(
+                      children: [
+                        Text("example:"+"\n$engine", style: const TextStyle(fontSize: 12), textAlign: TextAlign.left,),
+                      ],
+                    ),
                     TextField(
                       controller: searchProvider,
                     ),
-                    TextButton(
-                      onPressed: () {
-                        String provider = searchProvider.text;
-                        onProviderSet(provider);
-                        prefs.setString("provider", provider);
-                        Navigator.pop(context);
-                      }, 
-                      child: Text("Save")
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          }, 
+                          child: Text("Cancel")
+                        ),
+                        const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                        TextButton(
+                          onPressed: () {
+                            String provider = searchProvider.text;
+                            onProviderSet(provider);
+                            prefs.setString("provider", provider);
+                            Navigator.pop(context);
+                          }, 
+                          child: Text("Save")
+                        ),
+                      ],
                     ),
                   ],
                 );
               });
             }, 
-            child: Text("Set Custom Search Provider")
+            child: Text("Set Custom Search Provider",)
           ),
           Row(
             children: [
