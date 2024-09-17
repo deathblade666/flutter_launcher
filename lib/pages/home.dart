@@ -146,7 +146,9 @@ class _launcherState extends State<launcher>{
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
-      bottomSheet: Visibility(child:BottomSheet(
+      bottomSheet: Visibility(
+        visible: widgetVis,
+        child:BottomSheet(
         onClosing: onClosed, 
         builder: (BuildContext context){
           return GestureDetector(
