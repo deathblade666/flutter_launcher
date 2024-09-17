@@ -6,9 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-      SystemUiOverlay.bottom
-    ]);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(search_Launcher(prefs));
 }

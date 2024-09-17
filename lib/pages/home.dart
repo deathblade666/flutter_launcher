@@ -72,11 +72,15 @@ class _launcherState extends State<launcher>{
   void loadPrefs() {
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
+    bool? toggleStats = widget.prefs.getBool('StatusBar');
     if (provider != null){
       searchProvider(provider);
     } else {
       provider = "duckduckgo.com/?q=";
       searchProvider(provider);
+    }
+    if (toggleStats != null) {
+      toggleStatusBar(toggleStats);
     }
   }
 
@@ -106,6 +110,23 @@ class _launcherState extends State<launcher>{
     setState(() {
       engine = provider;
     });
+  }
+
+  void toggleStatusBar(toggleStats){
+    if (toggleStats == true) {
+      setState(() {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+        SystemUiOverlay.bottom
+        ]);
+      });
+    } else if (toggleStats == false){
+      setState(() {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+        SystemUiOverlay.bottom,
+        SystemUiOverlay.top
+        ]);
+      });
+    }
   }
 
   @override
@@ -333,7 +354,7 @@ class _launcherState extends State<launcher>{
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs)),
+                            MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar,)),
                           );
                         },
                       )

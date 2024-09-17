@@ -4,24 +4,33 @@ import 'package:flutter_launcher/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs,{required this.onProviderSet,super.key});
+  settingeMenu(this.prefs,{ required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
+  final void Function(bool toggleStats) onStatusBarToggle;
   SharedPreferences prefs;
 
   @override
   State<settingeMenu> createState() => _settingeMenuState();
 }
 
-
 class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
-
+  bool statusBarToggle = false;
   @override
-  void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-      SystemUiOverlay.bottom
-    ]);
+  initState(){
+    onLoad();
     super.initState();
+  }
+
+  void onLoad() {
+    widget.prefs.reload();
+    bool? toggelStatslast = widget.prefs.getBool("StatusBar");
+    print(toggelStatslast);
+    if (toggelStatslast != null) {
+      setState(() {
+        statusBarToggle = toggelStatslast;
+      });
+    }
   }
 
   @override
@@ -35,6 +44,18 @@ class _settingeMenuState extends State<settingeMenu> {
             onChanged: (value) {
               return null;
             }
+          ),
+          SwitchListTile(
+            value: statusBarToggle, 
+            onChanged: (value) {
+              bool toggleStats = value;
+              setState(() {
+                statusBarToggle = !statusBarToggle;
+              });
+              widget.onStatusBarToggle(toggleStats);
+              widget.prefs.setBool('StatusBar', value);
+            },
+            title: Text("Hide Status Bar"),
           ),
           TextButton(
             onPressed: () {
