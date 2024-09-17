@@ -115,11 +115,7 @@ class _settingeMenuState extends State<settingeMenu> {
             children: [
               BackButton(
                 onPressed: () {
-                  //Navigator.push(
-                    //context,
                     Navigator.pop(context);
-                    //MaterialPageRoute(builder: (context) => launcher(widget.prefs)),
-                  
                 },
               ),
               const Expanded(child: Padding(padding: EdgeInsets.all(1))),
