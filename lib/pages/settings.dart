@@ -42,10 +42,16 @@ class _settingeMenuState extends State<settingeMenu> {
 
   @override
   Widget build(BuildContext context) {
+
+    var screenSize = MediaQuery.of(context).size;
+
     return SafeArea(
       top: false,
       child: Scaffold(
-      body: Column(
+      body: SizedBox(
+        height: screenSize.height,
+        width: screenSize.width,
+        child:  Column(
         children: [
           SwitchListTile(
             value: widgetsEnabled,
@@ -134,6 +140,7 @@ class _settingeMenuState extends State<settingeMenu> {
         ],
       ),
     )
+      )
     );
   }
 }
