@@ -50,7 +50,7 @@ class _settingeMenuState extends State<settingeMenu> {
             title: const Text("Enable Widgets"),
             onChanged: (value) {
               setState(() {
-                bool widgetsEnabled = value;
+                widgetsEnabled = !widgetsEnabled;
               });
               widget.enableWidgets(widgetsEnabled);
               widget.prefs.setBool('EnableWidgets', value);
