@@ -319,7 +319,6 @@ class _launcherState extends State<launcher>{
                   setState(() {
                     _tapPosition = details.globalPosition;
                   });
-                  print("Tap Position: $_tapPosition");
                 },
                 onLongPress: () async {
                   double left = _tapPosition.dx - 110;
