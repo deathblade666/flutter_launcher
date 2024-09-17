@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_launcher/pages/home.dart';
@@ -10,7 +12,7 @@ class settingeMenu extends StatefulWidget {
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
   final void Function(bool widgetsEnabled) enableWidgets;
-  final void Function(String App ) onPinnedApp;
+  final void Function(String appName) onPinnedApp;
   SharedPreferences prefs;
   List<AppInfo> _app;
 
@@ -120,10 +122,14 @@ class _settingeMenuState extends State<settingeMenu> {
                               height: 50,
                               child: ListTile(
                                 onTap: () {
-                                  String App = app.packageName;
-                                  var iCon = app.icon;
-                                  widget.prefs.setString("Pinned App", App);
-                                  widget.onPinnedApp(App);
+                                  final String appName = app.packageName;
+                                  print(appName);
+                                  widget.prefs.setString("Pinned App", appName);
+                                  if (app.icon != null){
+                                    var encodedIcon = base64Encode(app.icon!);
+                                    widget.prefs.setString("appIcon", encodedIcon);
+                                  }
+                                  widget.onPinnedApp(appName);
                                   Navigator.pop(context);
                                 },
                                 leading: app.icon != null
@@ -168,13 +174,13 @@ class _settingeMenuState extends State<settingeMenu> {
             const Divider(),
             Row(
               children: [
-                const Expanded(child: Padding(padding: EdgeInsets.all(1))),
                 TextButton(
                   onPressed: () {
                     widget.prefs.clear();
                   }, 
                   child: const Text("Reset")
                 ),
+                const Expanded(child: Padding(padding: EdgeInsets.all(1))),
                 TextButton(
                   child: Text("Save"),
                   onPressed: () {

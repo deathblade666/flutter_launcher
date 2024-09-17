@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
@@ -48,6 +50,8 @@ class _launcherState extends State<launcher>{
   var _tapPosition;
   bool widgetVis = true;
   String pinnedAppInfo = "";
+  var appIconrestored;
+  var appIcon;
   
 
  focusListener(){
@@ -76,6 +80,8 @@ class _launcherState extends State<launcher>{
     bool? toggleStats = widget.prefs.getBool('StatusBar');
     bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
     String? App = widget.prefs.getString("Pinned App");
+    String? appIconEncoded = widget.prefs.getString("appIcon");
+    
     if (provider != null){
       searchProvider(provider);
     } else {
@@ -90,6 +96,11 @@ class _launcherState extends State<launcher>{
     }
     if (App != null){
       pinnedApp(App);
+    }
+    if (appIconEncoded != null){
+      appIconrestored = base64Decode(appIconEncoded);
+      var testing123 = Uint8List.fromList(appIconrestored);
+      restoreAppIcon(testing123);
     }
   }
 
@@ -124,9 +135,7 @@ class _launcherState extends State<launcher>{
   void toggleStatusBar(toggleStats){
     if (toggleStats == true) {
       setState(() {
-        Future.delayed(Duration(milliseconds: 100), () {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-        });
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       });
     } else if (toggleStats == false){
       setState(() {
@@ -143,10 +152,16 @@ class _launcherState extends State<launcher>{
       });
   }
 
-  void pinnedApp(App){
+  void pinnedApp(String appName) async {
+    AppInfo app = await InstalledApps.getAppInfo(appName);
     setState(() {
-      pinnedAppInfo = App;
+      String pinnedAppInfo = appName;
+      appIcon = app.icon;
     });
+  }
+
+  void restoreAppIcon(Uint8List){
+    appIcon = appIconrestored;
   }
 
 
@@ -214,7 +229,9 @@ class _launcherState extends State<launcher>{
                   onTap: (){
                     InstalledApps.startApp(pinnedAppInfo);
                   },
-                  child: Icon(Icons.call, size: 25, color: Theme.of(context).colorScheme.primary,),
+                  child: appIcon != null
+                    ? Image.memory(appIcon, height: 30,)
+                    : const Icon(Icons.android),
                 ),
                 onChanged: (String value) async {
                   String s = _searchController.text;
