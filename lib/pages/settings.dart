@@ -48,9 +48,8 @@ class _settingeMenuState extends State<settingeMenu> {
     return SafeArea(
       top: false,
       child: Scaffold(
-      body: SizedBox(
-        height: screenSize.height,
-        width: screenSize.width,
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
         child:  Column(
         children: [
           SwitchListTile(
