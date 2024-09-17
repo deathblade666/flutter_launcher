@@ -168,17 +168,18 @@ class _settingeMenuState extends State<settingeMenu> {
             const Divider(),
             Row(
               children: [
-                BackButton(
-                  onPressed: () {
-                      Navigator.pop(context);
-                  },
-                ),
                 const Expanded(child: Padding(padding: EdgeInsets.all(1))),
                 TextButton(
                   onPressed: () {
                     widget.prefs.clear();
                   }, 
                   child: const Text("Reset")
+                ),
+                TextButton(
+                  child: Text("Save"),
+                  onPressed: () {
+                      Navigator.pop(context);
+                  },
                 ),
               ],
             )
