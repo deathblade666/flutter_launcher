@@ -230,7 +230,7 @@ class _launcherState extends State<launcher>{
                     print(pinnedAppInfo);
                     InstalledApps.startApp(pinnedAppInfo);
                   },
-                  child: appIcon != null
+                  child: appIcon != null       //TODO: implement default as app icon
                     ? Image.memory(appIcon, height: 30,)
                     : const Icon(Icons.android),
                 ),
