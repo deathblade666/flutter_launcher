@@ -141,7 +141,9 @@ class _launcherState extends State<launcher>{
 
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(child: Scaffold(
+    return  SafeArea(
+      top: false,
+      child: Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
       bottomSheet: Visibility(
