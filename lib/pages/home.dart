@@ -164,18 +164,20 @@ class _launcherState extends State<launcher>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         PageView(
-                          children: [
-                            GestureDetector(
-                              child:Text("Click here to add your widgets"),
-                              onTap: () async {
+                          children: <Widget>[
+                            //GestureDetector(
+                               const Center( 
+                                child: Text("Click here to add your widgets"),
+                              ),
+                             // onTap: () async {
                                 //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
-                                showDialog(context: context, builder: (BuildContext context){
-                                  return const AlertDialog(
-                                    title: Text("To be Implemented"),
-                                  );
-                                });
-                              },
-                            ),
+                              //  showDialog(context: context, builder: (BuildContext context){
+                              //    return const AlertDialog(
+                               //     title: Text("To be Implemented"),
+                               //   );
+                               // });
+                             // },
+                           // ),
                           ],
                         ),
                       ]
