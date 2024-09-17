@@ -160,28 +160,26 @@ class _launcherState extends State<launcher>{
                 ),
                 onVerticalDragStart: (details) {
                   showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        PageView(
-                          children: <Widget>[
-                            //GestureDetector(
-                               const Center( 
-                                child: Text("Click here to add your widgets"),
-                              ),
-                             // onTap: () async {
-                                //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
-                              //  showDialog(context: context, builder: (BuildContext context){
-                              //    return const AlertDialog(
-                               //     title: Text("To be Implemented"),
-                               //   );
-                               // });
-                             // },
-                           // ),
-                          ],
-                        ),
-                      ]
-                    );   
+                    return PageView(
+                        children: <Widget>[
+                          GestureDetector(
+                            child: const Center( 
+                              child: Text("Click here to add your widgets"),
+                            ),
+                            onTap: () async {
+                              //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
+                              showDialog(context: context, builder: (BuildContext context){
+                                return const AlertDialog(
+                                  title: Text("To be Implemented"),
+                                );
+                              });
+                            },
+                          ),
+                          const Center( 
+                              child: Text("Page 2"),
+                            ),
+                        ],
+                      );   
                   });
                 },
               );
