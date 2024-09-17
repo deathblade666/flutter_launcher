@@ -46,7 +46,6 @@ class _settingeMenuState extends State<settingeMenu> {
     var screenSize = MediaQuery.of(context).size;
 
     return SafeArea(
-      top: false,
       child: Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
