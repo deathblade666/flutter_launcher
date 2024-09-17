@@ -123,6 +123,7 @@ class _settingeMenuState extends State<settingeMenu> {
                                   var iCon = app.icon;
                                   widget.prefs.setString("Pinned App", App);
                                   widget.onPinnedApp(App);
+                                  Navigator.pop(context);
                                 },
                                 leading: app.icon != null
                                   ? Image.memory(app.icon!, height: 30,)
