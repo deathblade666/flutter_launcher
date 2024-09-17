@@ -46,6 +46,7 @@ class _launcherState extends State<launcher>{
   String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
   String engine = "";
   var _tapPosition;
+  bool widgetVis = true;
   
   
 
@@ -73,6 +74,7 @@ class _launcherState extends State<launcher>{
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
+    bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
     if (provider != null){
       searchProvider(provider);
     } else {
@@ -81,6 +83,9 @@ class _launcherState extends State<launcher>{
     }
     if (toggleStats != null) {
       toggleStatusBar(toggleStats);
+    }
+    if (widgetsEnabled != null){
+      widgetToggle(widgetsEnabled);
     }
   }
 
@@ -128,13 +133,20 @@ class _launcherState extends State<launcher>{
       });
     }
   }
+  void widgetToggle(widgetsEnabled) {
+    if (widgetsEnabled == true) {
+      setState(() {
+        widgetVis = widgetsEnabled;
+      });
+    } 
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
-      bottomSheet: BottomSheet(
+      bottomSheet: Visibility(child:BottomSheet(
         onClosing: onClosed, 
         builder: (BuildContext context){
           return GestureDetector(
@@ -170,6 +182,7 @@ class _launcherState extends State<launcher>{
             },
           );
         }
+      )
       ),
       body: Column(
         verticalDirection: VerticalDirection.up,
@@ -354,7 +367,7 @@ class _launcherState extends State<launcher>{
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar,)),
+                            MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar,enableWidgets: widgetToggle,)),
                           );
                         },
                       )

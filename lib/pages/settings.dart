@@ -4,9 +4,10 @@ import 'package:flutter_launcher/pages/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs,{ required this.onStatusBarToggle,required this.onProviderSet,super.key});
+  settingeMenu(this.prefs,{required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
+  final void Function(bool widgetsEnabled) enableWidgets;
   SharedPreferences prefs;
 
   @override
@@ -16,6 +17,7 @@ class settingeMenu extends StatefulWidget {
 class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
   bool statusBarToggle = false;
+  bool widgetsEnabled = true;
   @override
   initState(){
     onLoad();
@@ -25,10 +27,15 @@ class _settingeMenuState extends State<settingeMenu> {
   void onLoad() {
     widget.prefs.reload();
     bool? toggelStatslast = widget.prefs.getBool("StatusBar");
-    print(toggelStatslast);
+    bool? widgetsEnabledlast = widget.prefs.getBool("EnableWidgets");
     if (toggelStatslast != null) {
       setState(() {
         statusBarToggle = toggelStatslast;
+      });
+    }
+    if (widgetsEnabledlast != null){
+      setState(() {
+        widgetsEnabled = widgetsEnabledlast;
       });
     }
   }
@@ -39,10 +46,14 @@ class _settingeMenuState extends State<settingeMenu> {
       body: Column(
         children: [
           SwitchListTile(
-            value: false,
+            value: widgetsEnabled,
             title: const Text("Enable Widgets"),
             onChanged: (value) {
-              return null;
+              setState(() {
+                bool widgetsEnabled = value;
+              });
+              widget.enableWidgets(widgetsEnabled);
+              widget.prefs.setBool('EnableWidgets', value);
             }
           ),
           SwitchListTile(
