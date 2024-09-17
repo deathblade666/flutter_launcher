@@ -79,7 +79,7 @@ class _launcherState extends State<launcher>{
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
     bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
-    String? App = widget.prefs.getString("Pinned App");
+    String? appName = widget.prefs.getString("Pinned App");
     String? appIconEncoded = widget.prefs.getString("appIcon");
     
     if (provider != null){
@@ -94,8 +94,8 @@ class _launcherState extends State<launcher>{
     if (widgetsEnabled != null){
       widgetToggle(widgetsEnabled);
     }
-    if (App != null){
-      pinnedApp(App);
+    if (appName != null){
+      pinnedApp(appName);
     }
     if (appIconEncoded != null){
       appIconrestored = base64Decode(appIconEncoded);
@@ -155,7 +155,7 @@ class _launcherState extends State<launcher>{
   void pinnedApp(String appName) async {
     AppInfo app = await InstalledApps.getAppInfo(appName);
     setState(() {
-      String pinnedAppInfo = appName;
+      pinnedAppInfo = appName;
       appIcon = app.icon;
     });
   }
@@ -227,6 +227,7 @@ class _launcherState extends State<launcher>{
                 elevation: const WidgetStatePropertyAll(0.0),
                 leading: GestureDetector(
                   onTap: (){
+                    print(pinnedAppInfo);
                     InstalledApps.startApp(pinnedAppInfo);
                   },
                   child: appIcon != null

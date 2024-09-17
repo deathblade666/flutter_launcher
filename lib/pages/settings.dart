@@ -53,7 +53,31 @@ class _settingeMenuState extends State<settingeMenu> {
       child: Scaffold(
         body: Column(
           children: [
-            Padding(padding: EdgeInsets.only(top: 25)),
+            const Text("UI Options"),
+            SwitchListTile(
+              value: widgetsEnabled,
+              title: const Text("Enable Widgets"),
+              onChanged: (value) {
+                setState(() {
+                  widgetsEnabled = !widgetsEnabled;
+                });
+                widget.enableWidgets(widgetsEnabled);
+                widget.prefs.setBool('EnableWidgets', value);
+              }
+            ),
+            SwitchListTile(
+              value: statusBarToggle, 
+              onChanged: (value) {
+                bool toggleStats = value;
+                setState(() {
+                  statusBarToggle = !statusBarToggle;
+                });
+                widget.onStatusBarToggle(toggleStats);
+                widget.prefs.setBool('StatusBar', value);
+              },
+              title: const Text("Hide Status Bar"),
+            ),
+            const Divider(),
             const Center(
               child: Text("Search Options"),
             ),
@@ -147,31 +171,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 child: Text("Select your pinned app"))
             ),
             const Divider(),
-            const Text("UI Options"),
-            SwitchListTile(
-              value: widgetsEnabled,
-              title: const Text("Enable Widgets"),
-              onChanged: (value) {
-                setState(() {
-                  widgetsEnabled = !widgetsEnabled;
-                });
-                widget.enableWidgets(widgetsEnabled);
-                widget.prefs.setBool('EnableWidgets', value);
-              }
-            ),
-            SwitchListTile(
-              value: statusBarToggle, 
-              onChanged: (value) {
-                bool toggleStats = value;
-                setState(() {
-                  statusBarToggle = !statusBarToggle;
-                });
-                widget.onStatusBarToggle(toggleStats);
-                widget.prefs.setBool('StatusBar', value);
-              },
-              title: const Text("Hide Status Bar"),
-            ),
-            const Divider(),
+
             Row(
               children: [
                 TextButton(
@@ -188,7 +188,7 @@ class _settingeMenuState extends State<settingeMenu> {
                   },
                 ),
               ],
-            )
+            )      
           ],
         )
       )
