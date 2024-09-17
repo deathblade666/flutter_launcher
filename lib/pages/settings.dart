@@ -68,20 +68,6 @@ class _settingeMenuState extends State<settingeMenu> {
                 statusBarToggle = !statusBarToggle;
               });
               widget.onStatusBarToggle(toggleStats);
-              if (value == true){
-                setState(() {
-                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-                    SystemUiOverlay.bottom
-                  ]);
-                });
-              } else if ( value == false) {
-                setState(() {
-                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-                    SystemUiOverlay.bottom,
-                    SystemUiOverlay.top
-                  ]);
-                });
-              }
               widget.prefs.setBool('StatusBar', value);
             },
             title: Text("Hide Status Bar"),
