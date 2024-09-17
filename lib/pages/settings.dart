@@ -51,6 +51,7 @@ class _settingeMenuState extends State<settingeMenu> {
       child: Scaffold(
         body: Column(
           children: [
+            Padding(padding: EdgeInsets.only(top: 25)),
             const Center(
               child: Text("Search Options"),
             ),
