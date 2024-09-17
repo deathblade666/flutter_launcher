@@ -47,9 +47,7 @@ class _settingeMenuState extends State<settingeMenu> {
 
     return SafeArea(
       child: Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-        child:  Column(
+        body:  Column(
         children: [
           SwitchListTile(
             value: widgetsEnabled,
@@ -70,6 +68,20 @@ class _settingeMenuState extends State<settingeMenu> {
                 statusBarToggle = !statusBarToggle;
               });
               widget.onStatusBarToggle(toggleStats);
+              if (value == true){
+                setState(() {
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+                    SystemUiOverlay.bottom
+                  ]);
+                });
+              } else if ( value == false) {
+                setState(() {
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+                    SystemUiOverlay.bottom,
+                    SystemUiOverlay.top
+                  ]);
+                });
+              }
               widget.prefs.setBool('StatusBar', value);
             },
             title: Text("Hide Status Bar"),
@@ -138,7 +150,6 @@ class _settingeMenuState extends State<settingeMenu> {
         ],
       ),
     )
-      )
     );
   }
 }
