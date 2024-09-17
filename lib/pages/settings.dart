@@ -38,6 +38,7 @@ class _settingeMenuState extends State<settingeMenu> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           SwitchListTile(
             value: false,
