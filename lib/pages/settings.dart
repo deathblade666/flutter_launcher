@@ -43,11 +43,13 @@ class _settingeMenuState extends State<settingeMenu> {
   @override
   Widget build(BuildContext context) {
 
-    var screenSize = MediaQuery.of(context).size;
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return SafeArea(
       child: Scaffold(
-        body:  Column(
+        body:  Padding(
+      padding: EdgeInsets.only(top: -statusBarHeight),
+      child:Column(
         children: [
           SwitchListTile(
             value: widgetsEnabled,
@@ -136,6 +138,7 @@ class _settingeMenuState extends State<settingeMenu> {
         ],
       ),
     )
+      )
     );
   }
 }
