@@ -257,7 +257,7 @@ class _launcherState extends State<launcher>{
         body: Column(
           verticalDirection: VerticalDirection.up,
           children: [
-            const Padding(padding: EdgeInsets.only(bottom: 60)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
+            const Padding(padding: EdgeInsets.only(bottom: 87)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
             Container( 
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SearchBar(
