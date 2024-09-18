@@ -2,21 +2,23 @@
 
 Unname as of yet, this flutter project is an android launcher. The idea is to have a modern, minimalistic UI without compromising on access to data when you need it. Inspired by [KISS](https://github.com/Neamar/KISS/) and [Kvaesitso](https://github.com/MM2-0/Kvaesitso).
 
-## Current features
+## features
+
+### Current
  - Search and launch apps via return or tapping on the list item
  - Use your preferred search engine from your home screen
  - Navigate to a site directly from your home screen
  - Set Favorites for quick access (currently up to 4)
  - Modular UI, only show the UI elements you need/want
 
-## Features in Progress
+### in Progress
 List of features that I'm actively working on implementing
  - Pinning Favorites 
    - Currently when you pin a favorite it populates all four fields, this will be fixed in the future
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
 
-## Future Feaures
+### Future
 This is a list of feature that i hope to accomplish but currently do not have the knowledge to do so
 
  - Widget support
