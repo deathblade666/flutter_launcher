@@ -54,6 +54,7 @@ class _launcherState extends State<launcher>{
   var appIconrestored;
   var appIcon;
   bool noAppPinned = false;
+  double searchHieght = 38;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -127,6 +128,13 @@ class _launcherState extends State<launcher>{
   void pinAppToggle (togglePinApp){
     setState(() {
       noAppPinned = togglePinApp;
+      if (widgetVis == true) {
+        searchHieght = 87;
+      } else if (widgetVis == false) {
+        searchHieght = 58;
+      } else {
+        searchHieght = 38;
+      }
     });
   }
 
@@ -160,6 +168,11 @@ class _launcherState extends State<launcher>{
   void widgetToggle(widgetsEnabled) {
       setState(() {
         widgetVis = widgetsEnabled;
+        if (noAppPinned == true) {
+          searchHieght = 87;
+        } else {
+          searchHieght = 40;
+        } 
       });
   }
 
@@ -255,7 +268,7 @@ class _launcherState extends State<launcher>{
         body: Column(
           verticalDirection: VerticalDirection.up,
           children: [
-            const Padding(padding: EdgeInsets.only(bottom: 87)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
+            Padding(padding: EdgeInsets.only(bottom: searchHieght)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
             Container( 
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SearchBar(
