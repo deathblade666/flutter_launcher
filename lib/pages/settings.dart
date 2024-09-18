@@ -105,7 +105,7 @@ class _settingeMenuState extends State<settingeMenu> {
       child: Scaffold(
         body: Column(
           children: [
-            const Text("UI Options"),
+            const Text("UI Options", textScaler: TextScaler.linear(1.5),),
             SwitchListTile(
               value: widgetsEnabled,
               title: const Text("Enable Widgets"),
@@ -144,7 +144,7 @@ class _settingeMenuState extends State<settingeMenu> {
             const Divider(),
             Visibility(
               visible: pinApp,
-              child: const Text("Favorites"),
+              child: const Text("Favorites", textScaler: TextScaler.linear(1.5),)
             ),
             Visibility(
               visible: pinApp,
@@ -197,7 +197,7 @@ class _settingeMenuState extends State<settingeMenu> {
               visible: pinApp,
               child: const Divider(),),
             const Center(
-              child: Text("Search Options"),
+              child: Text("Search Options", textScaler: TextScaler.linear(1.5),)
             ),
             TextButton(
               onPressed: () {
@@ -244,6 +244,43 @@ class _settingeMenuState extends State<settingeMenu> {
                 alignment: Alignment.centerLeft, 
                 child: Text("Set Custom Search Provider")
               )
+            ),
+            const Divider(),
+            const Align(
+              alignment: Alignment.center,
+              child: Text("Gesture Options", textScaler: TextScaler.linear(1.5),),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 15)),
+            const Row(
+              children: [
+                Padding(padding: EdgeInsets.only(right: 25)),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Swipe Right"),
+                ),
+                Expanded(
+                  child: Padding(padding: EdgeInsets.only(right: 1)
+                  ),
+                ),
+                Icon(Icons.add),
+                Padding(padding: EdgeInsets.only(right: 25)),
+              ]
+            ),
+            const Padding(padding: EdgeInsets.only(top: 15)),
+            const Row(
+              children: [
+                Padding(padding: EdgeInsets.only(left: 25)),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Swipe Left"),
+                ),
+                Expanded(
+                  child: Padding(padding: EdgeInsets.only(right: 1)
+                  ),
+                ),
+                Icon(Icons.add),
+                Padding(padding: EdgeInsets.only(right: 25)),
+              ]
             ),
             const Divider(),
             Row(
