@@ -185,14 +185,13 @@ class _launcherState extends State<launcher>{
         bottomSheet: BottomSheet(
           onClosing: onClosed, 
           builder: (BuildContext context){
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              child: Column(
+            return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Visibility(
                     visible: widgetVis,
                     child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [ 
@@ -250,7 +249,6 @@ class _launcherState extends State<launcher>{
                     )
                   )
                 ]
-              )
             );
           }
         ),
