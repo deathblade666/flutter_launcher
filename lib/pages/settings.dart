@@ -58,6 +58,47 @@ class _settingeMenuState extends State<settingeMenu> {
     }
   }
 
+  void setfavorites(appNumber){
+    showDialog(context: context, builder: (BuildContext context){
+      return  AlertDialog(
+        title: const Text("Select a favorite app"),
+        actions: [
+          SizedBox(
+            height: 300,
+            width: 300,
+            child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
+              AppInfo app = widget._app[index];
+              return Container(
+                height: 50,
+                child: ListTile(
+                onTap: () {
+                  final String appName = app.packageName;
+                  widget.prefs.setString("Pinned App$appNumber", appName);
+                  if (app.icon != null){
+                    var encodedIcon = base64Encode(app.icon!);
+                    widget.prefs.setString("appIcon$appNumber", encodedIcon);
+                  }
+                  widget.onPinnedApp(appName);
+                  Navigator.pop(context);
+                },
+                leading: app.icon != null
+                  ? Image.memory(app.icon!, height: 30,)
+                  : const Icon(Icons.add),
+                title: Text(app.name),
+
+                //TODO: Set visbility based on number of favorite set
+                //TODO: pass icon of selected app to replace the + sign in settings menu
+
+                )
+              );
+            })
+          ),
+        ],
+      ); 
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,6 +142,60 @@ class _settingeMenuState extends State<settingeMenu> {
               }
               ),
             const Divider(),
+            Visibility(
+              visible: pinApp,
+              child: const Text("Favorites"),
+            ),
+            Visibility(
+              visible: pinApp,
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          child: Icon(Icons.add),
+                          onTap: (){
+                            int appNumber = 1;
+                            setfavorites(appNumber);
+                          }
+                        ),
+                        const Padding(padding: EdgeInsets.only(right:20)),
+                        GestureDetector(
+                          child: Icon(Icons.add),
+                          onTap: (){
+                            int appNumber = 2;
+                            setfavorites(appNumber);
+                          },
+                        ),
+                        const Padding(padding: EdgeInsets.only(right:20)),
+                        GestureDetector(
+                          child: Icon(Icons.add),
+                          onTap: (){
+                            int appNumber = 3;
+                            setfavorites(appNumber);
+                          },
+                        ),
+                        const Padding(padding: EdgeInsets.only(right:20)),
+                        GestureDetector(
+                          child: Icon(Icons.add),
+                          onTap: (){
+                            int appNumber = 4;
+                            setfavorites(appNumber);
+                          },
+                        )
+                      ]
+                    )
+                  ),
+                ]
+              )
+            ),
+            Visibility(
+              visible: pinApp,
+              child: const Divider(),),
             const Center(
               child: Text("Search Options"),
             ),
@@ -150,157 +245,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 child: Text("Set Custom Search Provider")
               )
             ),
-            Visibility(
-              visible: pinApp,
-              child: const Divider(),),
-            Visibility(
-              visible: pinApp,
-              child: const Text("Favorites"),
-            ),
-            Visibility(
-              visible: pinApp,
-              child:  Row(
-                children: [
-                  const Align(
-                    alignment: Alignment.centerLeft, 
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 13),
-                      child: Text("Select a Quick Access App"),
-                      ) 
-                    
-                  ),
-                  const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
-                  GestureDetector(
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onSurface
-                    )
-                  ),
-                ),
-                onTap: (){
-                  showDialog(context: context, builder: (BuildContext context){
-                    return  AlertDialog(
-                      title: Text("Pin app to Search Bar"),
-                      actions: [
-                        SizedBox(
-                          height: 300,
-                          width: 300,
-                          child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
-                            AppInfo app = widget._app[index];
-                            return Container(
-                              height: 50,
-                              child: ListTile(
-                                onTap: () {
-                                  final String appName = app.packageName;
-                                  widget.prefs.setString("Pinned App", appName);
-                                  if (app.icon != null){
-                                    var encodedIcon = base64Encode(app.icon!);
-                                    widget.prefs.setString("appIcon", encodedIcon);
-                                  }
-                                  widget.onPinnedApp(appName);
-                                  Navigator.pop(context);
-                                },
-                              leading: app.icon != null
-                                ? Image.memory(app.icon!, height: 30,)
-                                : const Icon(Icons.android),
-                              title: Text(app.name),
-                              )
-                            );
-                          })
-                        ),
-                      ],
-                    ); 
-                  });
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(right: 30)),
-            ],
-          ),
-        ),
-              
-                
-                
-            Visibility(
-              visible: pinApp,
-              child: Column(
-                children: [
-              const Text("Select your Favorite Apps"),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
-                    ),
-                    onTap: (){
-                      return log("Test");
-                    },
-                  ),
-                  const Padding(padding: EdgeInsets.only(right:20)),
-                  GestureDetector(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
-                    ),
-                    onTap: (){
-                      return log("Test");
-                    },
-                  ),
-                  const Padding(padding: EdgeInsets.only(right:20)),
-                  GestureDetector(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
-                    ),
-                    onTap: (){
-                      return log("Test");
-                    },
-                  ),
-                  const Padding(padding: EdgeInsets.only(right:20)),
-                  GestureDetector(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.onSurface
-                        )
-                      ),
-                    ),
-                    onTap: (){
-                      return log("Test");
-                    },
-                  )
-                ]
-              )
-              )
-                ]
-              )
-            ),
-            
             const Divider(),
-
             Row(
               children: [
                 TextButton(
@@ -311,7 +256,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 ),
                 const Expanded(child: Padding(padding: EdgeInsets.all(1))),
                 TextButton(
-                  child: Text("Save"),
+                  child: const Text("Save"),
                   onPressed: () {
                       Navigator.pop(context);
                   },
@@ -321,6 +266,85 @@ class _settingeMenuState extends State<settingeMenu> {
           ],
         )
       )
-    );
+    );     
   }
 }
+            
+            
+               //   const Align(
+               //     alignment: Alignment.centerLeft, 
+               //     child: Padding(
+              //        padding: EdgeInsets.only(left: 13),
+               //       child: Text("Select a Quick Access App"),
+                //      ) 
+                    
+                //  ),
+                //  const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+               //   GestureDetector(
+               // child: Container(
+                //  height: 50,
+                //  width: 50,
+                //  decoration: BoxDecoration(
+                //    border: Border.all(
+                //      color: Theme.of(context).colorScheme.onSurface
+                 //   )
+                 // ),
+                //),
+                //onTap: (){
+                //  showDialog(context: context, builder: (BuildContext context){
+                //    return  
+                    //AlertDialog(
+                    //  title: Text("Pin app to Search Bar"),
+                    //  actions: [
+                    //    SizedBox(
+                    //      height: 300,
+                    //      width: 300,
+                    //      child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
+                    //        AppInfo app = widget._app[index];
+                    //        return Container(
+                    //          height: 50,
+                    //          child: ListTile(
+                    //            onTap: () {
+                    //              final String appName = app.packageName;
+                    //              widget.prefs.setString("Pinned App", appName);
+                    //              if (app.icon != null){
+                    //                var encodedIcon = base64Encode(app.icon!);
+                    //                widget.prefs.setString("appIcon", encodedIcon);
+                    //              }
+                    //              widget.onPinnedApp(appName);
+                    //              Navigator.pop(context);
+                    //            },
+                    //          leading: app.icon != null
+                    //            ? Image.memory(app.icon!, height: 30,)
+                    //            : const Icon(Icons.android),
+                    //          title: Text(app.name),
+                    //          )
+                    //        );
+                    //      })
+                    //    ),
+                    //  ],
+                  //  ); 
+                 // });
+                //},
+             // ),
+             // const Padding(padding: EdgeInsets.only(right: 30)),
+           // ],
+          //),
+        //),
+              
+                
+                
+            //Visibility(
+             // visible: pinApp,
+              //child: 
+                 // Column(
+                   // children: [
+                      //const Text("Select your Favorite Apps"),
+                      
+            
+            
+              
+              
+         //   );
+              //    }//);),
+          

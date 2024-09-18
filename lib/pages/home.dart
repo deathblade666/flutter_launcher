@@ -205,69 +205,83 @@ class _launcherState extends State<launcher>{
           onClosing: onClosed, 
           builder: (BuildContext context){
             return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Visibility(
-                    visible: widgetVis,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [ 
-                          Icon(Icons.keyboard_arrow_up, size: 30,),
-                        ],
-                      ), 
-              onVerticalDragStart: (details) {
-                showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
-                  return PageView(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: const Center( 
-                          child: Text("Click here to add your widgets"),
-                        ),
-                        onTap: () async {
-                          //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
-                          showDialog(context: context, builder: (BuildContext context){
-                            return const AlertDialog(
-                              title: Text("To be Implemented"),
-                            );
-                          });
-                        },
-                      ),
-                      const Center( 
-                        child: Text("Page 2"),
-                      ),
-                    ],
-                  );   
-                });
-              },
-                    ),
-                  ),
-                  Visibility(
-                    visible: noAppPinned,
-                    child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(
+                  visible: widgetVis,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton.outlined(
-                          onPressed: () {return log("button 1 pressed");},
-                          icon: const Icon(Icons.circle_notifications_outlined)
-                        ), 
-                        IconButton.outlined(
-                          onPressed: () {return log("button 2 pressed");},
-                          icon: const Icon(Icons.circle_notifications_outlined)
-                        ), 
-                        IconButton.outlined(
-                          onPressed: () {return log("button 3 pressed");},
-                          icon: const Icon(Icons.circle_notifications_outlined)
-                        ), 
-                        IconButton.outlined(
-                          onPressed: () {return log("button 4 pressed");},
-                          icon: const Icon(Icons.circle_notifications_outlined)
-                        ), 
+                      children: [ 
+                        Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
-                    )
+                    ), 
+                    onVerticalDragStart: (details) {
+                      showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
+                        return PageView(
+                          children: <Widget>[
+                            GestureDetector(
+                              child: const Center( 
+                                child: Text("Click here to add your widgets"),
+                              ),
+                              onTap: () async {
+                                //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
+                                showDialog(context: context, builder: (BuildContext context){
+                                  return const AlertDialog(
+                                    title: Text("To be Implemented"),
+                                  );
+                                });
+                              },
+                            ),
+                            const Center( 
+                              child: Text("Page 2"),
+                            ),
+                          ],
+                        );   
+                      });
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: noAppPinned,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      //TODO: Set visibility based on it sfavorite has been set.
+
+                      IconButton.outlined(
+                        onPressed: () {
+                          //  visible: noAppPinned,
+                          InstalledApps.startApp(pinnedAppInfo);
+                        },
+                        icon: appIcon != null 
+                          ? Image.memory(appIcon, height: 30,)
+                          : const Icon(Icons.android),
+                      ), 
+                      IconButton.outlined(
+                        onPressed: () {return log("button 2 pressed");},
+                        icon: appIcon != null 
+                          ? Image.memory(appIcon, height: 30,)
+                          : const Icon(Icons.android),
+                      ), 
+                      IconButton.outlined(
+                        onPressed: () {return log("button 3 pressed");},
+                        icon: appIcon != null 
+                          ? Image.memory(appIcon, height: 30,)
+                          : const Icon(Icons.android),
+                        ), 
+                      IconButton.outlined(
+                        onPressed: () {return log("button 4 pressed");},
+                        icon: appIcon != null 
+                          ? Image.memory(appIcon, height: 30,)
+                          : const Icon(Icons.android),
+                      ), 
+                    ],
                   )
-                ]
+                )
+              ]
             );
           }
         ),
@@ -284,17 +298,7 @@ class _launcherState extends State<launcher>{
                   minHeight: 40
                 ),
                 elevation: const WidgetStatePropertyAll(0.0),
-                leading: Visibility(
-                  visible: noAppPinned,
-                  child: GestureDetector(
-                  onTap: (){
-                    print(pinnedAppInfo);
-                    InstalledApps.startApp(pinnedAppInfo);
-                  },
-                  child: appIcon != null       //TODO: implement default as app icon
-                    ? Image.memory(appIcon, height: 30,)
-                    : const Icon(Icons.android),
-                )),
+                //leading: 
                 onChanged: (String value) async {
                   String s = _searchController.text;
                   setState(() {
