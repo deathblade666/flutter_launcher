@@ -51,8 +51,14 @@ class _launcherState extends State<launcher>{
   var _tapPosition;
   bool widgetVis = true;
   String pinnedAppInfo = "";
+  String pinnedAppInfo2 = "";
+  String pinnedAppInfo3 = "";
+  String pinnedAppInfo4 = "";
   var appIconrestored;
   var appIcon;
+  var appIcon2;
+  var appIcon3;
+  var appIcon4;
   bool noAppPinned = false;
   double searchHieght = 40;
 
@@ -69,11 +75,10 @@ class _launcherState extends State<launcher>{
   }
   @override
   void initState(){
-    _tapPosition = Offset(0.0, 0.0);
+    _tapPosition = const Offset(0.0, 0.0);
     super.initState();
     fetchApps();
     loadPrefs();
-    print(noAppPinned);
     focusOnSearch.addListener(focusListener);
   }
 
@@ -85,6 +90,7 @@ class _launcherState extends State<launcher>{
     String? appName = widget.prefs.getString("Pinned App");
     String? appIconEncoded = widget.prefs.getString("appIcon");
     bool? togglePinApp = widget.prefs.getBool("togglePin");
+    int? appNumber = widget.prefs.getInt("App1");
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
     }
@@ -101,7 +107,7 @@ class _launcherState extends State<launcher>{
       widgetToggle(widgetsEnabled);
     }
     if (appName != null){
-      pinnedApp(appName);
+      pinnedApp(appName, appNumber!);
     }
     if (appIconEncoded != null){
       appIconrestored = base64Decode(appIconEncoded);
@@ -182,11 +188,22 @@ class _launcherState extends State<launcher>{
       });
   }
 
-  void pinnedApp(String appName) async {
+  void pinnedApp(String appName, int appNumber) async {
     AppInfo app = await InstalledApps.getAppInfo(appName);
     setState(() {
-      pinnedAppInfo = appName;
-      appIcon = app.icon;
+      if (appNumber == 1){
+        pinnedAppInfo = appName;
+        appIcon = app.icon;
+      } else if (appNumber == 2) {
+        pinnedAppInfo2 = appName;
+        appIcon2 = app.icon;
+      }else if (appNumber ==3){
+        pinnedAppInfo3 = appName;
+        appIcon3 = app.icon;
+      } else if (appNumber == 4){
+        pinnedAppInfo4 = appName;
+        appIcon4 = app.icon;
+      }
     });
   }
 
@@ -262,26 +279,26 @@ class _launcherState extends State<launcher>{
                       ), 
                       IconButton.outlined(
                         onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo);
+                          InstalledApps.startApp(pinnedAppInfo2);
                         },
-                        icon: appIcon != null 
-                          ? Image.memory(appIcon, height: 30,)
+                        icon: appIcon2 != null 
+                          ? Image.memory(appIcon2, height: 30,)
                           : const Icon(Icons.android),
                       ), 
                       IconButton.outlined(
                         onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo);
+                          InstalledApps.startApp(pinnedAppInfo3);
                         },
-                        icon: appIcon != null 
-                          ? Image.memory(appIcon, height: 30,)
+                        icon: appIcon3 != null 
+                          ? Image.memory(appIcon3, height: 30,)
                           : const Icon(Icons.android),
                         ), 
                       IconButton.outlined(
                         onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo);
+                          InstalledApps.startApp(pinnedAppInfo4);
                         },
-                        icon: appIcon != null 
-                          ? Image.memory(appIcon, height: 30,)
+                        icon: appIcon4 != null 
+                          ? Image.memory(appIcon4, height: 30,)
                           : const Icon(Icons.android),
                       ), 
                     ],

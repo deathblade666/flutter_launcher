@@ -13,10 +13,10 @@ class settingeMenu extends StatefulWidget {
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
   final void Function(bool widgetsEnabled) enableWidgets;
-  final void Function(String appName) onPinnedApp;
+  final void Function(String appName, int appNumber) onPinnedApp;
   final void Function(bool togglePinApp) ontogglePinApp;
   SharedPreferences prefs;
-  List<AppInfo> _app;
+  final List<AppInfo> _app;
   
 
 
@@ -29,6 +29,10 @@ class _settingeMenuState extends State<settingeMenu> {
   bool statusBarToggle = false;
   bool widgetsEnabled = true;
   bool pinApp = false;
+  var applicationIcon;
+  var applicationIcon2;
+  var applicationIcon3;
+  var applicationIcon4;
   @override
   initState(){
     onLoad();
@@ -72,13 +76,40 @@ class _settingeMenuState extends State<settingeMenu> {
                 height: 50,
                 child: ListTile(
                 onTap: () {
-                  final String appName = app.packageName;
-                  widget.prefs.setString("Pinned App$appNumber", appName);
+                  if (appNumber == 1){
+                    final String appName = app.packageName;
+                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.onPinnedApp(appName, appNumber);
+                    setState(() {
+                      applicationIcon = app.icon;
+                    });
+                  } else if (appNumber == 2){
+                    final String appName = app.packageName;
+                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.onPinnedApp(appName, appNumber);
+                    setState(() {
+                      applicationIcon2 = app.icon;
+                    });
+                  } else if (appNumber == 3){
+                    final String appName = app.packageName;
+                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.onPinnedApp(appName, appNumber);
+                    setState(() {
+                      applicationIcon3 = app.icon;
+                    });
+                  }else if (appNumber == 4){
+                    final String appName = app.packageName;
+                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.onPinnedApp(appName, appNumber);
+                    setState(() {
+                      applicationIcon4 = app.icon;
+                    });
+                  }
+                  
                   if (app.icon != null){
                     var encodedIcon = base64Encode(app.icon!);
                     widget.prefs.setString("appIcon$appNumber", encodedIcon);
                   }
-                  widget.onPinnedApp(appName);
                   Navigator.pop(context);
                 },
                 leading: app.icon != null
@@ -130,7 +161,7 @@ class _settingeMenuState extends State<settingeMenu> {
               title: const Text("Hide Status Bar"),
             ),
             SwitchListTile(
-              title: Text("Toggle Favorites"),
+              title: const Text("Toggle Favorites"),
               value: pinApp, 
               onChanged: (value){
                 bool togglePinApp = value;
@@ -157,33 +188,45 @@ class _settingeMenuState extends State<settingeMenu> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          child: Icon(Icons.add),
+                          child: applicationIcon != null
+                            ? Image.memory(applicationIcon!, height: 30,)
+                            : const Icon(Icons.add),
                           onTap: (){
                             int appNumber = 1;
+                            widget.prefs.setInt("App1", 1);
                             setfavorites(appNumber);
                           }
                         ),
                         const Padding(padding: EdgeInsets.only(right:20)),
                         GestureDetector(
-                          child: Icon(Icons.add),
+                          child: applicationIcon2 != null
+                            ? Image.memory(applicationIcon2!, height: 30,)
+                            : const Icon(Icons.add),
                           onTap: (){
                             int appNumber = 2;
+                            widget.prefs.setInt("App2", 2);
                             setfavorites(appNumber);
                           },
                         ),
                         const Padding(padding: EdgeInsets.only(right:20)),
                         GestureDetector(
-                          child: Icon(Icons.add),
+                          child: applicationIcon3 != null
+                            ? Image.memory(applicationIcon3!, height: 30,)
+                            : const Icon(Icons.add),
                           onTap: (){
                             int appNumber = 3;
+                            widget.prefs.setInt("App3", 3);
                             setfavorites(appNumber);
                           },
                         ),
                         const Padding(padding: EdgeInsets.only(right:20)),
                         GestureDetector(
-                          child: Icon(Icons.add),
+                          child: applicationIcon4 != null
+                            ? Image.memory(applicationIcon4!, height: 30,)
+                            : const Icon(Icons.add),
                           onTap: (){
                             int appNumber = 4;
+                            widget.prefs.setInt("App4", 4);
                             setfavorites(appNumber);
                           },
                         )
