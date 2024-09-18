@@ -1,6 +1,6 @@
 # flutter_launcher
 
-Unname as of yet, this flutter project is an android launcher. The idea is to have a modern, minimalistic UI without compromising on access to data when you need it. Inspired by KISS and Kvaesitso.
+Unname as of yet, this flutter project is an android launcher. The idea is to have a modern, minimalistic UI without compromising on access to data when you need it. Inspired by [KISS](https://github.com/Neamar/KISS/) and [Kvaesitso](https://github.com/MM2-0/Kvaesitso).
 
 ## Current features
  - Search and launch apps via return or tapping on the list item
