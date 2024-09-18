@@ -54,7 +54,7 @@ class _launcherState extends State<launcher>{
   var appIconrestored;
   var appIcon;
   bool noAppPinned = false;
-  double searchHieght = 38;
+  double searchHieght = 40;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -128,12 +128,14 @@ class _launcherState extends State<launcher>{
   void pinAppToggle (togglePinApp){
     setState(() {
       noAppPinned = togglePinApp;
-      if (widgetVis == true) {
-        searchHieght = 87;
-      } else if (widgetVis == false) {
-        searchHieght = 58;
+      if (noAppPinned == true && widgetVis == true) {
+          searchHieght = 87;
+        } else if (noAppPinned == true && widgetVis == false) {
+          searchHieght = 57;
+        } else if (widgetVis == true && noAppPinned == false) {
+        searchHieght = 40;
       } else {
-        searchHieght = 38;
+        searchHieght = 40;
       }
     });
   }
@@ -168,11 +170,15 @@ class _launcherState extends State<launcher>{
   void widgetToggle(widgetsEnabled) {
       setState(() {
         widgetVis = widgetsEnabled;
-        if (noAppPinned == true) {
+        if (noAppPinned == true && widgetVis == true) {
           searchHieght = 87;
+        } else if (noAppPinned == false && widgetVis == true) {
+          searchHieght = 57;
+        } else if (widgetVis == false && noAppPinned == true) {
+          searchHieght = 57;
         } else {
           searchHieght = 40;
-        } 
+        }
       });
   }
 
