@@ -27,7 +27,7 @@ This is a list of feature that i hope to accomplish but currently do not have th
 |--|--|
 | ![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-34.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-51.png) |
 
-## Getting Started
+## Build
 
 ``
 git clone https://gitbhub.com/deathblade666/flutter_launcher
@@ -54,12 +54,10 @@ vim build.gradle
 Change compileSDK from 30 to 34
 save and exit
 
-### Build
+``cd`` to the directory you cloned to.
+run ``flutter build apk``
 
-1. ``cd`` to the directory you cloned to.
-2. run ``flutter build apk``
-
-
+## Default Flutter REAME Stuff
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
