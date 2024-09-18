@@ -21,12 +21,6 @@ This is a list of feature that i hope to accomplish but currently do not have th
 
  - Widget support
 
-## ShowCase
-
-|Home screen | Widget Pane |
-|--|--|
-| ![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-34.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-51.png) |
-
 ## Build
 
 ``
@@ -57,6 +51,13 @@ save and exit
 ``cd`` to the directory you cloned to.
 
 run ``flutter build apk``
+
+## Showcase
+
+|Home screen | Widget Pane |
+|--|--|
+| ![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-34.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-51.png) |
+
 
 ## Default Flutter README Stuff
 This project is a starting point for a Flutter application.
