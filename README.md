@@ -9,7 +9,7 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
  - Set Favorites for quick access (currently up to 4)
  - Modular UI, only show the UI elements you need/want
 
-## Featurs in Progress
+## Features in Progress
 List of features that I'm actively working on implementing
  - Pinning Favorites 
    - Currently when you pin a favorite it populates all four fields, this will be fixed in the future
