@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -181,51 +182,82 @@ class _launcherState extends State<launcher>{
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
-        bottomSheet: Visibility(
-          visible: widgetVis,
-          child:BottomSheet(
-            onClosing: onClosed, 
-            builder: (BuildContext context){
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.keyboard_arrow_up, size: 30,)
-                  ],
-                ),
-                onVerticalDragStart: (details) {
-                  showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
-                    return PageView(
-                        children: <Widget>[
-                          GestureDetector(
-                            child: const Center( 
-                              child: Text("Click here to add your widgets"),
-                            ),
-                            onTap: () async {
-                              //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
-                              showDialog(context: context, builder: (BuildContext context){
-                                return const AlertDialog(
-                                  title: Text("To be Implemented"),
-                                );
-                              });
-                            },
-                          ),
-                          const Center( 
-                              child: Text("Page 2"),
-                            ),
+        bottomSheet: BottomSheet(
+          onClosing: onClosed, 
+          builder: (BuildContext context){
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Visibility(
+                    visible: widgetVis,
+                    child: GestureDetector(
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [ 
+                          Icon(Icons.keyboard_arrow_up, size: 30,),
                         ],
-                      );   
-                  });
-                },
-              );
-            }
-          )
+                      ), 
+              onVerticalDragStart: (details) {
+                showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
+                  return PageView(
+                    children: <Widget>[
+                      GestureDetector(
+                        child: const Center( 
+                          child: Text("Click here to add your widgets"),
+                        ),
+                        onTap: () async {
+                          //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
+                          showDialog(context: context, builder: (BuildContext context){
+                            return const AlertDialog(
+                              title: Text("To be Implemented"),
+                            );
+                          });
+                        },
+                      ),
+                      const Center( 
+                        child: Text("Page 2"),
+                      ),
+                    ],
+                  );   
+                });
+              },
+                    ),
+                  ),
+                  Visibility(
+                    visible: noAppPinned,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton.outlined(
+                          onPressed: () {return log("button 1 pressed");},
+                          icon: const Icon(Icons.circle_notifications_outlined)
+                        ), 
+                        IconButton.outlined(
+                          onPressed: () {return log("button 2 pressed");},
+                          icon: const Icon(Icons.circle_notifications_outlined)
+                        ), 
+                        IconButton.outlined(
+                          onPressed: () {return log("button 3 pressed");},
+                          icon: const Icon(Icons.circle_notifications_outlined)
+                        ), 
+                        IconButton.outlined(
+                          onPressed: () {return log("button 4 pressed");},
+                          icon: const Icon(Icons.circle_notifications_outlined)
+                        ), 
+                      ],
+                    )
+                  )
+                ]
+              )
+            );
+          }
         ),
         body: Column(
           verticalDirection: VerticalDirection.up,
           children: [
-            const Padding(padding: EdgeInsets.only(bottom: 38)),      
+            const Padding(padding: EdgeInsets.only(bottom: 60)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
             Container( 
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SearchBar(
