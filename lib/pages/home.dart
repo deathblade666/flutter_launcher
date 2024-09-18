@@ -261,19 +261,25 @@ class _launcherState extends State<launcher>{
                           : const Icon(Icons.android),
                       ), 
                       IconButton.outlined(
-                        onPressed: () {return log("button 2 pressed");},
+                        onPressed: () {
+                          InstalledApps.startApp(pinnedAppInfo);
+                        },
                         icon: appIcon != null 
                           ? Image.memory(appIcon, height: 30,)
                           : const Icon(Icons.android),
                       ), 
                       IconButton.outlined(
-                        onPressed: () {return log("button 3 pressed");},
+                        onPressed: () {
+                          InstalledApps.startApp(pinnedAppInfo);
+                        },
                         icon: appIcon != null 
                           ? Image.memory(appIcon, height: 30,)
                           : const Icon(Icons.android),
                         ), 
                       IconButton.outlined(
-                        onPressed: () {return log("button 4 pressed");},
+                        onPressed: () {
+                          InstalledApps.startApp(pinnedAppInfo);
+                        },
                         icon: appIcon != null 
                           ? Image.memory(appIcon, height: 30,)
                           : const Icon(Icons.android),
