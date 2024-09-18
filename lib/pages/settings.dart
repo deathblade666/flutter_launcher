@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,7 +89,7 @@ class _settingeMenuState extends State<settingeMenu> {
               title: const Text("Hide Status Bar"),
             ),
             SwitchListTile(
-              title: Text("Toggle Pinned App"),
+              title: Text("Toggle Favorites"),
               value: pinApp, 
               onChanged: (value){
                 bool togglePinApp = value;
@@ -150,55 +151,154 @@ class _settingeMenuState extends State<settingeMenu> {
               )
             ),
             Visibility(
-              child: const Divider(),
-              visible: pinApp,),
+              visible: pinApp,
+              child: const Divider(),),
             Visibility(
               visible: pinApp,
               child: const Text("Favorites"),
             ),
             Visibility(
               visible: pinApp,
-              child: Align(
-                alignment: Alignment.centerLeft, 
-                child: TextButton(
-                  onPressed: () {
-                    showDialog(context: context, builder: (BuildContext context){
-                      return  AlertDialog(
-                        title: Text("Pin app to Search Bar"),
-                        actions: [
-                          SizedBox(
-                            height: 300,
-                            width: 300,
-                            child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
-                              AppInfo app = widget._app[index];
-                              return Container(
-                                height: 50,
-                                child: ListTile(
-                                  onTap: () {
-                                    final String appName = app.packageName;
-                                    widget.prefs.setString("Pinned App", appName);
-                                    if (app.icon != null){
-                                      var encodedIcon = base64Encode(app.icon!);
-                                      widget.prefs.setString("appIcon", encodedIcon);
-                                    }
-                                    widget.onPinnedApp(appName);
-                                    Navigator.pop(context);
-                                  },
-                                  leading: app.icon != null
-                                    ? Image.memory(app.icon!, height: 30,)
-                                    : const Icon(Icons.android),
-                                    title: Text(app.name),
-                                )
-                              );
-                            })
-                          )
-                        ],
-                      );
-                    });
-                  }, 
-                child: Text("Select your pinned app"))
+              child:  Row(
+                children: [
+                  const Align(
+                    alignment: Alignment.centerLeft, 
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 13),
+                      child: Text("Select a Quick Access App"),
+                      ) 
+                    
+                  ),
+                  const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                  GestureDetector(
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onSurface
+                    )
+                  ),
+                ),
+                onTap: (){
+                  showDialog(context: context, builder: (BuildContext context){
+                    return  AlertDialog(
+                      title: Text("Pin app to Search Bar"),
+                      actions: [
+                        SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
+                            AppInfo app = widget._app[index];
+                            return Container(
+                              height: 50,
+                              child: ListTile(
+                                onTap: () {
+                                  final String appName = app.packageName;
+                                  widget.prefs.setString("Pinned App", appName);
+                                  if (app.icon != null){
+                                    var encodedIcon = base64Encode(app.icon!);
+                                    widget.prefs.setString("appIcon", encodedIcon);
+                                  }
+                                  widget.onPinnedApp(appName);
+                                  Navigator.pop(context);
+                                },
+                              leading: app.icon != null
+                                ? Image.memory(app.icon!, height: 30,)
+                                : const Icon(Icons.android),
+                              title: Text(app.name),
+                              )
+                            );
+                          })
+                        ),
+                      ],
+                    ); 
+                  });
+                },
+              ),
+              const Padding(padding: EdgeInsets.only(right: 30)),
+            ],
+          ),
+        ),
+              
+                
+                
+            Visibility(
+              visible: pinApp,
+              child: Column(
+                children: [
+              const Text("Select your Favorite Apps"),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onSurface
+                        )
+                      ),
+                    ),
+                    onTap: (){
+                      return log("Test");
+                    },
+                  ),
+                  const Padding(padding: EdgeInsets.only(right:20)),
+                  GestureDetector(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onSurface
+                        )
+                      ),
+                    ),
+                    onTap: (){
+                      return log("Test");
+                    },
+                  ),
+                  const Padding(padding: EdgeInsets.only(right:20)),
+                  GestureDetector(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onSurface
+                        )
+                      ),
+                    ),
+                    onTap: (){
+                      return log("Test");
+                    },
+                  ),
+                  const Padding(padding: EdgeInsets.only(right:20)),
+                  GestureDetector(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onSurface
+                        )
+                      ),
+                    ),
+                    onTap: (){
+                      return log("Test");
+                    },
+                  )
+                ]
+              )
+              )
+                ]
               )
             ),
+            
             const Divider(),
 
             Row(
