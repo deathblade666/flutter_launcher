@@ -33,6 +33,8 @@ class _settingeMenuState extends State<settingeMenu> {
   var applicationIcon2;
   var applicationIcon3;
   var applicationIcon4;
+  var appIconrestored;
+
   @override
   initState(){
     onLoad();
@@ -44,6 +46,39 @@ class _settingeMenuState extends State<settingeMenu> {
     bool? toggelStatslast = widget.prefs.getBool("StatusBar");
     bool? widgetsEnabledlast = widget.prefs.getBool("EnableWidgets");
     bool? pinApprestore = widget.prefs.getBool("togglePin");
+    String? settingAppIcon1 = widget.prefs.getString("appIcon1");
+    String? settingAppIcon2 = widget.prefs.getString("appIcon2");
+    String? settingAppIcon3 = widget.prefs.getString("appIcon3");
+    String? settingAppIcon4 = widget.prefs.getString("appIcon4");
+
+    if (settingAppIcon1 != null){
+      appIconrestored = base64Decode(settingAppIcon1);
+      var iconAsList1 = Uint8List.fromList(appIconrestored);
+      setState(() {
+        applicationIcon = iconAsList1;
+      });
+    }
+    if (settingAppIcon2 != null){
+      appIconrestored = base64Decode(settingAppIcon2);
+      var iconAsList2 = Uint8List.fromList(appIconrestored);
+      setState(() {
+        applicationIcon2 = iconAsList2;
+      });
+    }
+    if (settingAppIcon3 != null){
+      appIconrestored = base64Decode(settingAppIcon3);
+      var iconAsList3 = Uint8List.fromList(appIconrestored);
+      setState(() {
+        applicationIcon3 = iconAsList3;
+      });
+    }
+    if (settingAppIcon4 != null){
+      appIconrestored = base64Decode(settingAppIcon4);
+      var iconAsList4 = Uint8List.fromList(appIconrestored);
+      setState(() {
+        applicationIcon4 = iconAsList4;
+      });
+    }
     if (toggelStatslast != null) {
       setState(() {
         statusBarToggle = toggelStatslast;
@@ -78,32 +113,34 @@ class _settingeMenuState extends State<settingeMenu> {
                 onTap: () {
                   if (appNumber == 1){
                     final String appName = app.packageName;
-                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.prefs.setString("Pinned App1", appName);
                     widget.onPinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon = app.icon;
                     });
                   } else if (appNumber == 2){
                     final String appName = app.packageName;
-                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.prefs.setString("Pinned App2", appName);
                     widget.onPinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon2 = app.icon;
                     });
                   } else if (appNumber == 3){
                     final String appName = app.packageName;
-                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.prefs.setString("Pinned App3", appName);
                     widget.onPinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon3 = app.icon;
                     });
                   }else if (appNumber == 4){
                     final String appName = app.packageName;
-                    widget.prefs.setString("Pinned App$appNumber", appName);
+                    widget.prefs.setString("Pinned App4", appName);
                     widget.onPinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon4 = app.icon;
                     });
+                    var encodedIcon = base64Encode(app.icon!);
+                    widget.prefs.setString("appIcon4", encodedIcon);
                   }
                   
                   if (app.icon != null){

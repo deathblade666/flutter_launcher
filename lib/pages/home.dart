@@ -61,6 +61,9 @@ class _launcherState extends State<launcher>{
   var appIcon4;
   bool noAppPinned = false;
   double searchHieght = 40;
+  var appNumber;
+  String appName ="";
+
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -87,10 +90,17 @@ class _launcherState extends State<launcher>{
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
     bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
-    String? appName = widget.prefs.getString("Pinned App");
     String? appIconEncoded = widget.prefs.getString("appIcon");
     bool? togglePinApp = widget.prefs.getBool("togglePin");
-    int? appNumber = widget.prefs.getInt("App1");
+    int? appNumber1 = widget.prefs.getInt("App1");
+    int? appNumber2 = widget.prefs.getInt("App2");
+    int? appNumber3 = widget.prefs.getInt("App3");
+    int? appNumber4 = widget.prefs.getInt("App4");
+    String? appName1 = widget.prefs.getString("Pinned App1");
+    String? appName2 = widget.prefs.getString("Pinned App2");
+    String? appName3 = widget.prefs.getString("Pinned App3");
+    String? appName4 = widget.prefs.getString("Pinned App4");
+    
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
     }
@@ -106,13 +116,30 @@ class _launcherState extends State<launcher>{
     if (widgetsEnabled != null){
       widgetToggle(widgetsEnabled);
     }
-    if (appName != null){
-      pinnedApp(appName, appNumber!);
+    if (appNumber1 != null && appName1 != null){
+      appNumber = appNumber1;
+      appName = appName1;
+      pinnedApp(appName, appNumber);
+    } 
+    if (appNumber2 != null && appName2 != null){
+      appNumber = appNumber2;
+      appName = appName2;
+      pinnedApp(appName, appNumber);
+    } 
+    if (appNumber3 != null && appName3 != null){
+      appName = appName3;
+      appNumber = appNumber3;
+      pinnedApp(appName, appNumber);
+    } 
+    if (appNumber4 != null && appName4 != null){
+      appName = appName4;
+      appNumber = appNumber4;
+      pinnedApp(appName, appNumber);
     }
     if (appIconEncoded != null){
       appIconrestored = base64Decode(appIconEncoded);
-      var testing123 = Uint8List.fromList(appIconrestored);
-      restoreAppIcon(testing123);
+      var iconAsList = Uint8List.fromList(appIconrestored);
+      restoreAppIcon(iconAsList);
     }
   }
 
@@ -192,17 +219,29 @@ class _launcherState extends State<launcher>{
     AppInfo app = await InstalledApps.getAppInfo(appName);
     setState(() {
       if (appNumber == 1){
-        pinnedAppInfo = appName;
-        appIcon = app.icon;
+        setState(() {
+          pinnedAppInfo = appName;
+          appIcon = app.icon;
+        });
+        
       } else if (appNumber == 2) {
-        pinnedAppInfo2 = appName;
-        appIcon2 = app.icon;
+        setState(() {
+          pinnedAppInfo2 = appName;
+          appIcon2 = app.icon;
+        });
+        
       }else if (appNumber ==3){
-        pinnedAppInfo3 = appName;
+        setState(() {
+          pinnedAppInfo3 = appName;
         appIcon3 = app.icon;
+        });
+        
       } else if (appNumber == 4){
-        pinnedAppInfo4 = appName;
+        setState(() {
+          pinnedAppInfo4 = appName;
         appIcon4 = app.icon;
+        });
+        
       }
     });
   }
@@ -268,7 +307,7 @@ class _launcherState extends State<launcher>{
 
                       //TODO: Set visibility based on it sfavorite has been set.
 
-                      IconButton.outlined(
+                      IconButton(
                         onPressed: () {
                           //  visible: noAppPinned,
                           InstalledApps.startApp(pinnedAppInfo);
@@ -277,7 +316,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon, height: 30,)
                           : const Icon(Icons.android),
                       ), 
-                      IconButton.outlined(
+                      IconButton(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo2);
                         },
@@ -285,7 +324,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon2, height: 30,)
                           : const Icon(Icons.android),
                       ), 
-                      IconButton.outlined(
+                      IconButton(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo3);
                         },
@@ -293,7 +332,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon3, height: 30,)
                           : const Icon(Icons.android),
                         ), 
-                      IconButton.outlined(
+                      IconButton(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo4);
                         },
