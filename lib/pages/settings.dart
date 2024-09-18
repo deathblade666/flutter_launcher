@@ -8,13 +8,15 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs, this._app,{ required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
+  settingeMenu(this.prefs, this._app,{required this.ontogglePinApp,required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
   final void Function(bool widgetsEnabled) enableWidgets;
   final void Function(String appName) onPinnedApp;
+  final void Function(bool togglePinApp) ontogglePinApp;
   SharedPreferences prefs;
   List<AppInfo> _app;
+  
 
 
   @override
@@ -25,6 +27,7 @@ class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
   bool statusBarToggle = false;
   bool widgetsEnabled = true;
+  bool pinApp = false;
   @override
   initState(){
     onLoad();
@@ -35,6 +38,7 @@ class _settingeMenuState extends State<settingeMenu> {
     widget.prefs.reload();
     bool? toggelStatslast = widget.prefs.getBool("StatusBar");
     bool? widgetsEnabledlast = widget.prefs.getBool("EnableWidgets");
+    bool? pinApprestore = widget.prefs.getBool("togglePin");
     if (toggelStatslast != null) {
       setState(() {
         statusBarToggle = toggelStatslast;
@@ -44,6 +48,12 @@ class _settingeMenuState extends State<settingeMenu> {
       setState(() {
         widgetsEnabled = widgetsEnabledlast;
       });
+    }
+    if (pinApprestore != null){
+      setState(() {
+        pinApp = pinApprestore;
+      });
+      
     }
   }
 
@@ -77,6 +87,18 @@ class _settingeMenuState extends State<settingeMenu> {
               },
               title: const Text("Hide Status Bar"),
             ),
+            SwitchListTile(
+              title: Text("Toggle Pinned App"),
+              value: pinApp, 
+              onChanged: (value){
+                bool togglePinApp = value;
+                setState(() {
+                  pinApp = !pinApp;
+                });
+                widget.ontogglePinApp(togglePinApp);
+                widget.prefs.setBool("togglePin", value);
+              }
+              ),
             const Divider(),
             const Center(
               child: Text("Search Options"),
@@ -127,48 +149,55 @@ class _settingeMenuState extends State<settingeMenu> {
                 child: Text("Set Custom Search Provider")
               )
             ),
-            const Divider(),
-            const Text("Favorites"),
-            Align(
-              alignment: Alignment.centerLeft, 
-              child: TextButton(
-                onPressed: () {
-                  showDialog(context: context, builder: (BuildContext context){
-                    return  AlertDialog(
-                      title: Text("Pin app to Search Bar"),
-                      actions: [
-                        SizedBox(
-                          height: 300,
-                          width: 300,
-                          child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
-                          AppInfo app = widget._app[index];
-                            return Container(
-                              height: 50,
-                              child: ListTile(
-                                onTap: () {
-                                  final String appName = app.packageName;
-                                  print(appName);
-                                  widget.prefs.setString("Pinned App", appName);
-                                  if (app.icon != null){
-                                    var encodedIcon = base64Encode(app.icon!);
-                                    widget.prefs.setString("appIcon", encodedIcon);
-                                  }
-                                  widget.onPinnedApp(appName);
-                                  Navigator.pop(context);
-                                },
-                                leading: app.icon != null
-                                  ? Image.memory(app.icon!, height: 30,)
-                                  : const Icon(Icons.android),
-                                  title: Text(app.name),
-                              )
-                            );
-                        })
-                      )
-                      ],
-                    );
-                  });
-                }, 
+            Visibility(
+              child: const Divider(),
+              visible: pinApp,),
+            Visibility(
+              visible: pinApp,
+              child: const Text("Favorites"),
+            ),
+            Visibility(
+              visible: pinApp,
+              child: Align(
+                alignment: Alignment.centerLeft, 
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(context: context, builder: (BuildContext context){
+                      return  AlertDialog(
+                        title: Text("Pin app to Search Bar"),
+                        actions: [
+                          SizedBox(
+                            height: 300,
+                            width: 300,
+                            child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
+                              AppInfo app = widget._app[index];
+                              return Container(
+                                height: 50,
+                                child: ListTile(
+                                  onTap: () {
+                                    final String appName = app.packageName;
+                                    widget.prefs.setString("Pinned App", appName);
+                                    if (app.icon != null){
+                                      var encodedIcon = base64Encode(app.icon!);
+                                      widget.prefs.setString("appIcon", encodedIcon);
+                                    }
+                                    widget.onPinnedApp(appName);
+                                    Navigator.pop(context);
+                                  },
+                                  leading: app.icon != null
+                                    ? Image.memory(app.icon!, height: 30,)
+                                    : const Icon(Icons.android),
+                                    title: Text(app.name),
+                                )
+                              );
+                            })
+                          )
+                        ],
+                      );
+                    });
+                  }, 
                 child: Text("Select your pinned app"))
+              )
             ),
             const Divider(),
 

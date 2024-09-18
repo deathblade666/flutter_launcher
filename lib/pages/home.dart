@@ -52,7 +52,7 @@ class _launcherState extends State<launcher>{
   String pinnedAppInfo = "";
   var appIconrestored;
   var appIcon;
-  
+  bool noAppPinned = false;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -71,6 +71,7 @@ class _launcherState extends State<launcher>{
     super.initState();
     fetchApps();
     loadPrefs();
+    print(noAppPinned);
     focusOnSearch.addListener(focusListener);
   }
 
@@ -81,7 +82,10 @@ class _launcherState extends State<launcher>{
     bool? widgetsEnabled = widget.prefs.getBool("EnableWidgets");
     String? appName = widget.prefs.getString("Pinned App");
     String? appIconEncoded = widget.prefs.getString("appIcon");
-    
+    bool? togglePinApp = widget.prefs.getBool("togglePin");
+    if (togglePinApp != null){
+      pinAppToggle(togglePinApp);
+    }
     if (provider != null){
       searchProvider(provider);
     } else {
@@ -116,6 +120,12 @@ class _launcherState extends State<launcher>{
   void enableSheet(DragStartDetails) {
     setState(() {
       enabeBottom = !enabeBottom;
+    });
+  }
+
+  void pinAppToggle (togglePinApp){
+    setState(() {
+      noAppPinned = togglePinApp;
     });
   }
 
@@ -225,7 +235,9 @@ class _launcherState extends State<launcher>{
                   minHeight: 40
                 ),
                 elevation: const WidgetStatePropertyAll(0.0),
-                leading: GestureDetector(
+                leading: Visibility(
+                  visible: noAppPinned,
+                  child: GestureDetector(
                   onTap: (){
                     print(pinnedAppInfo);
                     InstalledApps.startApp(pinnedAppInfo);
@@ -233,7 +245,7 @@ class _launcherState extends State<launcher>{
                   child: appIcon != null       //TODO: implement default as app icon
                     ? Image.memory(appIcon, height: 30,)
                     : const Icon(Icons.android),
-                ),
+                )),
                 onChanged: (String value) async {
                   String s = _searchController.text;
                   setState(() {
@@ -371,7 +383,7 @@ class _launcherState extends State<launcher>{
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,)),
+                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,ontogglePinApp: pinAppToggle,)),
                             );
                           },
                         )
