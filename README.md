@@ -55,6 +55,7 @@ Change compileSDK from 30 to 34
 save and exit
 
 ``cd`` to the directory you cloned to.
+
 run ``flutter build apk``
 
 ## Default Flutter REAME Stuff
