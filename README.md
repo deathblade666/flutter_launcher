@@ -30,7 +30,7 @@ This is a list of feature that i hope to accomplish but currently do not have th
 ## Build
 
 ``
-git clone https://gitbhub.com/deathblade666/flutter_launcher
+git clone https://github.com/deathblade666/flutter_launcher
 ``
 
 ``
