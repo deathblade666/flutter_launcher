@@ -241,9 +241,6 @@ class _launcherState extends State<launcher>{
           appIcon = app.icon;
           hideIcon1 = true;
         });
-        
-      } else {
-        hideIcon1 = false;
       }
       if (appNumber == 2) {
         setState(() {
