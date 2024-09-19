@@ -63,6 +63,10 @@ class _launcherState extends State<launcher>{
   double searchHieght = 40;
   var appNumber;
   String appName ="";
+  bool hideIcon1 = false;
+  bool hideIcon2 = false;
+  bool hideIcon3 = false;
+  bool hideIcon4 = false;
 
 
  focusListener(){
@@ -141,6 +145,26 @@ class _launcherState extends State<launcher>{
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
     }
+    if (appName4 == null){
+      setState(() {
+        hideIcon4 = false;
+      });
+    }
+    if (appName2 == null){
+      setState(() {
+        hideIcon2 = false;
+      });
+    }
+    if (appName3 == null){
+      setState(() {
+        hideIcon3 = false;
+      });
+    }
+    if (appName1 == null){
+      setState(() {
+        hideIcon1 = false;
+      });
+    }
   }
 
   void fetchApps() async {
@@ -171,6 +195,10 @@ class _launcherState extends State<launcher>{
         searchHieght = 40;
       }
     });
+  }
+
+  void autoHideUsedIcons (){
+
   }
 
   @override
@@ -217,7 +245,6 @@ class _launcherState extends State<launcher>{
 
   void pinnedApp(String appName, int appNumber) async {
     AppInfo app = await InstalledApps.getAppInfo(appName);
-    setState(() {
       if (appNumber == 1){
         setState(() {
           pinnedAppInfo = appName;
@@ -230,7 +257,7 @@ class _launcherState extends State<launcher>{
           appIcon2 = app.icon;
         });
         
-      }else if (appNumber ==3){
+      } else if (appNumber == 3){
         setState(() {
           pinnedAppInfo3 = appName;
         appIcon3 = app.icon;
@@ -243,7 +270,6 @@ class _launcherState extends State<launcher>{
         });
         
       }
-    });
   }
 
   void restoreAppIcon(Uint8List){
@@ -307,38 +333,49 @@ class _launcherState extends State<launcher>{
 
                       //TODO: Set visibility based on it sfavorite has been set.
 
-                      IconButton(
-                        onPressed: () {
-                          //  visible: noAppPinned,
-                          InstalledApps.startApp(pinnedAppInfo);
-                        },
-                        icon: appIcon != null 
-                          ? Image.memory(appIcon, height: 30,)
-                          : const Icon(Icons.android),
-                      ), 
-                      IconButton(
-                        onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo2);
-                        },
-                        icon: appIcon2 != null 
-                          ? Image.memory(appIcon2, height: 30,)
-                          : const Icon(Icons.android),
-                      ), 
-                      IconButton(
-                        onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo3);
-                        },
-                        icon: appIcon3 != null 
-                          ? Image.memory(appIcon3, height: 30,)
-                          : const Icon(Icons.android),
+                      Visibility(
+                        visible: hideIcon1,
+                        child: IconButton(
+                          onPressed: () {
+                            InstalledApps.startApp(pinnedAppInfo);
+                          },
+                          icon: appIcon != null 
+                            ? Image.memory(appIcon, height: 30,)
+                            : const Icon(Icons.android),
                         ), 
-                      IconButton(
-                        onPressed: () {
-                          InstalledApps.startApp(pinnedAppInfo4);
-                        },
-                        icon: appIcon4 != null 
-                          ? Image.memory(appIcon4, height: 30,)
-                          : const Icon(Icons.android),
+                      ),
+                      Visibility(
+                        visible: hideIcon2,
+                        child: IconButton(
+                          onPressed: () {
+                            InstalledApps.startApp(pinnedAppInfo2);
+                          },
+                          icon: appIcon2 != null 
+                            ? Image.memory(appIcon2, height: 30,)
+                            : const Icon(Icons.android),
+                        ), 
+                      ),
+                      Visibility(
+                        visible: hideIcon3,
+                        child: IconButton(
+                          onPressed: () {
+                            InstalledApps.startApp(pinnedAppInfo3);
+                          },
+                          icon: appIcon3 != null 
+                            ? Image.memory(appIcon3, height: 30,)
+                            : const Icon(Icons.android),
+                        ),
+                      ),
+                      Visibility(
+                        visible: hideIcon4,
+                        child: IconButton(
+                          onPressed: () {
+                            InstalledApps.startApp(pinnedAppInfo4);
+                          },
+                          icon: appIcon4 != null 
+                            ? Image.memory(appIcon4, height: 30,)
+                            : const Icon(Icons.android),
+                        ),
                       ), 
                     ],
                   )
