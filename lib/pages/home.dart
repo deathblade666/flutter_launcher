@@ -124,46 +124,38 @@ class _launcherState extends State<launcher>{
       appNumber = appNumber1;
       appName = appName1;
       pinnedApp(appName, appNumber);
-    } 
+      hideIcon1 = true;
+    } else {
+      hideIcon1 = false;
+    }
     if (appNumber2 != null && appName2 != null){
       appNumber = appNumber2;
       appName = appName2;
       pinnedApp(appName, appNumber);
-    } 
+      hideIcon2 = true;
+    } else {
+      hideIcon2 = false;
+    }
     if (appNumber3 != null && appName3 != null){
       appName = appName3;
       appNumber = appNumber3;
       pinnedApp(appName, appNumber);
-    } 
+      hideIcon3 = true;
+    } else {
+      hideIcon3 = false;
+    }
     if (appNumber4 != null && appName4 != null){
       appName = appName4;
       appNumber = appNumber4;
       pinnedApp(appName, appNumber);
+      hideIcon4 = true;
+    } else {
+      hideIcon4 = false;
     }
     if (appIconEncoded != null){
       appIconrestored = base64Decode(appIconEncoded);
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
-    }
-    if (appName4 == null){
-      setState(() {
-        hideIcon4 = false;
-      });
-    }
-    if (appName2 == null){
-      setState(() {
-        hideIcon2 = false;
-      });
-    }
-    if (appName3 == null){
-      setState(() {
-        hideIcon3 = false;
-      });
-    }
-    if (appName1 == null){
-      setState(() {
-        hideIcon1 = false;
-      });
     }
   }
 
@@ -185,20 +177,18 @@ class _launcherState extends State<launcher>{
   void pinAppToggle (togglePinApp){
     setState(() {
       noAppPinned = togglePinApp;
-      if (noAppPinned == true && widgetVis == true) {
-          searchHieght = 87;
-        } else if (noAppPinned == true && widgetVis == false) {
-          searchHieght = 57;
-        } else if (widgetVis == true && noAppPinned == false) {
+      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false){
         searchHieght = 40;
+      } else if (noAppPinned == true && widgetVis == false) {
+        searchHieght = 57;
+      } else if (widgetVis == true && noAppPinned == false) {
+        searchHieght = 40;
+      } else if (noAppPinned == true && widgetVis == true) {
+        searchHieght = 87;
       } else {
         searchHieght = 40;
       }
     });
-  }
-
-  void autoHideUsedIcons (){
-
   }
 
   @override
@@ -234,7 +224,7 @@ class _launcherState extends State<launcher>{
         if (noAppPinned == true && widgetVis == true) {
           searchHieght = 87;
         } else if (noAppPinned == false && widgetVis == true) {
-          searchHieght = 57;
+          searchHieght = 40;
         } else if (widgetVis == false && noAppPinned == true) {
           searchHieght = 57;
         } else {
@@ -249,24 +239,31 @@ class _launcherState extends State<launcher>{
         setState(() {
           pinnedAppInfo = appName;
           appIcon = app.icon;
+          hideIcon1 = true;
         });
         
-      } else if (appNumber == 2) {
+      } else {
+        hideIcon1 = false;
+      }
+      if (appNumber == 2) {
         setState(() {
           pinnedAppInfo2 = appName;
           appIcon2 = app.icon;
+          hideIcon2 = true;
         });
         
       } else if (appNumber == 3){
         setState(() {
           pinnedAppInfo3 = appName;
-        appIcon3 = app.icon;
+          appIcon3 = app.icon;
+          hideIcon3 = true;
         });
         
       } else if (appNumber == 4){
         setState(() {
           pinnedAppInfo4 = appName;
-        appIcon4 = app.icon;
+          appIcon4 = app.icon;
+          hideIcon4 = true;
         });
         
       }
