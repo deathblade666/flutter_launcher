@@ -157,6 +157,12 @@ class _settingeMenuState extends State<settingeMenu> {
               );
             })
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            }, 
+            child: const Text("Clear"),
+          ),
         ],
       ); 
     });
