@@ -9,12 +9,13 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs, this._app,{required this.ontogglePinApp,required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
+  settingeMenu(this.prefs, this._app,{ required this.onClear, required this.ontogglePinApp,required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
   final void Function(bool toggleStats) onStatusBarToggle;
   final void Function(bool widgetsEnabled) enableWidgets;
   final void Function(String appName, int appNumber) onPinnedApp;
   final void Function(bool togglePinApp) ontogglePinApp;
+  final void Function() onClear;
   SharedPreferences prefs;
   final List<AppInfo> _app;
   
@@ -159,6 +160,7 @@ class _settingeMenuState extends State<settingeMenu> {
             onPressed: () {
               widget.prefs.remove("appIcon$appNumber");
               widget.prefs.remove("Pinned App$appNumber");
+              widget.onClear();
               Navigator.pop(context);
             }, 
             child: const Text("Clear"),

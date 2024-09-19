@@ -529,7 +529,7 @@ class _launcherState extends State<launcher>{
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,ontogglePinApp: pinAppToggle,)),
+                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,ontogglePinApp: pinAppToggle,onClear: loadPrefs,)),
                             );
                           },
                         )
