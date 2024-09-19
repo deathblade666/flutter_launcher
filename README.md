@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/deathblade666/flutter_launcher/blob/3d5efb56d8d912cf97836d1730d918bf92aa29d2/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png">
+</p>
+
 # flutter_launcher
 
 Unname as of yet, this flutter project is an android launcher. The idea is to have a modern, minimalistic UI without compromising on access to data when you need it. Inspired by [KISS](https://github.com/Neamar/KISS/) and [Kvaesitso](https://github.com/MM2-0/Kvaesitso).
