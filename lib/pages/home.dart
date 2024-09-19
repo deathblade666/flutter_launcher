@@ -274,7 +274,7 @@ class _launcherState extends State<launcher>{
                       ],
                     ), 
                     onVerticalDragStart: (details) {
-                      showModalBottomSheet<void>(context: context, builder: (BuildContext context) {
+                      showModalBottomSheet<void>(showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return PageView(
                           children: <Widget>[
                             GestureDetector(
