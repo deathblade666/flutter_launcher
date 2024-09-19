@@ -17,7 +17,7 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
 
 ### in Progress
 List of features that I'm actively working on implementing
- - ~~Pinning Favorites ~~
+ - [x] ~~Pinning Favorites~~
    - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
