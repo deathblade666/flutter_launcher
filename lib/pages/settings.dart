@@ -173,6 +173,7 @@ class _settingeMenuState extends State<settingeMenu> {
       child: Scaffold(
         body: Column(
           children: [
+            const Padding(padding: EdgeInsets.only(top: 20)),
             const Text("UI Options", textScaler: TextScaler.linear(1.5),),
             SwitchListTile(
               value: widgetsEnabled,
