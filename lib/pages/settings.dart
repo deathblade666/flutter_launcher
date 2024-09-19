@@ -153,10 +153,6 @@ class _settingeMenuState extends State<settingeMenu> {
                   ? Image.memory(app.icon!, height: 30,)
                   : const Icon(Icons.add),
                 title: Text(app.name),
-
-                //TODO: Set visbility based on number of favorite set
-                //TODO: pass icon of selected app to replace the + sign in settings menu
-
                 )
               );
             })
@@ -276,7 +272,8 @@ class _settingeMenuState extends State<settingeMenu> {
             ),
             Visibility(
               visible: pinApp,
-              child: const Divider(),),
+              child: const Divider(),
+            ),
             const Center(
               child: Text("Search Options", textScaler: TextScaler.linear(1.5),)
             ),
@@ -297,7 +294,6 @@ class _settingeMenuState extends State<settingeMenu> {
                       TextField(
                         controller: searchProvider,
                       ),
-                      const Expanded(child: Padding(padding: EdgeInsets.only(top: 1))),
                       Row(
                         children: [
                           TextButton(
@@ -374,7 +370,7 @@ class _settingeMenuState extends State<settingeMenu> {
                   }, 
                   child: const Text("Reset")
                 ),
-                const Expanded(child: Padding(padding: EdgeInsets.all(1))),
+                const Expanded(child: Padding(padding: EdgeInsets.only(left: 1))),
                 TextButton(
                   child: const Text("Save"),
                   onPressed: () {
