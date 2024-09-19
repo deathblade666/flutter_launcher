@@ -307,7 +307,7 @@ class _launcherState extends State<launcher>{
 
                       //TODO: Set visibility based on it sfavorite has been set.
 
-                      IconButton(
+                      IconButton.outlined(
                         onPressed: () {
                           //  visible: noAppPinned,
                           InstalledApps.startApp(pinnedAppInfo);
@@ -316,7 +316,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon, height: 30,)
                           : const Icon(Icons.android),
                       ), 
-                      IconButton(
+                      IconButton.outlined(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo2);
                         },
@@ -324,7 +324,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon2, height: 30,)
                           : const Icon(Icons.android),
                       ), 
-                      IconButton(
+                      IconButton.outlined(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo3);
                         },
@@ -332,7 +332,7 @@ class _launcherState extends State<launcher>{
                           ? Image.memory(appIcon3, height: 30,)
                           : const Icon(Icons.android),
                         ), 
-                      IconButton(
+                      IconButton.outlined(
                         onPressed: () {
                           InstalledApps.startApp(pinnedAppInfo4);
                         },
