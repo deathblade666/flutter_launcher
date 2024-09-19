@@ -297,6 +297,7 @@ class _settingeMenuState extends State<settingeMenu> {
                       TextField(
                         controller: searchProvider,
                       ),
+                      const Expanded(child: Padding(padding: EdgeInsets.only(top: 1))),
                       Row(
                         children: [
                           TextButton(
@@ -363,6 +364,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 Padding(padding: EdgeInsets.only(right: 25)),
               ]
             ),
+            const Expanded(child: Padding(padding: EdgeInsets.only(bottom: 1))),
             const Divider(),
             Row(
               children: [
@@ -380,7 +382,8 @@ class _settingeMenuState extends State<settingeMenu> {
                   },
                 ),
               ],
-            )      
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 10)), 
           ],
         )
       )
