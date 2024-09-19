@@ -139,8 +139,6 @@ class _settingeMenuState extends State<settingeMenu> {
                     setState(() {
                       applicationIcon4 = app.icon;
                     });
-                    var encodedIcon = base64Encode(app.icon!);
-                    widget.prefs.setString("appIcon4", encodedIcon);
                   }
                   
                   if (app.icon != null){
@@ -159,6 +157,8 @@ class _settingeMenuState extends State<settingeMenu> {
           ),
           TextButton(
             onPressed: () {
+              widget.prefs.remove("appIcon$appNumber");
+              widget.prefs.remove("Pinned App$appNumber");
               Navigator.pop(context);
             }, 
             child: const Text("Clear"),
