@@ -70,7 +70,7 @@ class _launcherState extends State<launcher>{
   bool hideIcon4 = false;
   bool displayTasks = false;
   bool enableTasks = false;
-
+  bool showAddWidgettext = true;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -83,6 +83,7 @@ class _launcherState extends State<launcher>{
       });
     }
   }
+
   @override
   void initState(){
     _tapPosition = const Offset(0.0, 0.0);
@@ -107,7 +108,6 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    
     
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
@@ -288,6 +288,30 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
+  void widgetSelection(){
+    showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        title: const Text("Widgets"),
+        actions: [
+          SwitchListTile(
+            title: const Text("Tasks"),
+            value: enableTasks, 
+            onChanged: (value) {                               
+              //print(value);
+              setState(() {
+                enableTasks = value;
+                displayTasks = value;
+                if (value == true){
+                showAddWidgettext = false;
+                }
+              });
+            }
+          )
+        ],
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -321,34 +345,19 @@ class _launcherState extends State<launcher>{
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     GestureDetector(
-                                      child: const Center( 
-                                        child: Text("Click here to add your widgets"),
+                                      child: Center( 
+                                        child: Visibility(
+                                          visible: showAddWidgettext,
+                                          child: Text("Click here to add your widgets"),
+                                        )
                                       ),
-                                      onTap: () async {
-                                        showDialog(context: context, builder: (BuildContext context){
-                                          return AlertDialog(
-                                            title: Text("Widgets"),
-                                            actions: [
-                                              SwitchListTile(
-                                                title: Text("Tasks"),
-                                                value: enableTasks, 
-                                                onChanged: (value) {
-                                                  bool enableTasks = value;
-                                                  setState(() {
-                                                    print(enableTasks);
-                                                    enableTasks = !enableTasks;
-                                                    displayTasks = enableTasks;
-                                                  });
-                                                }
-                                              )
-                                            ],
-                                          );
-                                        });
+                                      onTap: ()  {
+                                        widgetSelection();
                                       },
                                     ),
                                     Visibility(
                                       visible: displayTasks,
-                                      child: Tasks(),
+                                      child: const Tasks(),
                                     ),
                                   ],
                                 ),
