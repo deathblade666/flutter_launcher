@@ -71,6 +71,7 @@ class _launcherState extends State<launcher>{
   bool displayTasks = false;
   bool enableTasks = false;
   bool showAddWidgettext = true;
+  bool enableCalendar = false;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -306,7 +307,14 @@ class _launcherState extends State<launcher>{
                 }
               });
             }
-          )
+          ),
+          SwitchListTile(
+            title: const Text("Calendar"),
+            value: enableCalendar, 
+            onChanged: (value){
+
+            }
+          ),
         ],
       );
     });
