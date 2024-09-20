@@ -92,6 +92,8 @@ class _launcherState extends State<launcher>{
     focusOnSearch.addListener(focusListener);
   }
 
+  //TODO: When clearing all favorite apps the hieght of the search bar does not adjust
+
   void loadPrefs() {
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
@@ -108,9 +110,11 @@ class _launcherState extends State<launcher>{
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
     
+    
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
     }
+    
     if (provider != null){
       searchProvider(provider);
     } else {
@@ -159,6 +163,11 @@ class _launcherState extends State<launcher>{
       appIconrestored = base64Decode(appIconEncoded);
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
+    }
+    if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
+      setState(() {
+        searchHieght = 40;
+      });
     }
   }
 
@@ -265,7 +274,15 @@ class _launcherState extends State<launcher>{
           appIcon4 = app.icon;
           hideIcon4 = true;
         });
-        
+      }
+      if (widgetVis == true && noAppPinned == true){
+        setState(() {
+          searchHieght = 87;
+        }); 
+      }else if (noAppPinned == true && widgetVis == false){
+        setState(() {
+          searchHieght = 57;
+        });
       }
   }
 
@@ -467,16 +484,17 @@ class _launcherState extends State<launcher>{
                 },
                 controller: _searchController,
                 onTap: () {
-                  setState(() {
-                    showAppList = !showAppList;
-                    if (showAppList == true){
-                      hideDate = false;
-                      hideMainGesture = false;
-                    } else {
-                      hideDate = true;
-                      hideMainGesture = true;
-                    }
-                  });
+                  if (_searchController.text != ""){
+                    String s = _searchController.text;
+                    setState(() {
+                      _filteredItems = _app.where(
+                        (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
+                      ).toList();
+                        showAppList = true;
+                        hideDate = false;
+                        hideMainGesture = false;
+                    });
+                  }
                 },
               )
             ),
@@ -489,7 +507,12 @@ class _launcherState extends State<launcher>{
                     height: 50,
                     child: ListTile(
                       onTap: () {
+                        focusOnSearch.unfocus();
+                        _searchController.text = "";
                         InstalledApps.startApp(app.packageName);
+                        setState(() {
+                          showAppList = false;
+                        });
                       },
                       leading: app.icon != null
                         ? Image.memory(app.icon!, height: 30,)
