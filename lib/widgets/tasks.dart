@@ -14,31 +14,58 @@ class Tasks extends StatefulWidget {
  }
 
 class _TasksState extends State<Tasks> {
-  List tasks = ["test","testsegssgsere","tesgsrgwdvsdvwdwdvwdvwdvwdv", "fegegeg","ergergerg","dfwwffr","test","testsegssgsere","tesgsrgwdvsdvwdwdvwdvwdvwdv", "fegegeg","ergergerg","dfwwffr",];
+  List<String> tasks = [];
   bool done = false;
+  TextEditingController _taskController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 450,
       width: 400,
-      child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
-        var taskAsString = tasks.toString();
-          return Container(
-            height: 50,
-            child: ListTile(
-              title: Text(taskAsString),
-              leading: Checkbox(
-                value: done, 
-                onChanged: (value) {
-                  setState(() {
-                    done = value!;
-                  });
-                  print(done);
-                }),
-            
-          )
-          );
-        })
-    );
+      child:Column(
+        children: [
+          const Text("Tasks", textScaler: TextScaler.linear(1.5),),
+          SizedBox(
+            height: 300,
+            width: 400,
+            child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
+                return SizedBox(
+                  height: 50,
+                  child: ListTile(
+                    title: Text(tasks[index]),
+                    leading: Checkbox(
+                    value: done, 
+                    onChanged: (value) {
+                      setState(() {
+                        done = value!;
+                      });
+                    }),
+                  )
+                );
+              }),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 15, top: 15)),
+          TextField(
+            decoration: const InputDecoration(
+                labelText: 'Enter a task',
+                border: OutlineInputBorder(),
+            ),
+            controller: _taskController,
+            onSubmitted: (value) {
+              setState(() {
+                if (_taskController.text.isNotEmpty) {
+                 tasks.add(_taskController.text);
+                 _taskController.clear();
+                }
+              });
+            },
+          ),
+        ],
+      )
+      
+      
+      );
   }
 }
