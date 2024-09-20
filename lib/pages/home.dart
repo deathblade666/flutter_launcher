@@ -92,8 +92,6 @@ class _launcherState extends State<launcher>{
     focusOnSearch.addListener(focusListener);
   }
 
-  //TODO: When clearing all favorite apps the hieght of the search bar does not adjust
-
   void loadPrefs() {
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
