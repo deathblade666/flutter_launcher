@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
+import 'package:flutter_launcher/widgets/tasks.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
@@ -67,6 +68,8 @@ class _launcherState extends State<launcher>{
   bool hideIcon2 = false;
   bool hideIcon3 = false;
   bool hideIcon4 = false;
+  bool displayTasks = false;
+  bool enableTasks = false;
 
 
  focusListener(){
@@ -297,18 +300,44 @@ class _launcherState extends State<launcher>{
                       showModalBottomSheet<void>(showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return PageView(
                           children: <Widget>[
-                            GestureDetector(
-                              child: const Center( 
-                                child: Text("Click here to add your widgets"),
+                            SizedBox.expand(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: const Center( 
+                                        child: Text("Click here to add your widgets"),
+                                      ),
+                                      onTap: () async {
+                                        showDialog(context: context, builder: (BuildContext context){
+                                          return AlertDialog(
+                                            title: Text("Widgets"),
+                                            actions: [
+                                              SwitchListTile(
+                                                title: Text("Tasks"),
+                                                value: enableTasks, 
+                                                onChanged: (value) {
+                                                  bool enableTasks = value;
+                                                  setState(() {
+                                                    print(enableTasks);
+                                                    enableTasks = !enableTasks;
+                                                    displayTasks = enableTasks;
+                                                  });
+                                                }
+                                              )
+                                            ],
+                                          );
+                                        });
+                                      },
+                                    ),
+                                    Visibility(
+                                      visible: displayTasks,
+                                      child: Tasks(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              onTap: () async {
-                                //await widgetplatform.invokeMethod('addWidgetToHomeScreen');
-                                showDialog(context: context, builder: (BuildContext context){
-                                  return const AlertDialog(
-                                    title: Text("To be Implemented"),
-                                  );
-                                });
-                              },
                             ),
                             const Center( 
                               child: Text("Page 2"),
@@ -424,7 +453,7 @@ class _launcherState extends State<launcher>{
                     String inputURL = "https://$userInput";
                       final Uri url = Uri.parse(inputURL);
                       await launchUrl(url);
-                  } else {  //TODO: make user configurable search engine
+                  } else { 
                     String Search = "https://$engine$userInput";
                     final Uri searchURL = Uri.parse(Search);
                     await launchUrl(searchURL);
