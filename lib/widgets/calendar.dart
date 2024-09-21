@@ -33,6 +33,7 @@ class _CalendarState extends State<Calendar> {
       width: 400,
       child:Column(
         children: [
+          const Text("Calendar", textScaler: TextScaler.linear(1.5),),
           SizedBox(
             height: 300,
             width: 400,
@@ -42,6 +43,12 @@ class _CalendarState extends State<Calendar> {
               lastDay: _lastDay,
               rowHeight: 35,
               calendarFormat: CalendarFormat.month,
+             // headerVisible: false,
+              headerStyle: const HeaderStyle(
+                titleCentered: true,
+                formatButtonVisible: false,
+              ),
+              availableGestures: AvailableGestures.none,
             )
           ),
           //TODO: List of Events for the entire month

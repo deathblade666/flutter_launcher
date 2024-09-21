@@ -194,7 +194,7 @@ class _launcherState extends State<launcher>{
   }
 
   void fetchApps() async {
-    List<AppInfo> apps = await InstalledApps.getInstalledApps(false,true);
+    List<AppInfo> apps = await InstalledApps.getInstalledApps(true,true);
     setState(() {
       installedApps = apps.map((app) => app.name).toList();
       _app = apps;
