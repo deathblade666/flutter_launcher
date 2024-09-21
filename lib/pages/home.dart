@@ -364,22 +364,24 @@ class _launcherState extends State<launcher>{
                             height: 500,
                             child: PageView(
                               children: <Widget>[
-                                if (displayTasks == true)...[  Visibility(
-                                  visible: displayTasks,
-                                  child: const SizedBox(
-                                    height: 800,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Tasks(),
-                                        ],
+                                if (displayTasks == true)...[  
+                                  Visibility(
+                                    visible: displayTasks,
+                                    child: const SizedBox(
+                                      height: 800,
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Tasks(),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ),
+                                    )
+                                  ),
                                 ] else... [],
-                                if (enableCalendar == true)...[  Visibility(
+                                if (enableCalendar == true)...[  
+                                  Visibility(
                                     visible: enableCalendar,
                                     child: const SizedBox(
                                       height: 800,
