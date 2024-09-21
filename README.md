@@ -21,11 +21,13 @@ List of features that I'm actively working on implementing
    - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
+ - Widget support
+   - Seems native widgets are a bit out of the quest so designing some custom ones
 
 ### Future
 This is a list of feature that i hope to accomplish but currently do not have the knowledge to do so
-
- - Widget support
+- Switch Search query for apps to Regex
+- WebCal?
 
 ## Build
 

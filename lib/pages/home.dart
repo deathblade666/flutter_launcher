@@ -256,34 +256,56 @@ class _launcherState extends State<launcher>{
   }
 
   void pinnedApp(String appName, int appNumber) async {
-    AppInfo app = await InstalledApps.getAppInfo(appName);
-      if (appNumber == 1){
+      if (appNumber == 1 && appName != ""){
+        AppInfo app = await InstalledApps.getAppInfo(appName);
         setState(() {
           pinnedAppInfo = appName;
           appIcon = app.icon;
           hideIcon1 = true;
         });
-      }
-      if (appNumber == 2) {
+      } else if (appNumber == 2 && appName != "") {
+        AppInfo app = await InstalledApps.getAppInfo(appName);
         setState(() {
           pinnedAppInfo2 = appName;
           appIcon2 = app.icon;
           hideIcon2 = true;
         });
-        
-      } else if (appNumber == 3){
+      } else if (appNumber == 3 && appName != ""){
+        AppInfo app = await InstalledApps.getAppInfo(appName);
         setState(() {
           pinnedAppInfo3 = appName;
           appIcon3 = app.icon;
           hideIcon3 = true;
         });
-        
-      } else if (appNumber == 4){
+      } else if (appNumber == 4 && appName != ""){
+        AppInfo app = await InstalledApps.getAppInfo(appName);
         setState(() {
           pinnedAppInfo4 = appName;
           appIcon4 = app.icon;
           hideIcon4 = true;
         });
+      }else {
+        if (appNumber == 1 && appName == ""){
+          setState(() {
+            appIcon = null;
+            hideIcon1 = false;
+          });
+        } else if (appNumber == 2 && appName == ""){
+          setState(() {
+            appIcon2 = null;
+            hideIcon2 = false;
+          });
+        } else if (appNumber == 3 && appName == ""){
+          setState(() {
+            appIcon3 = null;
+            hideIcon3 = false;
+          });
+        } else if (appNumber == 4 && appName == ""){
+          setState(() {
+            appIcon4 = null;
+            hideIcon4 = false;
+          });
+        }
       }
       if (widgetVis == true && noAppPinned == true){
         setState(() {
@@ -468,7 +490,7 @@ class _launcherState extends State<launcher>{
                           },
                           icon: appIcon4 != null 
                             ? Image.memory(appIcon4, height: 30,)
-                            : const Icon(Icons.android),
+                            : const Icon(Icons.android_outlined),
                         ),
                       ), 
                     ],
@@ -641,7 +663,7 @@ class _launcherState extends State<launcher>{
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,ontogglePinApp: pinAppToggle,onClear: loadPrefs,)),
+                              MaterialPageRoute(builder: (context) => settingeMenu(onProviderSet: searchProvider, widget.prefs, onStatusBarToggle: toggleStatusBar, enableWidgets: widgetToggle, _app, onPinnedApp: pinnedApp,ontogglePinApp: pinAppToggle,onClear: pinnedApp,)),
                             );
                           },
                         )

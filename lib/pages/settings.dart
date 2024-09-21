@@ -15,7 +15,7 @@ class settingeMenu extends StatefulWidget {
   final void Function(bool widgetsEnabled) enableWidgets;
   final void Function(String appName, int appNumber) onPinnedApp;
   final void Function(bool togglePinApp) ontogglePinApp;
-  final void Function() onClear;
+  final void Function(String appName, int appNumber) onClear;
   SharedPreferences prefs;
   final List<AppInfo> _app;
   
@@ -161,7 +161,8 @@ class _settingeMenuState extends State<settingeMenu> {
             onPressed: () {
               widget.prefs.remove("appIcon$appNumber");
               widget.prefs.remove("Pinned App$appNumber");
-              widget.onClear();
+              String appName = "";
+              widget.onClear(appName, appNumber);
               setState(() {
                 if (appNumber == 1){
                 applicationIcon = null;
