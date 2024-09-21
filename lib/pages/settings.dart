@@ -161,6 +161,18 @@ class _settingeMenuState extends State<settingeMenu> {
               widget.prefs.remove("appIcon$appNumber");
               widget.prefs.remove("Pinned App$appNumber");
               widget.onClear();
+              setState(() {
+                if (appNumber == 1){
+                applicationIcon = null;
+                } else if (appNumber == 2){
+                  applicationIcon2 = null;
+                }else if (appNumber == 3){
+                  applicationIcon3 = null;
+                }else if (appNumber == 4){
+                  applicationIcon4 = null;
+                }
+              });
+              
               Navigator.pop(context);
             }, 
             child: const Text("Clear"),
