@@ -19,6 +19,7 @@ class _TasksState extends State<Tasks> {
   List<bool> selectedTask = [];
   List<String> restoreCheckboxes = [];
   final TextEditingController _taskController = TextEditingController();
+  FocusNode taskInputField = FocusNode();
 
 
  @override
@@ -45,6 +46,12 @@ class _TasksState extends State<Tasks> {
     
   }
  }
+
+@override
+  void dispose() {
+    taskInputField.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +94,19 @@ class _TasksState extends State<Tasks> {
                 border: OutlineInputBorder(),
             ),
             controller: _taskController,
+            focusNode: taskInputField,
+            onTapOutside: (PointerDownEvent){
+              taskInputField.unfocus();
+            },
             onSubmitted: (value) {
               setState(() {
                 if (_taskController.text.isNotEmpty) {
+                  taskInputField.requestFocus();
                  tasks.add(_taskController.text);
                  selectedTask.add(false);
                  restoreCheckboxes.add("false");
                  _taskController.clear();
+
                 }
               });
               widget.prefs.setStringList("Tasks", tasks);
