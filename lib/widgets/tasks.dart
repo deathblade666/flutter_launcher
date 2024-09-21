@@ -68,8 +68,6 @@ class _TasksState extends State<Tasks> {
           ),
         ],
       )
-      
-      
-      );
+    );
   }
 }

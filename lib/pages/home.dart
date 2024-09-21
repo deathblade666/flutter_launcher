@@ -440,6 +440,7 @@ class _launcherState extends State<launcher>{
                                       height: 800,
                                       child: Center(
                                         child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Calendar()
                                           ],
