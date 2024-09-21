@@ -345,38 +345,43 @@ class _launcherState extends State<launcher>{
                     ), 
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return 
-                        PageView(
-                          children: <Widget>[
-                            SizedBox.expand(
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      child: Center( 
-                                        child: Visibility(
-                                          visible: showAddWidgettext,
-                                          child: Text("Click here to add your widgets"),
-                                        )
-                                      ),
-                                      onTap: ()  {
-                                        widgetSelection();
-                                      },
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: SizedBox(
+                            height: 500,
+                            child: PageView(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 800,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          child: Center( 
+                                            child: Visibility(
+                                              visible: showAddWidgettext,
+                                              child: Text("Click here to add your widgets"),
+                                            )
+                                          ),
+                                          onTap: ()  {
+                                            widgetSelection();
+                                          },
+                                        ),
+                                        Visibility(
+                                          visible: displayTasks,
+                                          child: const Tasks(),
+                                        ),
+                                      ],
                                     ),
-                                    Visibility(
-                                      visible: displayTasks,
-                                      child: const Tasks(),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            const Center( 
-                              child: Text("Page 2"),
-                            ),
-                          ],
-                          
+                                const Center( 
+                                  child: Text("Page 2"),
+                                ),
+                              ],
+                            )
+                          )
                         );
                       });
                     },

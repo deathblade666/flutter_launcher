@@ -31,9 +31,7 @@ class _TasksState extends State<Tasks> {
             height: 300,
             width: 400,
             child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
-                return Padding(padding: EdgeInsets.only(bottom:  MediaQuery.of(context).viewInsets.bottom),
-                child: 
-                
+                return 
                 SizedBox(
                   height: 50,
                   child: ListTile(
@@ -46,7 +44,6 @@ class _TasksState extends State<Tasks> {
                       });
                     }),
                   )
-                )
                 );
               }),
           ),
