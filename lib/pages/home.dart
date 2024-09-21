@@ -399,7 +399,6 @@ class _launcherState extends State<launcher>{
                                   onTap: ()  {
                                     Navigator.pop(context);
                                     widgetSelection();
-                                    
                                   },
                                 ),
                               ],
