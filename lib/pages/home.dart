@@ -1,5 +1,6 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 
+// ignore: must_be_immutable, camel_case_types
 class launcher extends StatefulWidget {
   launcher(this.prefs,{super.key});
   SharedPreferences prefs;
@@ -32,6 +34,7 @@ class launcher extends StatefulWidget {
   
 
 
+// ignore: camel_case_types
 class _launcherState extends State<launcher>{
   bool enabeBottom = true;
   bool showAppList = false;
@@ -46,23 +49,29 @@ class _launcherState extends State<launcher>{
   bool hideDate = true;
   bool hideMainGesture = true;
   static const platform = MethodChannel('notification_shade');
-  static const widgetplatform = MethodChannel('widget_channel');
   String weekDay = formatDate(DateTime.now(),[DD,]);
   String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
   String engine = "";
+  // ignore: prefer_typing_uninitialized_variables
   var _tapPosition;
   bool widgetVis = true;
   String pinnedAppInfo = "";
   String pinnedAppInfo2 = "";
   String pinnedAppInfo3 = "";
   String pinnedAppInfo4 = "";
+  // ignore: prefer_typing_uninitialized_variables
   var appIconrestored;
+  // ignore: prefer_typing_uninitialized_variables
   var appIcon;
+  // ignore: prefer_typing_uninitialized_variables
   var appIcon2;
+  // ignore: prefer_typing_uninitialized_variables
   var appIcon3;
+  // ignore: prefer_typing_uninitialized_variables
   var appIcon4;
   bool noAppPinned = false;
   double searchHieght = 40;
+  // ignore: prefer_typing_uninitialized_variables
   var appNumber;
   String appName ="";
   bool hideIcon1 = false;
@@ -180,6 +189,7 @@ class _launcherState extends State<launcher>{
     });
   }
 
+  // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
   void enableSheet(DragStartDetails) {
     setState(() {
       enabeBottom = !enabeBottom;
@@ -286,6 +296,7 @@ class _launcherState extends State<launcher>{
       }
   }
 
+  // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
   void restoreAppIcon(Uint8List){
     appIcon = appIconrestored;
   }
@@ -322,7 +333,7 @@ class _launcherState extends State<launcher>{
                   onPressed: (){
                     Navigator.pop(context);
                   }, 
-                  child: Text("Save")
+                  child: const Text("Save")
                 ),
               ],
             )
@@ -416,9 +427,6 @@ class _launcherState extends State<launcher>{
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
-                      //TODO: Set visibility based on it sfavorite has been set.
-
                       Visibility(
                         visible: hideIcon1,
                         child: IconButton(
@@ -473,7 +481,7 @@ class _launcherState extends State<launcher>{
         body: Column(
           verticalDirection: VerticalDirection.up,
           children: [
-            Padding(padding: EdgeInsets.only(bottom: searchHieght)), // 38 when widget only, 87 when widget and favorites. 55-60 when only favs
+            Padding(padding: EdgeInsets.only(bottom: searchHieght)),
             Container( 
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SearchBar(
@@ -483,7 +491,6 @@ class _launcherState extends State<launcher>{
                   minHeight: 40
                 ),
                 elevation: const WidgetStatePropertyAll(0.0),
-                //leading: 
                 onChanged: (String value) async {
                   String s = _searchController.text;
                   setState(() {
@@ -517,6 +524,7 @@ class _launcherState extends State<launcher>{
                       final Uri url = Uri.parse(inputURL);
                       await launchUrl(url);
                   } else { 
+                    // ignore: non_constant_identifier_names
                     String Search = "https://$engine$userInput";
                     final Uri searchURL = Uri.parse(Search);
                     await launchUrl(searchURL);
@@ -540,6 +548,12 @@ class _launcherState extends State<launcher>{
                         hideDate = false;
                         hideMainGesture = false;
                     });
+                  } else{
+                    setState(() {
+                      showAppList = !showAppList;
+                      hideDate = !hideDate;
+                      hideMainGesture = !hideMainGesture;
+                    });
                   }
                 },
               )
@@ -549,7 +563,7 @@ class _launcherState extends State<launcher>{
               child: Expanded(
                 child: ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
                   AppInfo app = _filteredItems[index];
-                  return Container(
+                  return SizedBox(
                     height: 50,
                     child: ListTile(
                       onTap: () {
@@ -580,7 +594,7 @@ class _launcherState extends State<launcher>{
                     Container(
                       padding: const EdgeInsets.only(left: 30),
                       child: Text(
-                        weekDay + '\n$monthDay',
+                        '$weekDay\n$monthDay',
                         textScaler: MediaQuery.textScalerOf(context),
                         style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 20), 
                       ),
@@ -640,24 +654,20 @@ class _launcherState extends State<launcher>{
                   onVerticalDragUpdate: (details) async {
                     int sensitivity = 3;
                     if (details.delta.dy > sensitivity) {
-                      // Do a thing on down swipe
                       await platform.invokeMethod('openNotificationShade');
                     } else if (details.delta.dy < sensitivity) {
-                      // do a thing on up swipe
                       focusOnSearch.requestFocus();
                     }
                   },
                   onHorizontalDragUpdate: (details) {
                     int sensitivity = 2;
                     if (details.delta.dx > sensitivity){
-                       // Do a thing on Right swipe
                       showDialog(context: context, builder: (BuildContext context){
                       return const AlertDialog(
                         title: Text("You swiped Right!"),
                       );
                     });
                     } else if (details.delta.dx < sensitivity) {
-                      // do a thing on Left swipe
                       showDialog(context: context, builder: (BuildContext context){
                         return const AlertDialog(
                           title: Text("You swiped Left!"),

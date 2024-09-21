@@ -1,13 +1,13 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_launcher/pages/home.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ignore: must_be_immutable, camel_case_types
 class settingeMenu extends StatefulWidget {
   settingeMenu(this.prefs, this._app,{ required this.onClear, required this.ontogglePinApp,required this.onPinnedApp ,required this.enableWidgets, required this.onStatusBarToggle,required this.onProviderSet,super.key});
   final void Function(String provider) onProviderSet;
@@ -25,6 +25,7 @@ class settingeMenu extends StatefulWidget {
   State<settingeMenu> createState() => _settingeMenuState();
 }
 
+// ignore: camel_case_types
 class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
   bool statusBarToggle = false;
@@ -108,7 +109,7 @@ class _settingeMenuState extends State<settingeMenu> {
             width: 300,
             child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
               AppInfo app = widget._app[index];
-              return Container(
+              return SizedBox(
                 height: 50,
                 child: ListTile(
                 onTap: () {
@@ -308,7 +309,7 @@ class _settingeMenuState extends State<settingeMenu> {
                     actions: [
                       Row(
                         children: [
-                          Text("example:"+"\n$engine", style: const TextStyle(fontSize: 12), textAlign: TextAlign.left,),
+                          Text("example:""\n$engine", style: const TextStyle(fontSize: 12), textAlign: TextAlign.left,),
                         ],
                       ),
                       TextField(

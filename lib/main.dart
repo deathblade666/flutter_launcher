@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/home.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -14,6 +16,7 @@ final _defaultDarkColorScheme = ColorScheme.fromSwatch(
 final _defaultLightColorScheme = ColorScheme.fromSwatch(
   primarySwatch: Colors.indigo);
 
+// ignore: must_be_immutable
 class search_Launcher extends StatelessWidget {
   search_Launcher(this.prefs, {super.key});
   SharedPreferences prefs;
