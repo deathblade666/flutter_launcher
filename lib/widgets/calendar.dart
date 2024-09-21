@@ -29,13 +29,12 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450,
+      height: 500,
       width: 400,
       child:Column(
         children: [
-          const Text("Calendar", textScaler: TextScaler.linear(1.5),),
           SizedBox(
-            height: 300,
+            height: 255,
             width: 400,
             child: TableCalendar(
               focusedDay: _focusedDay, 

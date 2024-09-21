@@ -49,13 +49,13 @@ class _TasksState extends State<Tasks> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450,
+      height: 500,
       width: 400,
       child:Column(
         children: [
-          const Text("Tasks", textScaler: TextScaler.linear(1.5),),
+          //const Text("Tasks", textScaler: TextScaler.linear(1.5),),
           SizedBox(
-            height: 300,
+            height: 400,
             width: 400,
             child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
                 return 
@@ -80,7 +80,7 @@ class _TasksState extends State<Tasks> {
                 );
               }),
           ),
-          const Padding(padding: EdgeInsets.only(bottom: 15, top: 15)),
+          const Padding(padding: EdgeInsets.only(bottom: 1, top: 15)),
           TextField(
             decoration: const InputDecoration(
                 labelText: 'Enter a task',
