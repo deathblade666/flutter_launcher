@@ -22,12 +22,17 @@ List of features that I'm actively working on implementing
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
  - Widget support
-   - Seems native widgets are a bit out of the quest so designing some custom ones
+   - Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones
+
+### Planned
+- Switch Search query for apps to Regex
+- Change amount of favorites to be more dynamic
 
 ### Future
-This is a list of feature that i hope to accomplish but currently do not have the knowledge to do so
-- Switch Search query for apps to Regex
+This is a list of feature that I hope to accomplish but currently do not have the knowledge to do so
 - WebCal?
+- Dynamic Date
+  - have the date widget change depending factors such as, if media is play change to media controls
 
 ## Build
 
