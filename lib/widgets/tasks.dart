@@ -1,22 +1,38 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Tasks extends StatefulWidget {
-  const Tasks({super.key});
+  Tasks(this.prefs,{super.key});
+  SharedPreferences prefs;
 
   @override
   State<Tasks> createState() => _TasksState();
 }
 
- void initState(){
 
- }
 
 class _TasksState extends State<Tasks> {
   List<String> tasks = [];
   List<bool> selectedTask= [];
   final TextEditingController _taskController = TextEditingController();
 
+
+
+ void initState(){
+  RestoreTasks();
+
+ }
+
+ void RestoreTasks (){
+  widget.prefs.reload();
+  List<String>? restoredTasks = widget.prefs.getStringList("Tasks");
+  if (restoredTasks != null) {
+    tasks = restoredTasks;
+  }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +60,7 @@ class _TasksState extends State<Tasks> {
                           selectedTask.remove(selectedTask[index]);
                         }
                       });
+                      
                     },
                   )
                 );
@@ -64,6 +81,7 @@ class _TasksState extends State<Tasks> {
                  _taskController.clear();
                 }
               });
+              widget.prefs.setStringList("Tasks", tasks);
             },
           ),
         ],

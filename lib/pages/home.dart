@@ -420,13 +420,13 @@ class _launcherState extends State<launcher>{
                                 if (displayTasks == true)...[  
                                   Visibility(
                                     visible: displayTasks,
-                                    child: const SizedBox(
+                                    child: SizedBox(
                                       height: 800,
                                       child: Center(
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Tasks(),
+                                            Tasks(widget.prefs),
                                           ],
                                         ),
                                       ),
