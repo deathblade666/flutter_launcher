@@ -173,11 +173,6 @@ class _launcherState extends State<launcher>{
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
     }
-    if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
-      setState(() {
-        searchHieght = 40;
-      });
-    }
   }
 
   void fetchApps() async {
@@ -316,6 +311,11 @@ class _launcherState extends State<launcher>{
           searchHieght = 57;
         });
       }
+      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false){
+      setState(() {
+        searchHieght = 40;
+      });
+    }
   }
 
   // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
