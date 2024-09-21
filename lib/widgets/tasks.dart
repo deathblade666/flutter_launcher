@@ -16,7 +16,8 @@ class Tasks extends StatefulWidget {
 
 class _TasksState extends State<Tasks> {
   List<String> tasks = [];
-  List<bool> selectedTask= [];
+  List<bool> selectedTask = [];
+  List<String> restoreCheckboxes = [];
   final TextEditingController _taskController = TextEditingController();
 
 
@@ -30,8 +31,18 @@ class _TasksState extends State<Tasks> {
  void RestoreTasks (){
   widget.prefs.reload();
   List<String>? restoredTasks = widget.prefs.getStringList("Tasks");
+  List<String>? restoreCheckboxesOnLoad = widget.prefs.getStringList("Restore Checkbox");
   if (restoredTasks != null) {
-    tasks = restoredTasks;
+    setState(() {
+      tasks = restoredTasks;
+    });  
+  }
+  if (restoreCheckboxesOnLoad != null) {
+    setState(() {
+      restoreCheckboxesOnLoad.forEach((item) => item == "true" ? selectedTask.add(true) : selectedTask.add(false));
+      restoreCheckboxes = restoreCheckboxesOnLoad;
+    });
+    
   }
  }
 
@@ -59,9 +70,11 @@ class _TasksState extends State<Tasks> {
                         if (value == true){
                           tasks.remove(tasks[index]);
                           selectedTask.remove(selectedTask[index]);
+                          restoreCheckboxes.remove(restoreCheckboxes[index]);
                         }
                       });
-                      
+                      widget.prefs.setStringList("Tasks", tasks);
+                      widget.prefs.setStringList("Restore Checkbox", restoreCheckboxes);
                     },
                   )
                 );
@@ -79,10 +92,12 @@ class _TasksState extends State<Tasks> {
                 if (_taskController.text.isNotEmpty) {
                  tasks.add(_taskController.text);
                  selectedTask.add(false);
+                 restoreCheckboxes.add("false");
                  _taskController.clear();
                 }
               });
               widget.prefs.setStringList("Tasks", tasks);
+              widget.prefs.setStringList("Restore Checkbox", restoreCheckboxes);
             },
           ),
         ],
