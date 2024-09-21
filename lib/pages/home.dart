@@ -119,6 +119,19 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
+    bool? calendar = widget.prefs.getBool("CalendarToggle");
+    bool? tasks = widget.prefs.getBool("TasksToggle");
+    if (calendar != null){
+      setState(() {
+        enableCalendar = calendar;
+    });
+    }
+    if (tasks != null){
+      setState(() {
+        enableTasks = tasks;
+        displayTasks = tasks;
+    });
+    }
     
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
@@ -172,6 +185,11 @@ class _launcherState extends State<launcher>{
       appIconrestored = base64Decode(appIconEncoded);
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
+    }
+    if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
+      setState(() {
+        searchHieght = 40;
+      });
     }
   }
 
@@ -340,6 +358,7 @@ class _launcherState extends State<launcher>{
                       enableTasks = value;
                       displayTasks = value;
                     });
+                    widget.prefs.setBool("TasksToggle", enableTasks);
                   }
                 ),
                 SwitchListTile(
@@ -349,6 +368,7 @@ class _launcherState extends State<launcher>{
                     setState(() {
                       enableCalendar = value;
                     });
+                    widget.prefs.setBool("CalendarToggle", enableCalendar);
                   }
                 ),
                 TextButton(
@@ -429,7 +449,7 @@ class _launcherState extends State<launcher>{
                                 ] else... [],
                                 GestureDetector(
                                   child: const Center( 
-                                    child: Text("Click here to add your widgets"),
+                                    child: Text("click here to add a widget!"),
                                   ),
                                   onTap: ()  {
                                     Navigator.pop(context);
