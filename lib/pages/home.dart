@@ -345,9 +345,7 @@ class _launcherState extends State<launcher>{
                     ), 
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: 
+                        return 
                         PageView(
                           children: <Widget>[
                             SizedBox.expand(
@@ -378,7 +376,7 @@ class _launcherState extends State<launcher>{
                               child: Text("Page 2"),
                             ),
                           ],
-                        )   
+                          
                         );
                       });
                     },
