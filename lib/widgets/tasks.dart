@@ -15,8 +15,9 @@ class Tasks extends StatefulWidget {
 
 class _TasksState extends State<Tasks> {
   List<String> tasks = [];
+  List<bool> selectedTask= [];
   bool done = false;
-  TextEditingController _taskController = TextEditingController();
+  final TextEditingController _taskController = TextEditingController();
 
 
   @override
@@ -34,15 +35,18 @@ class _TasksState extends State<Tasks> {
                 return 
                 SizedBox(
                   height: 50,
-                  child: ListTile(
+                  child: CheckboxListTile(
                     title: Text(tasks[index]),
-                    leading: Checkbox(
-                    value: done, 
+                    value: selectedTask[index],
                     onChanged: (value) {
                       setState(() {
-                        done = value!;
+                        selectedTask[index] = value!;
+                        if (value == true){
+                          tasks.remove(tasks[index]);
+                          selectedTask.remove(selectedTask[index]);
+                        }
                       });
-                    }),
+                    },
                   )
                 );
               }),
@@ -58,6 +62,7 @@ class _TasksState extends State<Tasks> {
               setState(() {
                 if (_taskController.text.isNotEmpty) {
                  tasks.add(_taskController.text);
+                 selectedTask.add(false);
                  _taskController.clear();
                 }
               });
