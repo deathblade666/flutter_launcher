@@ -292,32 +292,46 @@ class _launcherState extends State<launcher>{
 
   void widgetSelection(){
     showDialog(context: context, builder: (BuildContext context){
-      return AlertDialog(
-        title: const Text("Widgets"),
-        actions: [
-          SwitchListTile(
-            title: const Text("Tasks"),
-            value: enableTasks, 
-            onChanged: (value) {                               
-              setState(() {
-                enableTasks = value;
-                displayTasks = value;
-              });
-            }
-          ),
-          SwitchListTile(
-            title: const Text("Calendar"),
-            value: enableCalendar, 
-            onChanged: (value){
-              setState(() {
-                enableCalendar = value;
-              });
-            }
-          ),
-        ],
+      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+        return SizedBox( 
+          height: 200, 
+          width: 500,
+          child: AlertDialog(
+            title: const Text("Widgets"),
+              actions: [
+                SwitchListTile(
+                  title: const Text("Tasks"),
+                  value: enableTasks, 
+                  onChanged: (value) {                               
+                    setState(() {
+                      enableTasks = value;
+                      displayTasks = value;
+                    });
+                  }
+                ),
+                SwitchListTile(
+                  title: const Text("Calendar"),
+                  value: enableCalendar, 
+                  onChanged: (value){
+                    setState(() {
+                      enableCalendar = value;
+                    });
+                  }
+                ),
+                TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  }, 
+                  child: Text("Save")
+                ),
+              ],
+            )
+          );
+        }
       );
-    });
-  }
+    }
+  );
+}
 
 
   @override
@@ -383,7 +397,9 @@ class _launcherState extends State<launcher>{
                                     child: Text("Click here to add your widgets"),
                                   ),
                                   onTap: ()  {
+                                    Navigator.pop(context);
                                     widgetSelection();
+                                    
                                   },
                                 ),
                               ],

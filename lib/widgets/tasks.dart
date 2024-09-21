@@ -16,7 +16,6 @@ class Tasks extends StatefulWidget {
 class _TasksState extends State<Tasks> {
   List<String> tasks = [];
   List<bool> selectedTask= [];
-  bool done = false;
   final TextEditingController _taskController = TextEditingController();
 
 
