@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
+import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -298,13 +299,9 @@ class _launcherState extends State<launcher>{
             title: const Text("Tasks"),
             value: enableTasks, 
             onChanged: (value) {                               
-              //print(value);
               setState(() {
                 enableTasks = value;
                 displayTasks = value;
-                if (value == true){
-                showAddWidgettext = false;
-                }
               });
             }
           ),
@@ -312,7 +309,9 @@ class _launcherState extends State<launcher>{
             title: const Text("Calendar"),
             value: enableCalendar, 
             onChanged: (value){
-
+              setState(() {
+                enableCalendar = value;
+              });
             }
           ),
         ],
@@ -351,33 +350,41 @@ class _launcherState extends State<launcher>{
                             height: 500,
                             child: PageView(
                               children: <Widget>[
-                                SizedBox(
-                                  height: 800,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          child: Center( 
-                                            child: Visibility(
-                                              visible: showAddWidgettext,
-                                              child: Text("Click here to add your widgets"),
-                                            )
-                                          ),
-                                          onTap: ()  {
-                                            widgetSelection();
-                                          },
-                                        ),
-                                        Visibility(
-                                          visible: displayTasks,
-                                          child: const Tasks(),
-                                        ),
-                                      ],
+                                if (displayTasks == true)...[  Visibility(
+                                  visible: displayTasks,
+                                  child: const SizedBox(
+                                    height: 800,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Tasks(),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                  )
                                 ),
-                                const Center( 
-                                  child: Text("Page 2"),
+                                ] else... [],
+                                if (enableCalendar == true)...[  Visibility(
+                                    visible: enableCalendar,
+                                    child: const SizedBox(
+                                      height: 800,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Calendar()
+                                          ],
+                                        ),
+                                      ),
+                                    ))
+                                ] else... [],
+                                GestureDetector(
+                                  child: const Center( 
+                                    child: Text("Click here to add your widgets"),
+                                  ),
+                                  onTap: ()  {
+                                    widgetSelection();
+                                  },
                                 ),
                               ],
                             )
