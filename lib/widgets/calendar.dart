@@ -102,7 +102,6 @@ class _CalendarState extends State<Calendar> {
               onPageChanged: (focusedDay) {
                   _focusedDay = focusedDay;
               },
-                // Ici, vous pouvez personnaliser l'apparence et le comportement du calendrier selon vos besoins
             ),
           ),
           Row(
