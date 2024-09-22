@@ -57,13 +57,13 @@ class _TasksState extends State<Tasks> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 500,
-      width: 400,
+      //width: 400,
       child:Column(
         children: [
           //const Text("Tasks", textScaler: TextScaler.linear(1.5),),
           SizedBox(
             height: 400,
-            width: 400,
+            //width: 400,
             child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
                 return 
                 SizedBox(
@@ -87,7 +87,8 @@ class _TasksState extends State<Tasks> {
                 );
               }),
           ),
-          const Padding(padding: EdgeInsets.only(bottom: 1, top: 15)),
+          Padding(padding: const EdgeInsets.only(bottom: 1, top: 15, left: 15, right: 15), 
+          child:
           TextField(
             decoration: const InputDecoration(
                 labelText: 'Enter a task',
@@ -112,6 +113,7 @@ class _TasksState extends State<Tasks> {
               widget.prefs.setStringList("Tasks", tasks);
               widget.prefs.setStringList("Restore Checkbox", restoreCheckboxes);
             },
+          ),
           ),
         ],
       )
