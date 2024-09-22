@@ -86,11 +86,11 @@ class _CalendarState extends State<Calendar> {
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 todayDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.onSecondary
+                  color: Theme.of(context).colorScheme.tertiary
                 )
               ),
               
