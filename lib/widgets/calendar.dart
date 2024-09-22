@@ -83,6 +83,17 @@ class _CalendarState extends State<Calendar> {
                 leftChevronVisible: false,
                 rightChevronVisible: false
               ),
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+                todayDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.onSecondary
+                )
+              ),
+              
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
               //availableGestures: AvailableGestures.none,
               eventLoader: _getEventsForMonth,
