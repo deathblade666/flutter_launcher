@@ -388,9 +388,61 @@ class _settingeMenuState extends State<settingeMenu> {
               children: [
                 TextButton(
                   onPressed: () {
-                    widget.prefs.clear();
-                  }, 
-                  child: const Text("Reset")
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        title: const Text("The following will be lost the next time the app reloads:"),
+                        actionsAlignment: MainAxisAlignment.start,
+                        actions: [
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("- Favorites"),
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("- Custom searxh Engine"),
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("- Tasks"),
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("- Calendar Events"),
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("- UI Customizations"),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 15, bottom: 15),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text("Do you wish to continue?"),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: (){
+                                  Navigator.pop(context);
+                                }, 
+                                child: const Text("Cancel")
+                              ),
+                              const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                              TextButton(
+                                onPressed: (){
+                                  widget.prefs.clear();
+                                  Navigator.pop(context);
+                                }, 
+                                child: const Text("YES, RESET ALL APP DATA"),
+                              )
+                            ],
+                          )
+                        ],
+                      );
+                    });
+                  },
+                  child: const Text("Reset"),
                 ),
                 const Expanded(child: Padding(padding: EdgeInsets.only(left: 1))),
                 TextButton(
