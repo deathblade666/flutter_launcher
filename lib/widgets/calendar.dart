@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:date_format/date_format.dart';
@@ -30,14 +31,11 @@ class _CalendarState extends State<Calendar> {
     //loadPreviousEvents();
     loadPrefs();
   }
-
-
+    
   void loadPrefs(){
-    List<String>? restoreEvents = widget.prefs.getStringList("Events");
+    String? restoreEvents = widget.prefs.getString("Events");
     if (restoreEvents != null){
-      setState(() {
-        eventList = widget.prefs.getStringList("Events") ?? [];
-      });
+      getEvents();
     }
   }
 
@@ -51,15 +49,47 @@ class _CalendarState extends State<Calendar> {
       return events[day] ?? [];
   }
 
+  String encodeEvents(Map<DateTime, List<Event>> events) {
+    return json.encode(events.map(
+      (key, value) => MapEntry(
+          key.toIso8601String(), value.map((e) => e.toJson()).toList()),
+    ));
+  }
+  
+  Map<DateTime, List<Event>> _decodeEvents(String eventsJson) {
+    final Map<String, dynamic> jsonMap = json.decode(eventsJson);
+    return jsonMap.map((key, value) {
+      final DateTime dateTime = DateTime.parse(key);
+      final List<Event> _eventsList =
+          (value as List<dynamic>).map((e) => Event.fromJson(e)).toList();
+      setState(() {
+        eventList = _eventsList;
+      });
+      
+          
+          //PopulateEventList();
+      return MapEntry(dateTime, _eventsList);
+    });
+  }
+
+   Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
+    final eventsJson = encodeEvents(events);
+    debugPrint("Saving events: $eventsJson");
+    await widget.prefs.setString("Events", eventsJson);
+  }
+
   void PopulateEventList() async{
     setState(() {
           eventList = events.entries
       .expand((entry) => entry.value.map((event) => MapEntry(entry.key, event)))
       .toList();
     });
-    List<String> saveEvents = eventList.map((e) => e.toString()).toList();
-    widget.prefs.setStringList("Events", saveEvents);
+    saveEvents(events);
+  }
 
+  Map<DateTime, List<Event>> getEvents() {
+    final eventsJson = widget.prefs.getString("Events");
+    return eventsJson != null ? _decodeEvents(eventsJson) : {};
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -82,8 +112,8 @@ class _CalendarState extends State<Calendar> {
 
   void loadPreviousEvents() {  //re-evaluate this function as it populates the events map with the current day
     events = {
-      _selectedDay!: [const Event(title: '', description: '')],
-      _selectedDay!: [const Event(title: '', description: '')]
+      _selectedDay!: [ Event(title: '', description: '')],
+      _selectedDay!: [ Event(title: '', description: '')]
     };
   }
 
