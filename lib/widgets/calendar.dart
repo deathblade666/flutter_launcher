@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/widgets/calendar_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
-
+  Calendar(this.prefs,{super.key});
+  SharedPreferences prefs;
   @override
   State<Calendar> createState() => _CalendarState();
 }
@@ -26,7 +27,18 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForMonth(_selectedDay!));
-    loadPreviousEvents();
+    //loadPreviousEvents();
+    loadPrefs();
+  }
+
+
+  void loadPrefs(){
+    List<String>? restoreEvents = widget.prefs.getStringList("Events");
+    if (restoreEvents != null){
+      setState(() {
+        eventList = widget.prefs.getStringList("Events") ?? [];
+      });
+    }
   }
 
   @override
@@ -36,10 +48,18 @@ class _CalendarState extends State<Calendar> {
   }
 
   List<Event> _getEventsForMonth(DateTime day) {
-    eventList = events.entries
+      return events[day] ?? [];
+  }
+
+  void PopulateEventList() async{
+    setState(() {
+          eventList = events.entries
       .expand((entry) => entry.value.map((event) => MapEntry(entry.key, event)))
       .toList();
-    return events[day] ?? [];
+    });
+    List<String> saveEvents = eventList.map((e) => e.toString()).toList();
+    widget.prefs.setStringList("Events", saveEvents);
+
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -60,7 +80,7 @@ class _CalendarState extends State<Calendar> {
     _descriptionController.clear();
   }
 
-  void loadPreviousEvents() {
+  void loadPreviousEvents() {  //re-evaluate this function as it populates the events map with the current day
     events = {
       _selectedDay!: [const Event(title: '', description: '')],
       _selectedDay!: [const Event(title: '', description: '')]
@@ -147,6 +167,7 @@ class _CalendarState extends State<Calendar> {
                             });
                             _selectedEvents.value = _getEventsForMonth(_selectedDay!);
                             clearController();
+                            PopulateEventList();
                             Navigator.pop(context);
                           },
                           child: const Text('Submit'))
@@ -174,7 +195,7 @@ class _CalendarState extends State<Calendar> {
                 child: Row(
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
-                    Text(eventDate.toLocal().toString().split(' ')[0]),
+                    Text(eventDate.toString().split(' ')[0]),
                     const Padding(padding: EdgeInsets.only(right: 15)),
                     VerticalDivider(
                       indent: 4,
@@ -182,12 +203,8 @@ class _CalendarState extends State<Calendar> {
                       width: 2, 
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    //const Padding(padding: EdgeInsets.only(right: 15)),
                     Column(
                       children: [
-
-                     
-                        
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
