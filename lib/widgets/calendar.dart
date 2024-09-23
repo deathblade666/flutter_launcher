@@ -106,7 +106,9 @@ class _CalendarState extends State<Calendar> {
               },
             ),
           ),
-          Divider(),
+          const Divider(
+            height: 1,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
