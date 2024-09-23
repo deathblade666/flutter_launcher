@@ -450,6 +450,7 @@ class _launcherState extends State<launcher>{
                                     ))
                                 ] else... [],
                                 GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
                                   child: const Center( 
                                     child: Text("click here to add a widget!"),
                                   ),

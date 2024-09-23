@@ -106,9 +106,10 @@ class _CalendarState extends State<Calendar> {
               },
             ),
           ),
+          Divider(),
           Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
               TextButton(
                 onPressed:  (){
                   showDialog(
@@ -162,7 +163,6 @@ class _CalendarState extends State<Calendar> {
               if (eventList.isNotEmpty){
               final eventEntry = eventList[index];
               final eventDate = eventEntry.key;
-              final eventDateToString = eventDate.toString().split(' ');
               final event = eventEntry.value;
               final eventTitle = event.title;
               final eventDescripiton = event.description;
@@ -180,15 +180,34 @@ class _CalendarState extends State<Calendar> {
                       width: 2, 
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    const Padding(padding: EdgeInsets.only(right: 15)),
-                    Text(eventTitle + '\n$eventDescripiton'),
-                    //Text(event.description)
-                  ],) 
-                //ListTile(
-                  //title: Text(event.title),
-                  //subtitle: Text(event.description),
-                  //trailing: Text(eventDate.toString().split(' ')[0]),
-                //)
+                    //const Padding(padding: EdgeInsets.only(right: 15)),
+                    Column(
+                      children: [
+
+                     
+                        
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child:  Text(
+                              eventTitle, 
+                              textScaler: const TextScaler.linear(1.2), 
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(eventDescripiton),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ) 
               );
               } else {
                 return  const Center(
