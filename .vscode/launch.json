@@ -5,9 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "debug.inlineValues": "on",
-        },
-        {
             "name": "flutter_launcher",
             "request": "launch",
             "type": "dart"

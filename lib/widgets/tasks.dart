@@ -57,16 +57,12 @@ class _TasksState extends State<Tasks> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 500,
-      //width: 400,
       child:Column(
         children: [
-          //const Text("Tasks", textScaler: TextScaler.linear(1.5),),
           SizedBox(
             height: 400,
-            //width: 400,
             child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
-                return 
-                SizedBox(
+                return SizedBox(
                   height: 50,
                   child: CheckboxListTile(
                     title: Text(tasks[index]),
