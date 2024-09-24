@@ -474,7 +474,8 @@ class _launcherState extends State<launcher>{
                                       ),
                                     )
                                   )
-                                ] else ...[
+                                ] else ...[],
+                                if (enableCalendar == false || enableTasks == false || enableNotes == false)...[
                                   GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     child: const Center( 
@@ -485,7 +486,7 @@ class _launcherState extends State<launcher>{
                                       widgetSelection();
                                     },
                                   ),
-                                ]
+                                ] else ...[]
                               ],
                             )
                           )
