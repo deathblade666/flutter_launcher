@@ -21,23 +21,15 @@ class _CalendarState extends State<Calendar> {
       .toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List eventList = [];
+
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForMonth(_selectedDay!));
-    //loadPreviousEvents();
-    loadPrefs();
+    _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
   }
     
-  void loadPrefs(){
-    String? restoreEvents = widget.prefs.getString("Events");
-    if (restoreEvents != null){
-      getEvents();
-    }
-  }
 
   @override
   void dispose() {
@@ -45,52 +37,12 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
-  List<Event> _getEventsForMonth(DateTime day) {
+  List<Event> _getEventsForday(DateTime day) {
       return events[day] ?? [];
   }
 
-  String encodeEvents(Map<DateTime, List<Event>> events) {
-    return json.encode(events.map(
-      (key, value) => MapEntry(
-          key.toIso8601String(), value.map((e) => e.toJson()).toList()),
-    ));
-  }
-  
-  Map<DateTime, List<Event>> _decodeEvents(String eventsJson) {
-    final Map<String, dynamic> jsonMap = json.decode(eventsJson);
-    return jsonMap.map((key, value) {
-      final DateTime dateTime = DateTime.parse(key);
-      final List<Event> _eventsList =
-          (value as List<dynamic>).map((e) => Event.fromJson(e)).toList();
-      setState(() {
-        eventList = _eventsList;
-      });
-      
-          
-          //PopulateEventList();
-      return MapEntry(dateTime, _eventsList);
-    });
-  }
 
-   Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
-    final eventsJson = encodeEvents(events);
-    debugPrint("Saving events: $eventsJson");
-    await widget.prefs.setString("Events", eventsJson);
-  }
 
-  void PopulateEventList() async{
-    setState(() {
-          eventList = events.entries
-      .expand((entry) => entry.value.map((event) => MapEntry(entry.key, event)))
-      .toList();
-    });
-    saveEvents(events);
-  }
-
-  Map<DateTime, List<Event>> getEvents() {
-    final eventsJson = widget.prefs.getString("Events");
-    return eventsJson != null ? _decodeEvents(eventsJson) : {};
-  }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -99,7 +51,7 @@ class _CalendarState extends State<Calendar> {
         _focusedDay = focusedDay;
         _rangeSelectionMode = RangeSelectionMode.toggledOff;
       });
-      _selectedEvents.value = _getEventsForMonth(selectedDay);
+      _selectedEvents.value = _getEventsForday(selectedDay);
     }
   }
 
@@ -108,13 +60,6 @@ class _CalendarState extends State<Calendar> {
   void clearController() {
     _titleController.clear();
     _descriptionController.clear();
-  }
-
-  void loadPreviousEvents() {  //re-evaluate this function as it populates the events map with the current day
-    events = {
-      _selectedDay!: [ Event(title: '', description: '')],
-      _selectedDay!: [ Event(title: '', description: '')]
-    };
   }
 
   @override
@@ -148,7 +93,7 @@ class _CalendarState extends State<Calendar> {
                 )
               ),
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              eventLoader: _getEventsForMonth,
+              eventLoader: _getEventsForday,
               onDaySelected: _onDaySelected,
               rangeSelectionMode: _rangeSelectionMode,
               onPageChanged: (focusedDay) {
@@ -191,13 +136,13 @@ class _CalendarState extends State<Calendar> {
                               _selectedDay!: [
                                 ..._selectedEvents.value,
                                 Event(
+                                  date: _selectedDay.toString(),
                                   title: _titleController.text,
                                   description: _descriptionController.text)
                                ]
                             });
-                            _selectedEvents.value = _getEventsForMonth(_selectedDay!);
+                            _selectedEvents.value = _getEventsForday(_selectedDay!);
                             clearController();
-                            PopulateEventList();
                             Navigator.pop(context);
                           },
                           child: const Text('Submit'))
@@ -212,20 +157,15 @@ class _CalendarState extends State<Calendar> {
           ),
           SizedBox(
             height: 200,
-            child: ListView.builder(itemCount: events.length, itemBuilder: (context, index){
-              if (eventList.isNotEmpty){
-              final eventEntry = eventList[index];
-              final eventDate = eventEntry.key;
-              final event = eventEntry.value;
-              final eventTitle = event.title;
-              final eventDescripiton = event.description;
-              
+            child: ValueListenableBuilder(valueListenable: _selectedEvents, builder: (context, value,_){
+              return ListView.builder(itemCount: events.length, itemBuilder: (context, index){
+              if (value.isNotEmpty){
               return SizedBox(
                 height: 50,
                 child: Row(
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
-                    Text(eventDate.toString().split(' ')[0]),
+                    Text(value[index].date!.toString().split(' ')[0]),
                     const Padding(padding: EdgeInsets.only(right: 15)),
                     VerticalDivider(
                       indent: 4,
@@ -240,7 +180,7 @@ class _CalendarState extends State<Calendar> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child:  Text(
-                              eventTitle, 
+                              value[index].title, 
                               textScaler: const TextScaler.linear(1.2), 
                               style: const TextStyle(fontWeight: FontWeight.w500),
                             ),
@@ -250,7 +190,7 @@ class _CalendarState extends State<Calendar> {
                           alignment: Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: Text(eventDescripiton),
+                            child: Text(value[index].description),
                           ),
                         ),
                       ],
@@ -263,8 +203,11 @@ class _CalendarState extends State<Calendar> {
                   child:Text("No Events")
                 );
               }
-            }),
+            });
+            },
           ),
+        )
+
         ]
       )
     );
