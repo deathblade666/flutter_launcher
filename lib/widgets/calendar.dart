@@ -110,8 +110,12 @@ class _CalendarState extends State<Calendar> {
             height: 1,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
             children: [
+              const Spacer(flex: 3,),
+              const Text("Events", textScaler: TextScaler.linear(1.4),), 
+              const Spacer(flex: 2,),
               TextButton(
                 onPressed:  (){
                   showDialog(
@@ -137,20 +141,22 @@ class _CalendarState extends State<Calendar> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                            events.addAll({
-                              _selectedDay!: [
-                                ..._selectedEvents.value,
-                                Event(
-                                  date: _selectedDay.toString(),
-                                  title: _titleController.text,
-                                  description: _descriptionController.text)
-                               ]
-                            });
-                            _selectedEvents.value = _getEventsForday(_selectedDay!);
-                            clearController();
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Submit'))
+                              events.addAll({
+                                _selectedDay!: [
+                                  ..._selectedEvents.value,
+                                  Event(
+                                    date: _selectedDay.toString(),
+                                    title: _titleController.text,
+                                    description: _descriptionController.text
+                                  )
+                                ]
+                              });
+                              _selectedEvents.value = _getEventsForday(_selectedDay!);
+                              clearController();
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Submit')
+                          )
                         ],
                       );
                     }
@@ -167,61 +173,58 @@ class _CalendarState extends State<Calendar> {
                 var _grabDate = DateTime.parse(value[index].date!.toString().split(' ')[0]);
                 String month = formatDate(_grabDate, [M]);
                 String eventDay = formatDate(_grabDate, [d]);
-              if (value.isNotEmpty){
-              return SizedBox(
-                height: 50,
-                child: Row(
-                  children: [
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    Column(
+                if (value.isNotEmpty){
+                  return SizedBox(
+                    height: 50,
+                    child: Row(
                       children: [
-                        Text(month, textScaler: TextScaler.linear(1.3),),
-                        Text(' $eventDay', textScaler: TextScaler.linear(1.2),),
-                      ],
-                    ),
-                    
-                    const Padding(padding: EdgeInsets.only(right: 15)),
-                    VerticalDivider(
-                      indent: 4,
-                      endIndent: 4,
-                      width: 2, 
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child:  Text(
-                              value[index].title, 
-                              textScaler: const TextScaler.linear(1.2), 
-                              style: const TextStyle(fontWeight: FontWeight.w500),
+                        const Padding(padding: EdgeInsets.only(left: 10)),
+                        Column(
+                          children: [
+                            Text(month, textScaler: TextScaler.linear(1.3),),
+                            Text(' $eventDay', textScaler: TextScaler.linear(1.2),),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(right: 15)),
+                        VerticalDivider(
+                          indent: 4,
+                          endIndent: 4,
+                          width: 2, 
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(
+                                  value[index].title, 
+                                  textScaler: const TextScaler.linear(1.2), 
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(value[index].description),
-                          ),
-                        ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(value[index].description),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ) 
-              );
-              } else {
-                return  const Center(
-                  child:Text("No Events")
-                );
-              }
-            });
-            },
-          ),
-        )
-
+                    ) 
+                  );
+                } else {
+                  return  const Center(
+                    child:Text("No Events")
+                  );
+                }
+              });
+            }),
+          )
         ]
       )
     );
