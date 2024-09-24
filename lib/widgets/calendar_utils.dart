@@ -1,13 +1,19 @@
 
+import 'package:flutter/material.dart';
+
 class Event {
+  String? location;
   String title;
   String description;
   String? date;
+  TimeOfDay? starttime;
 
-  Event({required this.title, required this.description, required this.date});
+  Event({required this.title, required this.description, required this.date, this.starttime, this.location});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
+      location: json["location"],
+      starttime: json["starttime"],
       date: json["date"],
       title: json["title"],
       description: json["description"],
@@ -15,6 +21,8 @@ class Event {
   }
   Map<String, dynamic> toJson(){
     return {
+      "location":location,
+      "starttime":starttime,
       "date": date,
       "title": title, 
       "description": description, 

@@ -64,12 +64,14 @@ class _CalendarState extends State<Calendar> {
       
     }
   }
-
+  
+  final _locationController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   void clearController() {
     _titleController.clear();
     _descriptionController.clear();
+    _locationController.clear();
   }
 
   @override
@@ -129,56 +131,72 @@ class _CalendarState extends State<Calendar> {
                 onPressed:  (){
                   showDialog(
                     context: context, builder: (BuildContext context) {
-                      return AlertDialog.adaptive(
-                        scrollable: true,
-                        title: const Text('New Event'),
-                        content: Padding(
-                          padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                TextField(
-                                  controller: _titleController,
-                                  decoration: const InputDecoration(helperText: 'Title'),
-                                ),
-                                Row(
-                                  children: [
-                                    const Text("Time:"),
-                                    TextButton(
-                                      onPressed: (){
-                                        _selectTime();
-                                      }, 
-                                      child: Text(pickedTime.format(context))
-                                    ),
-                                  ],
-                                ),
-                                TextField(
-                                  controller: _descriptionController,
-                                  decoration: const InputDecoration(helperText: 'Description'),
-                                ),
-                              ],
+                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                        return AlertDialog.adaptive(
+                          scrollable: true,
+                          title: const Text('New Event'),
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    controller: _titleController,
+                                    decoration: const InputDecoration(helperText: 'Title'),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text("Time:"),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final TimeOfDay? newTime = await showTimePicker(
+                                            context: context,
+                                            initialTime: pickedTime,
+                                          );
+                                          if (newTime != null) {
+                                            setState(() {
+                                              pickedTime = newTime;
+                                            });
+                                          }    
+                                        }, 
+                                        child: Text(pickedTime.format(context))
+                                      ),
+                                    ],
+                                  ),
+                                  TextField(
+                                    controller: _locationController,
+                                    decoration: const InputDecoration(helperText: 'Location'),
+                                  ),
+                                  TextField(
+                                    controller: _descriptionController,
+                                    decoration: const InputDecoration(helperText: 'Description'),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              events.addAll({
-                                _selectedDay!: [
-                                  ..._selectedEvents.value,
-                                  Event(
-                                    date: _selectedDay.toString(),
-                                    title: _titleController.text,
-                                    description: _descriptionController.text
-                                  )
-                                ]
-                              });
-                              _selectedEvents.value = _getEventsForday(_selectedDay!);
-                              clearController();
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Submit')
-                          )
-                        ],
-                      );
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                events.addAll({
+                                  _selectedDay!: [
+                                    ..._selectedEvents.value,
+                                    Event(
+                                      location: _locationController.text,
+                                      starttime: pickedTime,
+                                      date: _selectedDay.toString(),
+                                      title: _titleController.text,
+                                      description: _descriptionController.text
+                                    )
+                                  ]
+                                });
+                                _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                clearController();
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Submit')
+                            )
+                          ],
+                        );
+                      });
                     }
                   );
                 },
@@ -195,14 +213,15 @@ class _CalendarState extends State<Calendar> {
                 String eventDay = formatDate(_grabDate, [d]);
                 if (value.isNotEmpty){
                   return SizedBox(
-                    height: 50,
+                    height: 65,
                     child: Row(
                       children: [
                         const Padding(padding: EdgeInsets.only(left: 10)),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text(month, textScaler: TextScaler.linear(1.3),),
-                            Text(' $eventDay', textScaler: TextScaler.linear(1.2),),
+                            Text(month, textScaler: const TextScaler.linear(1.5)),
+                            Text(' $eventDay', textScaler: const TextScaler.linear(1.4)),
                           ],
                         ),
                         const Padding(padding: EdgeInsets.only(right: 15)),
@@ -212,28 +231,24 @@ class _CalendarState extends State<Calendar> {
                           width: 2, 
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  value[index].title, 
-                                  textScaler: const TextScaler.linear(1.2), 
-                                  style: const TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(value[index].description),
-                              ),
-                            ),
-                          ],
-                        )
+                        Padding(
+                          padding: const EdgeInsets.only( left: 5),
+                            child: SizedBox(
+                              width: 350,
+                              child: Text(
+                              '${value[index].title}\n${value[index].starttime?.format(context)}  -  8:45 PM\n${value[index].description}', 
+                              textScaler: const TextScaler.linear(1.1), 
+                              //style: const TextStyle(fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
+                            ), 
+                            )
+                            
+                        ),
+                       // Align(
+                         // alignment: Alignment.topRight,
+                         // child: Text('${value[index].starttime?.format(context)}' ' - ' "8:45 PM" ),
+                        //),
+                      
                       ],
                     ) 
                   );
