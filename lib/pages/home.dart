@@ -123,6 +123,7 @@ class _launcherState extends State<launcher>{
     String? appName4 = widget.prefs.getString("Pinned App4");
     bool? calendar = widget.prefs.getBool("CalendarToggle");
     bool? tasks = widget.prefs.getBool("TasksToggle");
+    bool? notes = widget.prefs.getBool("enableNotes");
     if (calendar != null){
       setState(() {
         enableCalendar = calendar;
@@ -133,6 +134,11 @@ class _launcherState extends State<launcher>{
         enableTasks = tasks;
         displayTasks = tasks;
     });
+    }
+    if (notes != null){
+      setState(() {
+        enableNotes = notes;
+      });
     }
     
     if (togglePinApp != null){
@@ -380,6 +386,7 @@ class _launcherState extends State<launcher>{
                     setState(() {
                       enableNotes = value;
                     });
+                    widget.prefs.setBool("enableNotes", value);
                   }
                 ),
                 TextButton(
