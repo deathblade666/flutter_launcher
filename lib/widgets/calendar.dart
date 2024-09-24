@@ -50,8 +50,9 @@ class _CalendarState extends State<Calendar> {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
         _rangeSelectionMode = RangeSelectionMode.toggledOff;
+        _selectedEvents.value = _getEventsForday(selectedDay);
       });
-      _selectedEvents.value = _getEventsForday(selectedDay);
+      
     }
   }
 
@@ -83,13 +84,17 @@ class _CalendarState extends State<Calendar> {
                 rightChevronVisible: false
               ),
               calendarStyle: CalendarStyle(
+                markerDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
                 selectedDecoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 todayDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.tertiary
+                  color: Theme.of(context).colorScheme.secondary
                 )
               ),
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
@@ -158,14 +163,23 @@ class _CalendarState extends State<Calendar> {
           SizedBox(
             height: 200,
             child: ValueListenableBuilder(valueListenable: _selectedEvents, builder: (context, value,_){
-              return ListView.builder(itemCount: events.length, itemBuilder: (context, index){
+              return ListView.builder(itemCount: value.length, itemBuilder: (context, index){
+                var _grabDate = DateTime.parse(value[index].date!.toString().split(' ')[0]);
+                String month = formatDate(_grabDate, [M]);
+                String eventDay = formatDate(_grabDate, [d]);
               if (value.isNotEmpty){
               return SizedBox(
                 height: 50,
                 child: Row(
                   children: [
                     const Padding(padding: EdgeInsets.only(left: 10)),
-                    Text(value[index].date!.toString().split(' ')[0]),
+                    Column(
+                      children: [
+                        Text(month, textScaler: TextScaler.linear(1.3),),
+                        Text(' $eventDay', textScaler: TextScaler.linear(1.2),),
+                      ],
+                    ),
+                    
                     const Padding(padding: EdgeInsets.only(right: 15)),
                     VerticalDivider(
                       indent: 4,
