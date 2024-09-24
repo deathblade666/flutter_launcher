@@ -112,8 +112,8 @@ class _CalendarState extends State<Calendar> {
 
   void loadPreviousEvents() {  //re-evaluate this function as it populates the events map with the current day
     events = {
-      _selectedDay!: [ Event(title: '', description: '')],
-      _selectedDay!: [ Event(title: '', description: '')]
+      _selectedDay!: [ Event(title: '', description: '', date: '')],
+      _selectedDay!: [ Event(title: '', description: '', date: '')]
     };
   }
 
@@ -191,6 +191,7 @@ class _CalendarState extends State<Calendar> {
                               _selectedDay!: [
                                 ..._selectedEvents.value,
                                 Event(
+                                  date: _selectedDay.toString(),
                                   title: _titleController.text,
                                   description: _descriptionController.text)
                                ]
