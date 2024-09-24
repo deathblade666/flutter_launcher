@@ -21,6 +21,7 @@ class _CalendarState extends State<Calendar> {
       .toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  TimeOfDay pickedTime = TimeOfDay.now();
 
 
   @override
@@ -29,7 +30,18 @@ class _CalendarState extends State<Calendar> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
   }
-    
+
+  void _selectTime() async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: pickedTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        pickedTime = newTime;
+      });
+    }
+  }    
 
   @override
   void dispose() {
@@ -40,9 +52,6 @@ class _CalendarState extends State<Calendar> {
   List<Event> _getEventsForday(DateTime day) {
       return events[day] ?? [];
   }
-
-
-
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
@@ -130,6 +139,17 @@ class _CalendarState extends State<Calendar> {
                                 TextField(
                                   controller: _titleController,
                                   decoration: const InputDecoration(helperText: 'Title'),
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Time:"),
+                                    TextButton(
+                                      onPressed: (){
+                                        _selectTime();
+                                      }, 
+                                      child: Text(pickedTime.format(context))
+                                    ),
+                                  ],
                                 ),
                                 TextField(
                                   controller: _descriptionController,
