@@ -219,62 +219,97 @@ class _CalendarState extends State<Calendar> {
               return ListView.builder(itemCount: value.length, itemBuilder: (context, index){
                 var _grabDate = DateTime.parse(value[index].date!.toString().split(' ')[0]);
                 String month = formatDate(_grabDate, [M]);
+                String longMonth = formatDate(_grabDate, [MM]);
                 String eventDay = formatDate(_grabDate, [d]);
                 if (value.isNotEmpty){
-                  return SizedBox(
-                    height: 65,
-                    child: Row(
-                      children: [
-                        const Padding(padding: EdgeInsets.only(left: 10)),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(month, textScaler: const TextScaler.linear(1.5)),
-                            Text(' $eventDay', textScaler: const TextScaler.linear(1.4)),
-                          ],
-                        ),
-                        const Padding(padding: EdgeInsets.only(right: 15)),
-                        VerticalDivider(
-                          indent: 4,
-                          endIndent: 4,
-                          width: 2, 
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only( left: 10, right: 10),
-                          child: SizedBox(
-                            width: 335,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        value[index].title, 
-                                        textScaler: const TextScaler.linear(1.2), 
-                                        style: const TextStyle(fontWeight: FontWeight.w500),
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: (){
+                      showDialog(context: context, builder: (BuildContext context){
+                        return AlertDialog(
+                          title: Center(
+                            child: Text(value[index].title)
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Date: " '$longMonth $eventDay'),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Time: "'${value[index].starttime?.format(context)} - ${value[index].endTime?.format(context)}'),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Location: " '${value[index].location}'),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("Decription: " '${value[index].description}'),
+                              ),
+                            ],
+                          ),                    
+                        );
+                      });
+                    },
+                    child: SizedBox(
+                      height: 65,
+                      child: Row(
+                        children: [
+                          const Padding(padding: EdgeInsets.only(left: 10)),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(month, textScaler: const TextScaler.linear(1.5)),
+                              Text(' $eventDay', textScaler: const TextScaler.linear(1.4)),
+                            ],
+                          ),
+                          const Padding(padding: EdgeInsets.only(right: 15)),
+                          VerticalDivider(
+                            indent: 4,
+                            endIndent: 4,
+                            width: 2, 
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only( left: 10, right: 10),
+                            child: SizedBox(
+                              width: 335,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          value[index].title, 
+                                          textScaler: const TextScaler.linear(1.2), 
+                                          style: const TextStyle(fontWeight: FontWeight.w500),
+                                        ),
                                       ),
-                                    ),
-                                    const Spacer(),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text('${value[index].starttime?.format(context)}  -  ${value[index].endTime?.format(context)}',overflow: TextOverflow.ellipsis,),
-                                    ),
-                                  ],
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(value[index].description),
-                                )
-                              ],
-                            )
-                          ) 
-                        ),
-                      ],
-                    ) 
+                                      const Spacer(),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: Text('${value[index].starttime?.format(context)}  -  ${value[index].endTime?.format(context)}',overflow: TextOverflow.ellipsis,),
+                                      ),
+                                    ],
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(value[index].description),
+                                  )
+                                ],
+                              )
+                            ) 
+                          ),
+                        ],
+                      ) 
+                    )
                   );
                 } else {
                   return  const Center(
