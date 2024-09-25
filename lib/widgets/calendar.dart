@@ -30,19 +30,7 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
-  }
-
-  void _selectTime() async {
-    final TimeOfDay? newTime = await showTimePicker(
-      context: context,
-      initialTime: pickedStartTime,
-    );
-    if (newTime != null) {
-      setState(() {
-        pickedStartTime = newTime;
-      });
-    }
-  }    
+  }   
 
   @override
   void dispose() {
