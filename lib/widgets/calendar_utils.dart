@@ -7,11 +7,13 @@ class Event {
   String description;
   String? date;
   TimeOfDay? starttime;
+  TimeOfDay? endTime;
 
-  Event({required this.title, required this.description, required this.date, this.starttime, this.location});
+  Event({required this.title, required this.description, required this.date, this.starttime, this.location, this.endTime});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
+      endTime: json["endTime"],
       location: json["location"],
       starttime: json["starttime"],
       date: json["date"],
@@ -21,6 +23,7 @@ class Event {
   }
   Map<String, dynamic> toJson(){
     return {
+      "endTime":endTime,
       "location":location,
       "starttime":starttime,
       "date": date,

@@ -21,7 +21,8 @@ class _CalendarState extends State<Calendar> {
       .toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  TimeOfDay pickedTime = TimeOfDay.now();
+  TimeOfDay pickedStartTime = TimeOfDay.now();
+  TimeOfDay pickedEndTime = TimeOfDay.now();
 
 
   @override
@@ -34,11 +35,11 @@ class _CalendarState extends State<Calendar> {
   void _selectTime() async {
     final TimeOfDay? newTime = await showTimePicker(
       context: context,
-      initialTime: pickedTime,
+      initialTime: pickedStartTime,
     );
     if (newTime != null) {
       setState(() {
-        pickedTime = newTime;
+        pickedStartTime = newTime;
       });
     }
   }    
@@ -145,20 +146,39 @@ class _CalendarState extends State<Calendar> {
                                   ),
                                   Row(
                                     children: [
-                                      const Text("Time:"),
+                                      const Text("Start Time:"),
                                       TextButton(
                                         onPressed: () async {
                                           final TimeOfDay? newTime = await showTimePicker(
                                             context: context,
-                                            initialTime: pickedTime,
+                                            initialTime: pickedStartTime,
                                           );
                                           if (newTime != null) {
                                             setState(() {
-                                              pickedTime = newTime;
+                                              pickedStartTime = newTime;
                                             });
                                           }    
                                         }, 
-                                        child: Text(pickedTime.format(context))
+                                        child: Text(pickedStartTime.format(context))
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text("End Time:"),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final TimeOfDay? newTime = await showTimePicker(
+                                            context: context,
+                                            initialTime: pickedEndTime,
+                                          );
+                                          if (newTime != null) {
+                                            setState(() {
+                                              pickedEndTime = newTime;
+                                            });
+                                          }    
+                                        }, 
+                                        child: Text(pickedEndTime.format(context))
                                       ),
                                     ],
                                   ),
@@ -180,8 +200,9 @@ class _CalendarState extends State<Calendar> {
                                   _selectedDay!: [
                                     ..._selectedEvents.value,
                                     Event(
+                                      endTime: pickedEndTime,
                                       location: _locationController.text,
-                                      starttime: pickedTime,
+                                      starttime: pickedStartTime,
                                       date: _selectedDay.toString(),
                                       title: _titleController.text,
                                       description: _descriptionController.text
@@ -252,7 +273,7 @@ class _CalendarState extends State<Calendar> {
                                     const Spacer(),
                                     Align(
                                       alignment: Alignment.topRight,
-                                      child: Text('${value[index].starttime?.format(context)}  -  8:45 PM',overflow: TextOverflow.ellipsis,),
+                                      child: Text('${value[index].starttime?.format(context)}  -  ${value[index].endTime?.format(context)}',overflow: TextOverflow.ellipsis,),
                                     ),
                                   ],
                                 ),
