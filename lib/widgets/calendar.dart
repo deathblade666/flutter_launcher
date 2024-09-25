@@ -97,7 +97,7 @@ class _CalendarState extends State<Calendar> {
               calendarStyle: CalendarStyle(
                 markerDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.tertiary,
+                  color: Theme.of(context).colorScheme.onTertiary,
                 ),
                 selectedDecoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -244,7 +244,7 @@ class _CalendarState extends State<Calendar> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        '${value[index].title}', 
+                                        value[index].title, 
                                         textScaler: const TextScaler.linear(1.2), 
                                         style: const TextStyle(fontWeight: FontWeight.w500),
                                       ),
