@@ -232,23 +232,38 @@ class _CalendarState extends State<Calendar> {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only( left: 5),
-                            child: SizedBox(
-                              width: 350,
-                              child: Text(
-                              '${value[index].title}\n${value[index].starttime?.format(context)}  -  8:45 PM\n${value[index].description}', 
-                              textScaler: const TextScaler.linear(1.1), 
-                              //style: const TextStyle(fontWeight: FontWeight.w500),
-                              overflow: TextOverflow.ellipsis,
-                            ), 
+                          padding: const EdgeInsets.only( left: 10, right: 10),
+                          child: SizedBox(
+                            width: 335,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '${value[index].title}', 
+                                        textScaler: const TextScaler.linear(1.2), 
+                                        style: const TextStyle(fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Text('${value[index].starttime?.format(context)}  -  8:45 PM',overflow: TextOverflow.ellipsis,),
+                                    ),
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(value[index].description),
+                                )
+                              ],
                             )
-                            
+                          ) 
                         ),
-                       // Align(
-                         // alignment: Alignment.topRight,
-                         // child: Text('${value[index].starttime?.format(context)}' ' - ' "8:45 PM" ),
-                        //),
-                      
                       ],
                     ) 
                   );
