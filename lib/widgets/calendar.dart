@@ -224,6 +224,90 @@ class _CalendarState extends State<Calendar> {
                 if (value.isNotEmpty){
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
+                    onLongPress: (){
+                      showDialog(
+                        context: context, builder: (BuildContext context) {
+                          return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                            return AlertDialog.adaptive(
+                              scrollable: true,
+                              title: const Text('Edit Event'),
+                              content: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    TextField(
+                                      controller: _titleController,
+                                      decoration: const InputDecoration(helperText: 'Title'),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("Start Time:"),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final TimeOfDay? newTime = await showTimePicker(
+                                              context: context,
+                                              initialTime: pickedStartTime,
+                                            );
+                                            if (newTime != null) {
+                                              setState(() {
+                                                pickedStartTime = newTime;
+                                              });
+                                            }    
+                                          }, 
+                                          child: Text(pickedStartTime.format(context))
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text("End Time:"),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final TimeOfDay? newTime = await showTimePicker(
+                                              context: context,
+                                              initialTime: pickedEndTime,
+                                            );
+                                            if (newTime != null) {
+                                              setState(() {
+                                                pickedEndTime = newTime;
+                                              });
+                                            }    
+                                          }, 
+                                          child: Text(pickedEndTime.format(context))
+                                        ),
+                                      ],
+                                    ),
+                                    TextField(
+                                      controller: _locationController,
+                                      decoration: const InputDecoration(helperText: 'Location'),
+                                    ),
+                                    TextField(
+                                      controller: _descriptionController,
+                                      decoration: const InputDecoration(helperText: 'Description'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    value[index].title = _titleController.text;
+                                    value[index].description = _descriptionController.text;
+                                    value[index].starttime = pickedStartTime;
+                                    value[index].endTime = pickedEndTime;
+                                    value[index].location = _locationController.text;
+                                    _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                    clearController();
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Submit')
+                                )
+                              ],
+                            );
+                          });
+                        }
+                      );
+                    },
                     onTap: (){
                       showDialog(context: context, builder: (BuildContext context){
                         return AlertDialog.adaptive(
