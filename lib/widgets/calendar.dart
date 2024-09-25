@@ -226,7 +226,7 @@ class _CalendarState extends State<Calendar> {
                     behavior: HitTestBehavior.opaque,
                     onTap: (){
                       showDialog(context: context, builder: (BuildContext context){
-                        return AlertDialog(
+                        return AlertDialog.adaptive(
                           title: Center(
                             child: Text(value[index].title)
                           ),
