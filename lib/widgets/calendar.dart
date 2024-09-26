@@ -38,6 +38,21 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
+  modifyDate (BuildContext context) async {
+      final DateTime? modifiedSelectedDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+      initialEntryMode: DatePickerEntryMode.calendarOnly
+    );
+    if (modifiedSelectedDate != null){
+      setState(() {
+        modifiedDate = modifiedSelectedDate.toString();
+      });
+    }
+    
+  }
+
   List<Event> _getEventsForday(DateTime day) {
       return events[day] ?? [];
   }
@@ -57,6 +72,7 @@ class _CalendarState extends State<Calendar> {
   final _locationController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String modifiedDate ='';
   void clearController() {
     _titleController.clear();
     _descriptionController.clear();
@@ -235,6 +251,21 @@ class _CalendarState extends State<Calendar> {
                                 padding: const EdgeInsets.all(8),
                                 child: Column(
                                   children: [
+                                    TextButton(
+                                      onPressed: () async {
+                                        final  DateTime? modifiedSelectedDate = await showDatePicker(
+                                          context: context,
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2025),
+                                          initialEntryMode: DatePickerEntryMode.calendarOnly
+                                        );
+                                        if (modifiedSelectedDate != null){
+                                          value[index].date = modifiedSelectedDate.toString();
+                                       }
+                                       _selectedEvents.value = _getEventsForday(modifiedSelectedDate!);
+                                      },
+                                      child: Text('$longMonth $eventDay')
+                                    ),
                                     TextField(
                                       controller: _titleController,
                                       decoration: const InputDecoration(helperText: 'Title'),
@@ -291,13 +322,24 @@ class _CalendarState extends State<Calendar> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    value[index].title = _titleController.text;
-                                    value[index].description = _descriptionController.text;
-                                    value[index].starttime = pickedStartTime;
-                                    value[index].endTime = pickedEndTime;
-                                    value[index].location = _locationController.text;
+                                    if (_titleController.text != ''){
+                                      value[index].title = _titleController.text;
+                                    }
+                                    if (_descriptionController.text != ''){
+                                      value[index].description = _descriptionController.text;
+                                    }
+                                    if (pickedStartTime != value[index].starttime){
+                                      value[index].starttime = pickedStartTime;
+                                    }
+                                    if (pickedEndTime != value[index].endTime){
+                                      value[index].endTime = pickedEndTime;
+                                    }
+                                    if (_locationController.text != ''){
+                                      value[index].location = _locationController.text;
+                                    }
                                     _selectedEvents.value = _getEventsForday(_selectedDay!);
                                     clearController();
+                                    print(value[index].date);
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Submit')
