@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -23,6 +24,10 @@ class _CalendarState extends State<Calendar> {
   DateTime? _selectedDay;
   TimeOfDay pickedStartTime = TimeOfDay.now();
   TimeOfDay pickedEndTime = TimeOfDay.now();
+  final _locationController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  String modifiedDate ='';
 
 
   @override
@@ -30,16 +35,50 @@ class _CalendarState extends State<Calendar> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
+    _loadEvents();
   }   
 
-  @override
-  void dispose() {
-    _selectedEvents.dispose();
-    super.dispose();
+ Future<void> _loadEvents() async {
+    Map<DateTime, List<Event>> _events = await loadEvents();
+    setState(() {
+      _selectedEvents.value = _getEventsForday(DateTime.now());
+      events = _events;
+    });
+  }
+
+  Future<Map<DateTime, List<Event>>> loadEvents() async {
+    String? jsonString = widget.prefs.getString('Events');
+    if (jsonString == null) {
+      return {};
+    }
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    Map<DateTime, List<Event>> events = jsonMap.map((key, value) => MapEntry(
+      DateTime.parse(key),
+      (value as List).map((event) => Event.fromJson(event)).toList(),
+    ));
+    return events;
+  }
+  
+  void ReloadCalendar(){
+    Map<DateTime, List<Event>> _events = events;
+    setState(() {
+      print(_selectedDay);
+      _selectedEvents.value = _getEventsForday(_selectedDay!);
+      events = _events;
+    });
+  }
+
+  Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
+    Map<String, dynamic> jsonMap = events.map((key, value) => MapEntry(
+      key.toIso8601String(),
+      value.map((event) => event.toJson()).toList(),
+    ));
+    String jsonString = jsonEncode(jsonMap);
+    await widget.prefs.setString('Events', jsonString);
   }
 
   modifyDate (BuildContext context) async {
-      final DateTime? modifiedSelectedDate = await showDatePicker(
+    final DateTime? modifiedSelectedDate = await showDatePicker(
       context: context,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
@@ -50,34 +89,32 @@ class _CalendarState extends State<Calendar> {
         modifiedDate = modifiedSelectedDate.toString();
       });
     }
-    
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+      _selectedEvents.value = _getEventsForday(selectedDay);
+    });
   }
 
   List<Event> _getEventsForday(DateTime day) {
       return events[day] ?? [];
-  }
+  }  
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-        _selectedEvents.value = _getEventsForday(selectedDay);
-      });
-      
-    }
-  }
-  
-  final _locationController = TextEditingController();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  String modifiedDate ='';
   void clearController() {
     _titleController.clear();
     _descriptionController.clear();
     _locationController.clear();
   }
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -204,17 +241,19 @@ class _CalendarState extends State<Calendar> {
                                   _selectedDay!: [
                                     ..._selectedEvents.value,
                                     Event(
-                                      endTime: pickedEndTime,
                                       location: _locationController.text,
-                                      starttime: pickedStartTime,
-                                      date: _selectedDay.toString(),
                                       title: _titleController.text,
-                                      description: _descriptionController.text
+                                      description: _descriptionController.text,
+                                      date: _selectedDay.toString(),
+                                      starttime: pickedStartTime,
+                                      endTime: pickedEndTime,
                                     )
                                   ]
                                 });
+                                ReloadCalendar();
                                 _selectedEvents.value = _getEventsForday(_selectedDay!);
                                 clearController();
+                                saveEvents(events);
                                 Navigator.pop(context);
                               },
                               child: const Text('Submit')
@@ -339,7 +378,7 @@ class _CalendarState extends State<Calendar> {
                                     }
                                     _selectedEvents.value = _getEventsForday(_selectedDay!);
                                     clearController();
-                                    print(value[index].date);
+                                    saveEvents(events);
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Submit')
