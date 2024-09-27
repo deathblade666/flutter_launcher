@@ -367,32 +367,52 @@ class _CalendarState extends State<Calendar> {
                                 ),
                               ),
                               actions: [
-                                TextButton(
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      
+                                      //TODO: Update calendar and list once event has been deleted, and retain the selected day
+                                      // Probably best with a new function or add on to the onPressed action
 
+                                      onPressed: (){
+                                        value.remove(value[index]);
+                                        _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                        clearController();
+                                        saveEvents(events);
+                                        _loadEvents();
+                                        Navigator.pop(context);
+                                      }, 
+                                      child: const Text("Delete Event"),
+                                    ),
+                                    const Spacer(),
+                                    TextButton(
+                                
                                   //TODO: Update Key value to reflect if a new date is selected
-
-                                  onPressed: () {
-                                    if (_titleController.text != ''){
-                                      value[index].title = _titleController.text;
-                                    }
-                                    if (_descriptionController.text != ''){
-                                      value[index].description = _descriptionController.text;
-                                    }
-                                    if (pickedStartTime != value[index].starttime){
-                                      value[index].starttime = pickedStartTime;
-                                    }
-                                    if (pickedEndTime != value[index].endTime){
-                                      value[index].endTime = pickedEndTime;
-                                    }
-                                    if (_locationController.text != ''){
-                                      value[index].location = _locationController.text;
-                                    }
-                                    _selectedEvents.value = _getEventsForday(_selectedDay!);
-                                    clearController();
-                                    saveEvents(events);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Submit')
+                                
+                                      onPressed: () {
+                                        if (_titleController.text != ''){
+                                          value[index].title = _titleController.text;
+                                        }
+                                        if (_descriptionController.text != ''){
+                                          value[index].description = _descriptionController.text;
+                                        }
+                                        if (pickedStartTime != value[index].starttime){
+                                          value[index].starttime = pickedStartTime;
+                                        }
+                                        if (pickedEndTime != value[index].endTime){
+                                          value[index].endTime = pickedEndTime;
+                                        }
+                                        if (_locationController.text != ''){
+                                          value[index].location = _locationController.text;
+                                        }
+                                        _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                        clearController();
+                                        saveEvents(events);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Submit')
+                                    ),
+                                  ],
                                 )
                               ],
                             );
