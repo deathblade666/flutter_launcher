@@ -38,6 +38,8 @@ class _CalendarState extends State<Calendar> {
     _loadEvents();
   }   
 
+  //TODO: Load events list for intially selected date (today) on page load
+
  Future<void> _loadEvents() async {
     Map<DateTime, List<Event>> _events = await loadEvents();
     setState(() {
@@ -235,6 +237,9 @@ class _CalendarState extends State<Calendar> {
                               ),
                             ),
                           actions: [
+                            
+                            //TODO: First submit saves to map but doesnt updat ehte calendar
+
                             TextButton(
                               onPressed: () {
                                 events.addAll({
@@ -292,6 +297,9 @@ class _CalendarState extends State<Calendar> {
                                   children: [
                                     TextButton(
                                       onPressed: () async {
+                                        //TODO: Update Date shown to be the date selected
+
+
                                         final  DateTime? modifiedSelectedDate = await showDatePicker(
                                           context: context,
                                           firstDate: DateTime(2000),
@@ -360,6 +368,9 @@ class _CalendarState extends State<Calendar> {
                               ),
                               actions: [
                                 TextButton(
+
+                                  //TODO: Update Key value to reflect if a new date is selected
+
                                   onPressed: () {
                                     if (_titleController.text != ''){
                                       value[index].title = _titleController.text;
