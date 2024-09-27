@@ -16,7 +16,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+ late final ValueNotifier<List<Event>> _selectedEvents;
   Map<DateTime, List<Event>> events = {};
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff;
@@ -27,6 +27,7 @@ class _CalendarState extends State<Calendar> {
   final _locationController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _eventNoteController = TextEditingController();
   String modifiedDate ='';
 
 
@@ -42,10 +43,12 @@ class _CalendarState extends State<Calendar> {
 
  Future<void> _loadEvents() async {
     Map<DateTime, List<Event>> _events = await loadEvents();
+    var selectedDay = DateTime.now();
+    var focusedDay = DateTime.now();
     setState(() {
-      _selectedEvents.value = _getEventsForday(DateTime.now());
       events = _events;
     });
+    _onDaySelected(selectedDay, focusedDay);
   }
 
   Future<Map<DateTime, List<Event>>> loadEvents() async {
@@ -59,15 +62,6 @@ class _CalendarState extends State<Calendar> {
       (value as List).map((event) => Event.fromJson(event)).toList(),
     ));
     return events;
-  }
-  
-  void ReloadCalendar(){
-    Map<DateTime, List<Event>> _events = events;
-    setState(() {
-      print(_selectedDay);
-      _selectedEvents.value = _getEventsForday(_selectedDay!);
-      events = _events;
-    });
   }
 
   Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
@@ -129,7 +123,7 @@ class _CalendarState extends State<Calendar> {
             child: TableCalendar(
               focusedDay: _focusedDay, 
               firstDay: DateTime.utc(2000, 12, 31),
-              lastDay: DateTime.utc(2030, 01, 01),
+              lastDay: DateTime.utc(2300, 01, 01),
               rowHeight: 35,
               calendarFormat: CalendarFormat.month,
               headerStyle: const HeaderStyle(
@@ -233,6 +227,12 @@ class _CalendarState extends State<Calendar> {
                                     controller: _descriptionController,
                                     decoration: const InputDecoration(helperText: 'Description'),
                                   ),
+                                  TextField(
+                                    controller: _eventNoteController,
+                                    decoration: const InputDecoration(helperText: 'Notes'),
+                                    //expands: true,
+                                    maxLines: null,
+                                  ),
                                 ],
                               ),
                             ),
@@ -252,10 +252,10 @@ class _CalendarState extends State<Calendar> {
                                       date: _selectedDay.toString(),
                                       starttime: pickedStartTime,
                                       endTime: pickedEndTime,
+                                      eventNotes: _eventNoteController.text,
                                     )
                                   ]
                                 });
-                                ReloadCalendar();
                                 _selectedEvents.value = _getEventsForday(_selectedDay!);
                                 clearController();
                                 saveEvents(events);
@@ -426,6 +426,15 @@ class _CalendarState extends State<Calendar> {
                                 alignment: Alignment.centerLeft,
                                 child: Text("Decription: " '${value[index].description}'),
                               ),
+                              const Divider(),
+                              const Align(
+                                alignment: Alignment.center,
+                                child: Text("Notes:"),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('${value[index].eventNotes}'),
+                              )
                             ],
                           ),                    
                         );

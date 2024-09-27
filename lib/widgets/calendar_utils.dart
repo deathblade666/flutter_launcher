@@ -7,6 +7,7 @@ class Event {
   String? date;
   TimeOfDay? starttime;
   TimeOfDay? endTime;
+  String? eventNotes;
 
   Event({
     required this.title,
@@ -15,6 +16,7 @@ class Event {
     this.starttime,
     this.location,
     this.endTime,
+    this.eventNotes
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class Event {
       date: json["date"],
       starttime: json["starttime"] != null ? _timeOfDayFromString(json["starttime"]) : null,
       endTime: json["endTime"] != null ? _timeOfDayFromString(json["endTime"]) : null,
+      eventNotes: json["eventNotes"],
     );
   }
 
@@ -36,6 +39,7 @@ class Event {
       "date": date,
       "starttime": starttime != null ? _timeOfDayToString(starttime!) : null,
       "endTime": endTime != null ? _timeOfDayToString(endTime!) : null,
+      "eventNotes": eventNotes,
     };
   }
 
