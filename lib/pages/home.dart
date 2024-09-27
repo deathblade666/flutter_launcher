@@ -6,6 +6,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
+import 'package:flutter_launcher/widgets/notes.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -82,6 +83,7 @@ class _launcherState extends State<launcher>{
   bool enableTasks = false;
   bool showAddWidgettext = true;
   bool enableCalendar = false;
+  bool enableNotes = false;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -121,6 +123,7 @@ class _launcherState extends State<launcher>{
     String? appName4 = widget.prefs.getString("Pinned App4");
     bool? calendar = widget.prefs.getBool("CalendarToggle");
     bool? tasks = widget.prefs.getBool("TasksToggle");
+    bool? notes = widget.prefs.getBool("enableNotes");
     if (calendar != null){
       setState(() {
         enableCalendar = calendar;
@@ -131,6 +134,11 @@ class _launcherState extends State<launcher>{
         enableTasks = tasks;
         displayTasks = tasks;
     });
+    }
+    if (notes != null){
+      setState(() {
+        enableNotes = notes;
+      });
     }
     
     if (togglePinApp != null){
@@ -371,6 +379,16 @@ class _launcherState extends State<launcher>{
                     widget.prefs.setBool("CalendarToggle", enableCalendar);
                   }
                 ),
+                SwitchListTile(
+                  title: const Text("Notes"),
+                  value: enableNotes, 
+                  onChanged: (value){
+                    setState(() {
+                      enableNotes = value;
+                    });
+                    widget.prefs.setBool("enableNotes", value);
+                  }
+                ),
                 TextButton(
                   onPressed: (){
                     Navigator.pop(context);
@@ -449,16 +467,33 @@ class _launcherState extends State<launcher>{
                                       ),
                                     ))
                                 ] else... [],
-                                GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  child: const Center( 
-                                    child: Text("click here to add a widget!"),
+                                if (enableNotes == true)...[
+                                  Visibility(
+                                    visible: enableNotes,
+                                    child: SizedBox(
+                                      height: 800,
+                                      child: Center(
+                                        child: Column(
+                                          children: [
+                                            Notes(widget.prefs)
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  )
+                                ] else ...[],
+                                if (enableCalendar == false || enableTasks == false || enableNotes == false)...[
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    child: const Center( 
+                                      child: Text("click here to add a widget!"),
+                                    ),
+                                    onTap: ()  {
+                                      Navigator.pop(context);
+                                      widgetSelection();
+                                    },
                                   ),
-                                  onTap: ()  {
-                                    Navigator.pop(context);
-                                    widgetSelection();
-                                  },
-                                ),
+                                ] else ...[]
                               ],
                             )
                           )
