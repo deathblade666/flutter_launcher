@@ -250,7 +250,7 @@ class _launcherState extends State<launcher>{
   void toggleStatusBar(toggleStats){
     if (toggleStats == true) {
       setState(() {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
       });
     } else if (toggleStats == false){
       setState(() {
