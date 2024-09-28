@@ -303,17 +303,15 @@ class _CalendarState extends State<Calendar> {
                                       onPressed: () async {
                                         //TODO: Update Date shown to be the date selected
 
-
-                                          DateTime? modifiedSelectedDate = await showDatePicker(
-                                          context: context,
-                                          firstDate: DateTime(2000),
-                                          lastDate: DateTime(2025),
-                                          initialEntryMode: DatePickerEntryMode.calendarOnly
+                                        DateTime? modifiedSelectedDate = await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2025),
+                                        initialEntryMode: DatePickerEntryMode.calendarOnly
                                         );
-                                        if (modifiedSelectedDate != null){
+                                        if (modifiedSelectedDate != null){ 
                                           value[index].date = modifiedSelectedDate.toString();
                                        }
-                                       //_selectedEvents.value = _getEventsForday(modifiedSelectedDate!);
                                       },
                                       child: Text('$longMonth $eventDay')
                                     ),
@@ -378,13 +376,12 @@ class _CalendarState extends State<Calendar> {
                                 Row(
                                   children: [
                                     TextButton(
-                                      
-                                      //TODO: Update calendar and list once event has been deleted, and retain the selected day
-                                      // Probably best with a new function or add on to the onPressed action
-
                                       onPressed: (){
                                         value.remove(value[index]);
                                         _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                        var selectedDay = _selectedDay!;
+                                        var focusedDay = _selectedDay!;
+                                        _onDaySelected(selectedDay, focusedDay);
                                         clearController();
                                         saveEvents(events);
                                         _loadEvents();
