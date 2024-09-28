@@ -42,6 +42,9 @@ class Event {
       "eventNotes": eventNotes,
     };
   }
+  static int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year; 
+  }
 
   static TimeOfDay _timeOfDayFromString(String time) {
     final parts = time.split(':');
@@ -51,4 +54,10 @@ class Event {
   static String _timeOfDayToString(TimeOfDay time) {
     return '${time.hour}:${time.minute}';
   }
+
+  bool isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
@@ -37,17 +38,17 @@ class _CalendarState extends State<Calendar> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
     _loadEvents();
-  }   
-
-  //TODO: Load events list for intially selected date (today) on page load
+  }
 
  Future<void> _loadEvents() async {
+    widget.prefs.reload();
     Map<DateTime, List<Event>> _events = await loadEvents();
     var selectedDay = DateTime.now();
     var focusedDay = DateTime.now();
-    setState(() {
-      events = _events;
-    });
+     events = LinkedHashMap(
+      equals: isSameDay,
+      hashCode: Event.getHashCode,
+    )..addAll(_events);
     _onDaySelected(selectedDay, focusedDay);
   }
 
