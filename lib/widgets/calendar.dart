@@ -233,7 +233,6 @@ class _CalendarState extends State<Calendar> {
                                   TextField(
                                     controller: _eventNoteController,
                                     decoration: const InputDecoration(helperText: 'Notes'),
-                                    //expands: true,
                                     maxLines: null,
                                   ),
                                 ],
@@ -289,6 +288,7 @@ class _CalendarState extends State<Calendar> {
                       _descriptionController.text = value[index].description;
                       _locationController.text = value[index].location!;
                       var oldDate = value[index].date;
+                      var newDate = value[index].date;
                       showDialog(
                         context: context, builder: (BuildContext context) {
                           return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
@@ -309,7 +309,7 @@ class _CalendarState extends State<Calendar> {
                                         initialEntryMode: DatePickerEntryMode.calendarOnly
                                         );
                                         if (modifiedSelectedDate != null){ 
-                                          value[index].date = modifiedSelectedDate.toString();
+                                          setState(() => newDate = modifiedSelectedDate.toString());
                                           setState(() => eventDay = formatDate(modifiedSelectedDate, [d]));
                                           setState(()=> longMonth = formatDate(modifiedSelectedDate, [MM]));
                                        }
@@ -380,7 +380,6 @@ class _CalendarState extends State<Calendar> {
                                       onPressed: (){
                                         var selectedDay = DateTime.parse(value[index].date!);
                                         var focusedDay = DateTime.parse(value[index].date!);
-                                        //_selectedEvents.value = _getEventsForday(_selectedDay!);
                                         value.remove(value[index]);
                                         _onDaySelected(selectedDay, focusedDay);
                                         clearController();
@@ -392,26 +391,26 @@ class _CalendarState extends State<Calendar> {
                                     const Spacer(),
                                     TextButton(
                                       onPressed: () {
-                                        if (value[index].date == oldDate && _titleController.text != value[index].title){
+                                        if (newDate == oldDate && _titleController.text != value[index].title){
                                           value[index].title = _titleController.text;
                                         }
-                                        if (value[index].date == oldDate  && _descriptionController.text != value[index].description){
+                                        if (newDate == oldDate && _descriptionController.text != value[index].description){
                                           value[index].description = _descriptionController.text;
                                         }
-                                        if (value[index].date == oldDate && pickedStartTime != value[index].starttime){
+                                        if (newDate == oldDate && pickedStartTime != value[index].starttime){
                                           value[index].starttime = pickedStartTime;
                                         }
-                                        if (value[index].date == oldDate && pickedEndTime != value[index].endTime){
+                                        if (newDate == oldDate && pickedEndTime != value[index].endTime){
                                           value[index].endTime = pickedEndTime;
                                         }
-                                        if ( value[index].date == oldDate && _locationController.text != value[index].location){
+                                        if (newDate == oldDate && _locationController.text != value[index].location){
                                           value[index].location = _locationController.text;
                                         }
-                                        if (value[index].date == oldDate && _eventNoteController.text != value[index].eventNotes){
+                                        if (newDate == oldDate&& _eventNoteController.text != value[index].eventNotes){
                                           value[index].eventNotes = _eventNoteController.text;
                                         }
-                                        if (value[index].date != oldDate){
-                                          _selectedDay = DateTime.parse(value[index].date!);
+                                        if (newDate != oldDate){
+                                          _selectedDay = DateTime.parse(newDate!);
                                           value.remove(value[index]);
                                           events.addAll({
                                             _selectedDay!: [
@@ -487,7 +486,6 @@ class _CalendarState extends State<Calendar> {
                                   onPressed: (){
                                     var selectedDay = DateTime.parse(value[index].date!);
                                     var focusedDay = DateTime.parse(value[index].date!);
-                                    //_selectedEvents.value = _getEventsForday(_selectedDay!);
                                     value.remove(value[index]);
                                     _onDaySelected(selectedDay, focusedDay);
                                     saveEvents(events);
