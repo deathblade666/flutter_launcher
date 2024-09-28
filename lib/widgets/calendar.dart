@@ -8,8 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
-  Calendar(this.prefs,{super.key});
+  Calendar(this.prefs,{required this.onPressed,super.key});
   SharedPreferences prefs;
+  final Function() onPressed;
+
   @override
   State<Calendar> createState() => _CalendarState();
 }
@@ -120,10 +122,10 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 500,
+      height: 450,
       child:Column(
         children: [
-          SizedBox(
+          Container(
             height: 235,
             child: TableCalendar(
               focusedDay: _focusedDay, 
@@ -212,7 +214,7 @@ class _CalendarState extends State<Calendar> {
             ],
           ),
           SizedBox(
-            height: 200,
+            height: 150,
             child: ListView.builder(itemCount: events.length, itemBuilder: (context, index){
               if (eventList.isNotEmpty){
               final eventEntry = eventList[index];

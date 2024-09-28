@@ -14,6 +14,7 @@ class _NotesState extends State<Notes> {
 
   @override
   void initState(){
+    super.initState();
     loadLastText();
   }
 
@@ -27,14 +28,14 @@ class _NotesState extends State<Notes> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 500,
+      height: 450,
       child: Column(
         children: [
           const Center(
             child: Text("Notes", textScaler: TextScaler.linear(1.5),),
           ),
           SizedBox(
-            height: 450,
+            height: 420,
             child: Padding(
               padding: EdgeInsets.all(20),
               child: TextField(
