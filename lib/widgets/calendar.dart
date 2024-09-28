@@ -301,16 +301,17 @@ class _CalendarState extends State<Calendar> {
                                   children: [
                                     TextButton(
                                       onPressed: () async {
-                                        //TODO: Update Date shown to be the date selected
-
                                         DateTime? modifiedSelectedDate = await showDatePicker(
                                         context: context,
+                                        initialDate: DateTime.parse(value[index].date!),
                                         firstDate: DateTime(2000),
-                                        lastDate: DateTime(2025),
+                                        lastDate: DateTime(2300),
                                         initialEntryMode: DatePickerEntryMode.calendarOnly
                                         );
                                         if (modifiedSelectedDate != null){ 
                                           value[index].date = modifiedSelectedDate.toString();
+                                          setState(() => eventDay = formatDate(modifiedSelectedDate, [d]));
+                                          setState(()=> longMonth = formatDate(modifiedSelectedDate, [MM]));
                                        }
                                       },
                                       child: Text('$longMonth $eventDay')
