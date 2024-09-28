@@ -378,14 +378,13 @@ class _CalendarState extends State<Calendar> {
                                   children: [
                                     TextButton(
                                       onPressed: (){
+                                        var selectedDay = DateTime.parse(value[index].date!);
+                                        var focusedDay = DateTime.parse(value[index].date!);
+                                        //_selectedEvents.value = _getEventsForday(_selectedDay!);
                                         value.remove(value[index]);
-                                        _selectedEvents.value = _getEventsForday(_selectedDay!);
-                                        var selectedDay = _selectedDay!;
-                                        var focusedDay = _selectedDay!;
                                         _onDaySelected(selectedDay, focusedDay);
                                         clearController();
                                         saveEvents(events);
-                                        _loadEvents();
                                         Navigator.pop(context);
                                       }, 
                                       child: const Text("Delete Event"),
