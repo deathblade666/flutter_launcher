@@ -138,15 +138,15 @@ class _CalendarState extends State<Calendar> {
               calendarStyle: CalendarStyle(
                 markerDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.onTertiary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 selectedDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 todayDecoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.secondary
+                  color: Theme.of(context).colorScheme.tertiary
                 )
               ),
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
