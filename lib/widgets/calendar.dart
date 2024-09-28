@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/pages/home.dart';
 import 'package:flutter_launcher/widgets/calendar_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -30,6 +31,7 @@ class _CalendarState extends State<Calendar> {
   final _descriptionController = TextEditingController();
   final _eventNoteController = TextEditingController();
   String modifiedDate ='';
+  DateTime? modifiedSelectedDate;
 
 
   @override
@@ -238,9 +240,6 @@ class _CalendarState extends State<Calendar> {
                               ),
                             ),
                           actions: [
-                            
-                            //TODO: First submit saves to map but doesnt updat ehte calendar
-
                             TextButton(
                               onPressed: () {
                                 events.addAll({
@@ -286,6 +285,10 @@ class _CalendarState extends State<Calendar> {
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onLongPress: (){
+                      _titleController.text = value[index].title;
+                      _descriptionController.text = value[index].description;
+                      _locationController.text = value[index].location!;
+                      var oldDate = value[index].date;
                       showDialog(
                         context: context, builder: (BuildContext context) {
                           return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
@@ -301,7 +304,7 @@ class _CalendarState extends State<Calendar> {
                                         //TODO: Update Date shown to be the date selected
 
 
-                                        final  DateTime? modifiedSelectedDate = await showDatePicker(
+                                          DateTime? modifiedSelectedDate = await showDatePicker(
                                           context: context,
                                           firstDate: DateTime(2000),
                                           lastDate: DateTime(2025),
@@ -310,7 +313,7 @@ class _CalendarState extends State<Calendar> {
                                         if (modifiedSelectedDate != null){
                                           value[index].date = modifiedSelectedDate.toString();
                                        }
-                                       _selectedEvents.value = _getEventsForday(modifiedSelectedDate!);
+                                       //_selectedEvents.value = _getEventsForday(modifiedSelectedDate!);
                                       },
                                       child: Text('$longMonth $eventDay')
                                     ),
@@ -364,6 +367,10 @@ class _CalendarState extends State<Calendar> {
                                       controller: _descriptionController,
                                       decoration: const InputDecoration(helperText: 'Description'),
                                     ),
+                                    TextField(
+                                      controller: _eventNoteController,
+                                      decoration: const InputDecoration(helperText: 'Notes'),
+                                    )
                                   ],
                                 ),
                               ),
@@ -387,26 +394,47 @@ class _CalendarState extends State<Calendar> {
                                     ),
                                     const Spacer(),
                                     TextButton(
-                                
-                                  //TODO: Update Key value to reflect if a new date is selected
-                                
                                       onPressed: () {
-                                        if (_titleController.text != ''){
+                                        if (value[index].date == oldDate && _titleController.text != value[index].title){
                                           value[index].title = _titleController.text;
                                         }
-                                        if (_descriptionController.text != ''){
+                                        if (value[index].date == oldDate  && _descriptionController.text != value[index].description){
                                           value[index].description = _descriptionController.text;
                                         }
-                                        if (pickedStartTime != value[index].starttime){
+                                        if (value[index].date == oldDate && pickedStartTime != value[index].starttime){
                                           value[index].starttime = pickedStartTime;
                                         }
-                                        if (pickedEndTime != value[index].endTime){
+                                        if (value[index].date == oldDate && pickedEndTime != value[index].endTime){
                                           value[index].endTime = pickedEndTime;
                                         }
-                                        if (_locationController.text != ''){
+                                        if ( value[index].date == oldDate && _locationController.text != value[index].location){
                                           value[index].location = _locationController.text;
                                         }
+                                        if (value[index].date == oldDate && _eventNoteController.text != value[index].eventNotes){
+                                          value[index].eventNotes = _eventNoteController.text;
+                                        }
+                                        if (value[index].date != oldDate){
+                                          _selectedDay = DateTime.parse(value[index].date!);
+                                          value.remove(value[index]);
+                                          events.addAll({
+                                            _selectedDay!: [
+                                              ..._selectedEvents.value,
+                                              Event(
+                                                location: _locationController.text,
+                                                title: _titleController.text,
+                                                description: _descriptionController.text,
+                                                date: _selectedDay.toString(),
+                                                starttime: pickedStartTime,
+                                                endTime: pickedEndTime,
+                                                eventNotes: _eventNoteController.text,
+                                              )
+                                            ]
+                                          });
+                                        }
                                         _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                        var selectedDay = _selectedDay!;
+                                        var focusedDay = _selectedDay!;
+                                        _onDaySelected(selectedDay, focusedDay);
                                         clearController();
                                         saveEvents(events);
                                         Navigator.pop(context);
