@@ -435,7 +435,7 @@ class _settingeMenuState extends State<settingeMenu> {
                                     resetEvents = value;
                                   });
                                 },
-                                title: Text("Calendar Events"),
+                                title: const Text("Calendar Events"),
                               ),
                               SwitchListTile(
                                 value: resetUI, 
@@ -444,7 +444,7 @@ class _settingeMenuState extends State<settingeMenu> {
                                     resetUI = value;
                                   });
                                 },
-                                title: Text("UI Customizations"),
+                                title: const Text("UI Customizations"),
                               ),
                             ],
                           ),
