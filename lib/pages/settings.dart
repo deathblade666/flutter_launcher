@@ -417,7 +417,7 @@ class _settingeMenuState extends State<settingeMenu> {
                                     resetSearchEngine = value;
                                   });
                                 },
-                                title:  const Text("Custom search Engine")
+                                title:  const Text("Search Engine")
                               ),
                               SwitchListTile(
                                 value: resettasks, 
@@ -463,7 +463,12 @@ class _settingeMenuState extends State<settingeMenu> {
                                     widget.prefs.clear();
                                     Navigator.pop(context);
                                   }, 
-                                  child: const Text("REST ALL SELECTED ITEMS"),
+                                  child: TextButton(
+                                    onPressed: (){
+
+                                    },
+                                    child: const Text("RESET")
+                                  ),
                                 )
                               ],
                             )
