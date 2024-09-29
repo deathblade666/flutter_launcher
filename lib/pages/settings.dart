@@ -389,57 +389,87 @@ class _settingeMenuState extends State<settingeMenu> {
                 TextButton(
                   onPressed: () {
                     showDialog(context: context, builder: (BuildContext context){
-                      return AlertDialog(
-                        title: const Text("The following will be lost the next time the app reloads:"),
-                        actionsAlignment: MainAxisAlignment.start,
-                        actions: [
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Favorites"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Custom searxh Engine"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Tasks"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Calendar Events"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- UI Customizations"),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 15, bottom: 15),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text("Do you wish to continue?"),
-                            ),
-                          ),
-                          Row(
+                      bool resetFavorites = false;
+                      bool resetSearchEngine = false;
+                      bool resettasks = false;
+                      bool resetEvents = false;
+                      bool resetUI = false;
+                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                        return AlertDialog(
+                          title: const Text("Select options to reset:"),
+                          actionsAlignment: MainAxisAlignment.start,
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextButton(
-                                onPressed: (){
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("Cancel")
+                              SwitchListTile(
+                                 value: resetFavorites, 
+                                 onChanged: (value){
+                                   setState(() {
+                                     resetFavorites = value;
+                                   });
+                                 },
+                                 title: const Text("Favorites"),
                               ),
-                              const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
-                              TextButton(
-                                onPressed: (){
-                                  widget.prefs.clear();
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("YES, RESET ALL APP DATA"),
-                              )
+                              SwitchListTile(
+                                value: resetSearchEngine,
+                                onChanged: (value){
+                                  setState(() {
+                                    resetSearchEngine = value;
+                                  });
+                                },
+                                title:  const Text("Custom search Engine")
+                              ),
+                              SwitchListTile(
+                                value: resettasks, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resettasks = value;
+                                  });
+                                },
+                                title: const Text("Tasks"),
+                              ),
+                              SwitchListTile(
+                                value: resetEvents, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetEvents = value;
+                                  });
+                                },
+                                title: Text("Calendar Events"),
+                              ),
+                              SwitchListTile(
+                                value: resetUI, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetUI = value;
+                                  });
+                                },
+                                title: Text("UI Customizations"),
+                              ),
                             ],
-                          )
-                        ],
-                      );
+                          ),
+                          actions: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  }, 
+                                  child: const Text("Cancel")
+                                ),
+                                const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                                TextButton(
+                                  onPressed: (){
+                                    widget.prefs.clear();
+                                    Navigator.pop(context);
+                                  }, 
+                                  child: const Text("REST ALL SELECTED ITEMS"),
+                                )
+                              ],
+                            )
+                          ],
+                        );
+                      });
                     });
                   },
                   child: const Text("Reset"),
