@@ -475,15 +475,6 @@ class _launcherState extends State<launcher>{
                                         child: Center(
                                           child: Column(
                                             children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: IconButton(
-                                                  onPressed: (){
-                                                    _pageController.jumpToPage(0);
-                                                  }, 
-                                                  icon: const Icon(Icons.menu)
-                                                ) 
-                                              ),
                                               Tasks(widget.prefs),
                                             ],
                                           ),
@@ -500,15 +491,6 @@ class _launcherState extends State<launcher>{
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: IconButton(
-                                                  onPressed: (){
-                                                    _pageController.jumpToPage(0);
-                                                  }, 
-                                                  icon: const Icon(Icons.menu)
-                                                ) 
-                                              ),
                                               Calendar(widget.prefs, onPressed: widgetSelection,)
                                             ],
                                           ),
@@ -524,15 +506,6 @@ class _launcherState extends State<launcher>{
                                         child: Center(
                                           child: Column(
                                             children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: IconButton(
-                                                  onPressed: (){
-                                                    _pageController.jumpToPage(0);
-                                                  }, 
-                                                  icon: const Icon(Icons.menu)
-                                                ) 
-                                              ),
                                               Notes(widget.prefs)
                                             ],
                                           ),
