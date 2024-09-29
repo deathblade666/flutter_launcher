@@ -351,63 +351,6 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-
-
-  void widgetSelection(){
-    showDialog(context: context, builder: (BuildContext context){
-      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
-        return SizedBox( 
-          height: 200, 
-          width: 500,
-          child: AlertDialog(
-            title: const Text("Widgets"),
-              actions: [
-                SwitchListTile(
-                  title: const Text("Tasks"),
-                  value: enableTasks, 
-                  onChanged: (value) {                               
-                    setState(() {
-                      enableTasks = value;
-                    });
-                    widget.prefs.setBool("TasksToggle", enableTasks);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Calendar"),
-                  value: enableCalendar, 
-                  onChanged: (value){
-                    setState(() {
-                      enableCalendar = value;
-                    });
-                    widget.prefs.setBool("CalendarToggle", enableCalendar);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Notes"),
-                  value: enableNotes, 
-                  onChanged: (value){
-                    setState(() {
-                      enableNotes = value;
-                    });
-                    widget.prefs.setBool("enableNotes", enableNotes);
-                  }
-                ),
-                TextButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }, 
-                  child: const Text("Save")
-                ),
-              ],
-            )
-          );
-        }
-      );
-    }
-  );
-}
-
-
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -491,7 +434,7 @@ class _launcherState extends State<launcher>{
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Calendar(widget.prefs, onPressed: widgetSelection,)
+                                              Calendar(widget.prefs)
                                             ],
                                           ),
                                         ),

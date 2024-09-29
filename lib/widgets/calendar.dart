@@ -8,9 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
-  Calendar(this.prefs,{required this.onPressed,super.key});
+  Calendar(this.prefs,{super.key});
   SharedPreferences prefs;
-  final Function() onPressed;
 
   @override
   State<Calendar> createState() => _CalendarState();
