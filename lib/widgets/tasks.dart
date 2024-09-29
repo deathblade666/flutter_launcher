@@ -56,11 +56,11 @@ class _TasksState extends State<Tasks> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450,
+      height: 500,
       child:Column(
         children: [
           SizedBox(
-            height: 370,
+            height: 400,
             child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
                 return SizedBox(
                   height: 50,
