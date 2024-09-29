@@ -477,20 +477,6 @@ class _CalendarState extends State<Calendar> {
                               alignment: Alignment.centerLeft,
                               child: Text('${value[index].eventNotes}'),
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                onPressed: (){
-                                  var selectedDay = DateTime.parse(value[index].date!);
-                                  var focusedDay = DateTime.parse(value[index].date!);
-                                  value.remove(value[index]);
-                                  _onDaySelected(selectedDay, focusedDay);
-                                  saveEvents(events);
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("Delete Event"),
-                              ),
-                            ),
                           ],
                         ),                    
                       );
