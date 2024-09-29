@@ -91,6 +91,10 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                   widget.onEnableNotesWidget(value);
                 }
               ),
+              const Spacer(),
+              const Text("Once enabled, simply swipe =>"),
+              const Text('Each widget gets its own page'),
+              const Padding(padding: EdgeInsets.only(bottom: 15))
             ],
           )
         );
