@@ -1,8 +1,11 @@
+import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/pages/home.dart';
 import 'package:flutter_launcher/widgets/calendar_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -15,28 +18,94 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late final ValueNotifier<List<Event>> _selectedEvents;
+ late final ValueNotifier<List<Event>> _selectedEvents;
   Map<DateTime, List<Event>> events = {};
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List eventList = [];
+  TimeOfDay pickedStartTime = TimeOfDay.now();
+  TimeOfDay pickedEndTime = TimeOfDay.now();
+  final _locationController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _eventNoteController = TextEditingController();
+  String modifiedDate ='';
+  DateTime? modifiedSelectedDate;
+
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForMonth(_selectedDay!));
-    //loadPreviousEvents();
-    loadPrefs();
+    _selectedEvents = ValueNotifier(_getEventsForday(_selectedDay!));
+    _loadEvents();
   }
-    
-  void loadPrefs(){
-    String? restoreEvents = widget.prefs.getString("Events");
-    if (restoreEvents != null){
-      getEvents();
+
+ Future<void> _loadEvents() async {
+    widget.prefs.reload();
+    Map<DateTime, List<Event>> _events = await loadEvents();
+    var selectedDay = DateTime.now();
+    var focusedDay = DateTime.now();
+     events = LinkedHashMap(
+      equals: isSameDay,
+      hashCode: Event.getHashCode,
+    )..addAll(_events);
+    _onDaySelected(selectedDay, focusedDay);
+  }
+
+  Future<Map<DateTime, List<Event>>> loadEvents() async {
+    String? jsonString = widget.prefs.getString('Events');
+    if (jsonString == null) {
+      return {};
     }
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    Map<DateTime, List<Event>> events = jsonMap.map((key, value) => MapEntry(
+      DateTime.parse(key),
+      (value as List).map((event) => Event.fromJson(event)).toList(),
+    ));
+    return events;
+  }
+
+  Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
+    Map<String, dynamic> jsonMap = events.map((key, value) => MapEntry(
+      key.toIso8601String(),
+      value.map((event) => event.toJson()).toList(),
+    ));
+    String jsonString = jsonEncode(jsonMap);
+    await widget.prefs.setString('Events', jsonString);
+  }
+
+  modifyDate (BuildContext context) async {
+    final DateTime? modifiedSelectedDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+      initialEntryMode: DatePickerEntryMode.calendarOnly
+    );
+    if (modifiedSelectedDate != null){
+      setState(() {
+        modifiedDate = modifiedSelectedDate.toString();
+      });
+    }
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+      _selectedEvents.value = _getEventsForday(selectedDay);
+    });
+  }
+
+  List<Event> _getEventsForday(DateTime day) {
+      return events[day] ?? [];
+  }  
+
+  void clearController() {
+    _titleController.clear();
+    _descriptionController.clear();
+    _locationController.clear();
   }
 
   @override
@@ -45,77 +114,6 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
-  List<Event> _getEventsForMonth(DateTime day) {
-      return events[day] ?? [];
-  }
-
-  String encodeEvents(Map<DateTime, List<Event>> events) {
-    return json.encode(events.map(
-      (key, value) => MapEntry(
-          key.toIso8601String(), value.map((e) => e.toJson()).toList()),
-    ));
-  }
-  
-  Map<DateTime, List<Event>> _decodeEvents(String eventsJson) {
-    final Map<String, dynamic> jsonMap = json.decode(eventsJson);
-    return jsonMap.map((key, value) {
-      final DateTime dateTime = DateTime.parse(key);
-      final List<Event> _eventsList =
-          (value as List<dynamic>).map((e) => Event.fromJson(e)).toList();
-      setState(() {
-        eventList = _eventsList;
-      });
-      
-          
-          //PopulateEventList();
-      return MapEntry(dateTime, _eventsList);
-    });
-  }
-
-   Future<void> saveEvents(Map<DateTime, List<Event>> events) async {
-    final eventsJson = encodeEvents(events);
-    debugPrint("Saving events: $eventsJson");
-    await widget.prefs.setString("Events", eventsJson);
-  }
-
-  void PopulateEventList() async{
-    setState(() {
-          eventList = events.entries
-      .expand((entry) => entry.value.map((event) => MapEntry(entry.key, event)))
-      .toList();
-    });
-    saveEvents(events);
-  }
-
-  Map<DateTime, List<Event>> getEvents() {
-    final eventsJson = widget.prefs.getString("Events");
-    return eventsJson != null ? _decodeEvents(eventsJson) : {};
-  }
-
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    if (!isSameDay(_selectedDay, selectedDay)) {
-      setState(() {
-        _selectedDay = selectedDay;
-        _focusedDay = focusedDay;
-        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-      });
-      _selectedEvents.value = _getEventsForMonth(selectedDay);
-    }
-  }
-
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  void clearController() {
-    _titleController.clear();
-    _descriptionController.clear();
-  }
-
-  void loadPreviousEvents() {  //re-evaluate this function as it populates the events map with the current day
-    events = {
-      _selectedDay!: [ Event(title: '', description: '', date: '')],
-      _selectedDay!: [ Event(title: '', description: '', date: '')]
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +126,7 @@ class _CalendarState extends State<Calendar> {
             child: TableCalendar(
               focusedDay: _focusedDay, 
               firstDay: DateTime.utc(2000, 12, 31),
-              lastDay: DateTime.utc(2030, 01, 01),
+              lastDay: DateTime.utc(2300, 01, 01),
               rowHeight: 35,
               calendarFormat: CalendarFormat.month,
               headerStyle: const HeaderStyle(
@@ -138,9 +136,13 @@ class _CalendarState extends State<Calendar> {
                 rightChevronVisible: false
               ),
               calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
+                markerDecoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).colorScheme.primary,
+                ),
+                selectedDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 todayDecoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -148,7 +150,7 @@ class _CalendarState extends State<Calendar> {
                 )
               ),
               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-              eventLoader: _getEventsForMonth,
+              eventLoader: _getEventsForday,
               onDaySelected: _onDaySelected,
               rangeSelectionMode: _rangeSelectionMode,
               onPageChanged: (focusedDay) {
@@ -160,50 +162,109 @@ class _CalendarState extends State<Calendar> {
             height: 1,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
             children: [
+              const Spacer(flex: 3,),
+              const Text("Events", textScaler: TextScaler.linear(1.4),), 
+              const Spacer(flex: 2,),
               TextButton(
                 onPressed:  (){
                   showDialog(
                     context: context, builder: (BuildContext context) {
-                      return AlertDialog.adaptive(
-                        scrollable: true,
-                        title: const Text('New Event'),
-                        content: Padding(
-                          padding: const EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                TextField(
-                                  controller: _titleController,
-                                  decoration: const InputDecoration(helperText: 'Title'),
-                                ),
-                                TextField(
-                                  controller: _descriptionController,
-                                  decoration: const InputDecoration(helperText: 'Description'),
-                                ),
-                              ],
+                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                        return AlertDialog.adaptive(
+                          scrollable: true,
+                          title: const Text('New Event'),
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  TextField(
+                                    controller: _titleController,
+                                    decoration: const InputDecoration(helperText: 'Title'),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text("Start Time:"),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final TimeOfDay? newTime = await showTimePicker(
+                                            context: context,
+                                            initialTime: pickedStartTime,
+                                          );
+                                          if (newTime != null) {
+                                            setState(() {
+                                              pickedStartTime = newTime;
+                                            });
+                                          }    
+                                        }, 
+                                        child: Text(pickedStartTime.format(context))
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text("End Time:"),
+                                      TextButton(
+                                        onPressed: () async {
+                                          final TimeOfDay? newTime = await showTimePicker(
+                                            context: context,
+                                            initialTime: pickedEndTime,
+                                          );
+                                          if (newTime != null) {
+                                            setState(() {
+                                              pickedEndTime = newTime;
+                                            });
+                                          }    
+                                        }, 
+                                        child: Text(pickedEndTime.format(context))
+                                      ),
+                                    ],
+                                  ),
+                                  TextField(
+                                    controller: _locationController,
+                                    decoration: const InputDecoration(helperText: 'Location'),
+                                  ),
+                                  TextField(
+                                    controller: _descriptionController,
+                                    decoration: const InputDecoration(helperText: 'Description'),
+                                  ),
+                                  TextField(
+                                    controller: _eventNoteController,
+                                    decoration: const InputDecoration(helperText: 'Notes'),
+                                    maxLines: null,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                            events.addAll({
-                              _selectedDay!: [
-                                ..._selectedEvents.value,
-                                Event(
-                                  date: _selectedDay.toString(),
-                                  title: _titleController.text,
-                                  description: _descriptionController.text)
-                               ]
-                            });
-                            _selectedEvents.value = _getEventsForMonth(_selectedDay!);
-                            clearController();
-                            PopulateEventList();
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Submit'))
-                        ],
-                      );
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                events.addAll({
+                                  _selectedDay!: [
+                                    ..._selectedEvents.value,
+                                    Event(
+                                      location: _locationController.text,
+                                      title: _titleController.text,
+                                      description: _descriptionController.text,
+                                      date: _selectedDay.toString(),
+                                      starttime: pickedStartTime,
+                                      endTime: pickedEndTime,
+                                      eventNotes: _eventNoteController.text,
+                                    )
+                                  ]
+                                });
+                                _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                clearController();
+                                saveEvents(events);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Submit')
+                            )
+                          ],
+                        );
+                      });
                     }
                   );
                 },
@@ -213,59 +274,287 @@ class _CalendarState extends State<Calendar> {
           ),
           SizedBox(
             height: 200,
-            child: ListView.builder(itemCount: events.length, itemBuilder: (context, index){
-              if (eventList.isNotEmpty){
-              final eventEntry = eventList[index];
-              final eventDate = eventEntry.key;
-              final event = eventEntry.value;
-              final eventTitle = event.title;
-              final eventDescripiton = event.description;
-              
-              return SizedBox(
-                height: 50,
-                child: Row(
-                  children: [
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    Text(eventDate.toString().split(' ')[0]),
-                    const Padding(padding: EdgeInsets.only(right: 15)),
-                    VerticalDivider(
-                      indent: 4,
-                      endIndent: 4,
-                      width: 2, 
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child:  Text(
-                              eventTitle, 
-                              textScaler: const TextScaler.linear(1.2), 
-                              style: const TextStyle(fontWeight: FontWeight.w500),
+            child: ValueListenableBuilder(valueListenable: _selectedEvents, builder: (context, value,_){
+              return ListView.builder(itemCount: value.length, itemBuilder: (context, index){
+                var _grabDate = DateTime.parse(value[index].date!.toString().split(' ')[0]);
+                String month = formatDate(_grabDate, [M]);
+                String longMonth = formatDate(_grabDate, [MM]);
+                String eventDay = formatDate(_grabDate, [d]);
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onLongPress: (){
+                    _titleController.text = value[index].title;
+                    _descriptionController.text = value[index].description;
+                    _locationController.text = value[index].location!;
+                    var oldDate = value[index].date;
+                    var newDate = value[index].date;
+                    showDialog(context: context, builder: (BuildContext context) {
+                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                        return AlertDialog.adaptive(
+                          scrollable: true,
+                          title: const Text('Edit Event'),
+                          content: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () async {
+                                    DateTime? modifiedSelectedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.parse(value[index].date!),
+                                      firstDate: DateTime(2000),
+                                      lastDate: DateTime(2300),
+                                      initialEntryMode: DatePickerEntryMode.calendarOnly
+                                      );
+                                      if (modifiedSelectedDate != null){ 
+                                        setState(() => newDate = modifiedSelectedDate.toString());
+                                        setState(() => eventDay = formatDate(modifiedSelectedDate, [d]));
+                                        setState(()=> longMonth = formatDate(modifiedSelectedDate, [MM]));
+                                      }
+                                  },
+                                  child: Text('$longMonth $eventDay')
+                                ),
+                                TextField(
+                                  controller: _titleController,
+                                  decoration: const InputDecoration(helperText: 'Title'),
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Start Time:"),
+                                    TextButton(
+                                      onPressed: () async {
+                                        final TimeOfDay? newTime = await showTimePicker(
+                                        context: context,
+                                        initialTime: pickedStartTime,
+                                        );
+                                        if (newTime != null) {
+                                          setState(() {
+                                            pickedStartTime = newTime;
+                                          });
+                                        }    
+                                      }, 
+                                      child: Text(pickedStartTime.format(context))
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("End Time:"),
+                                    TextButton(
+                                      onPressed: () async {
+                                        final TimeOfDay? newTime = await showTimePicker(
+                                          context: context,
+                                          initialTime: pickedEndTime,
+                                        );
+                                        if (newTime != null) {
+                                          setState(() {
+                                            pickedEndTime = newTime;
+                                          });
+                                        }    
+                                      }, 
+                                      child: Text(pickedEndTime.format(context))
+                                    ),
+                                  ],
+                                ),
+                                TextField(
+                                  controller: _locationController,
+                                  decoration: const InputDecoration(helperText: 'Location'),
+                                ),
+                                TextField(
+                                  controller: _descriptionController,
+                                  decoration: const InputDecoration(helperText: 'Description'),
+                                ),
+                                TextField(
+                                  controller: _eventNoteController,
+                                  decoration: const InputDecoration(helperText: 'Notes'),
+                                )
+                              ],
                             ),
                           ),
+                          actions: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: (){
+                                    var selectedDay = DateTime.parse(value[index].date!);
+                                    var focusedDay = DateTime.parse(value[index].date!);
+                                    value.remove(value[index]);
+                                    _onDaySelected(selectedDay, focusedDay);
+                                    clearController();
+                                    saveEvents(events);
+                                    Navigator.pop(context);
+                                  }, 
+                                  child: const Text("Delete Event"),
+                                ),
+                                const Spacer(),
+                                TextButton(
+                                  onPressed: () {
+                                    if (newDate == oldDate && _titleController.text != value[index].title){
+                                      value[index].title = _titleController.text;
+                                    }
+                                    if (newDate == oldDate && _descriptionController.text != value[index].description){
+                                      value[index].description = _descriptionController.text;
+                                    }
+                                    if (newDate == oldDate && pickedStartTime != value[index].starttime){
+                                      value[index].starttime = pickedStartTime;
+                                    }
+                                    if (newDate == oldDate && pickedEndTime != value[index].endTime){
+                                      value[index].endTime = pickedEndTime;
+                                    }
+                                    if (newDate == oldDate && _locationController.text != value[index].location){
+                                      value[index].location = _locationController.text;
+                                    }
+                                    if (newDate == oldDate&& _eventNoteController.text != value[index].eventNotes){
+                                      value[index].eventNotes = _eventNoteController.text;
+                                    }
+                                    if (newDate != oldDate){
+                                      _selectedDay = DateTime.parse(newDate!);
+                                      value.remove(value[index]);
+                                      events.addAll({
+                                        _selectedDay!: [
+                                          ..._selectedEvents.value,
+                                          Event(
+                                            location: _locationController.text,
+                                            title: _titleController.text,
+                                            description: _descriptionController.text,
+                                            date: _selectedDay.toString(),
+                                            starttime: pickedStartTime,
+                                            endTime: pickedEndTime,
+                                            eventNotes: _eventNoteController.text,
+                                          )
+                                        ]
+                                      });
+                                    }
+                                    _selectedEvents.value = _getEventsForday(_selectedDay!);
+                                    var selectedDay = _selectedDay!;
+                                    var focusedDay = _selectedDay!;
+                                    _onDaySelected(selectedDay, focusedDay);
+                                    clearController();
+                                    saveEvents(events);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Submit')
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+                      });
+                    });
+                  },
+                  onTap: (){
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog.adaptive(
+                        title: Center(
+                          child: Text(value[index].title)
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(eventDescripiton),
-                          ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Date: " '$longMonth $eventDay'),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Time: "'${value[index].starttime?.format(context)} - ${value[index].endTime?.format(context)}'),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Location: " '${value[index].location}'),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Decription: " '${value[index].description}'),
+                            ),
+                            const Divider(),
+                            const Align(
+                              alignment: Alignment.center,
+                              child: Text("Notes:"),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('${value[index].eventNotes}'),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                onPressed: (){
+                                  var selectedDay = DateTime.parse(value[index].date!);
+                                  var focusedDay = DateTime.parse(value[index].date!);
+                                  value.remove(value[index]);
+                                  _onDaySelected(selectedDay, focusedDay);
+                                  saveEvents(events);
+                                  Navigator.pop(context);
+                                }, 
+                                child: const Text("Delete Event"),
+                              ),
+                            ),
+                          ],
+                        ),                    
+                      );
+                    });
+                  },
+                  child: SizedBox(
+                    height: 65,
+                    child: Row(
+                      children: [
+                        const Padding(padding: EdgeInsets.only(left: 10)),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(month, textScaler: const TextScaler.linear(1.5)),
+                            Text(' $eventDay', textScaler: const TextScaler.linear(1.4)),
+                          ],
+                        ),
+                        const Padding(padding: EdgeInsets.only(right: 15)),
+                        VerticalDivider(
+                          indent: 4,
+                          endIndent: 4,
+                          width: 2, 
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only( left: 10, right: 10),
+                          child: SizedBox(
+                            width: 335,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        value[index].title, 
+                                        textScaler: const TextScaler.linear(1.2), 
+                                        style: const TextStyle(fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Text('${value[index].starttime?.format(context)}  -  ${value[index].endTime?.format(context)}',overflow: TextOverflow.ellipsis,),
+                                    ),
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(value[index].description),
+                                )
+                              ],
+                            )
+                          ) 
                         ),
                       ],
-                    )
-                  ],
-                ) 
-              );
-              } else {
-                return  const Center(
-                  child:Text("No Events")
+                    ) 
+                  )
                 );
-              }
+              });
             }),
-          ),
+          )
         ]
       )
     );
