@@ -14,6 +14,7 @@ class _NotesState extends State<Notes> {
 
   @override
   void initState(){
+    super.initState();
     loadLastText();
   }
 

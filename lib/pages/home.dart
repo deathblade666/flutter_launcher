@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/notes.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
@@ -79,11 +81,11 @@ class _launcherState extends State<launcher>{
   bool hideIcon2 = false;
   bool hideIcon3 = false;
   bool hideIcon4 = false;
-  bool displayTasks = false;
   bool enableTasks = false;
   bool showAddWidgettext = true;
   bool enableCalendar = false;
   bool enableNotes = false;
+  final PageController _pageController = PageController(initialPage: 1); 
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -132,7 +134,6 @@ class _launcherState extends State<launcher>{
     if (tasks != null){
       setState(() {
         enableTasks = tasks;
-        displayTasks = tasks;
     });
     }
     if (notes != null){
@@ -198,6 +199,7 @@ class _launcherState extends State<launcher>{
       setState(() {
         searchHieght = 40;
       });
+      
     }
   }
 
@@ -349,62 +351,6 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  void widgetSelection(){
-    showDialog(context: context, builder: (BuildContext context){
-      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
-        return SizedBox( 
-          height: 200, 
-          width: 500,
-          child: AlertDialog(
-            title: const Text("Widgets"),
-              actions: [
-                SwitchListTile(
-                  title: const Text("Tasks"),
-                  value: enableTasks, 
-                  onChanged: (value) {                               
-                    setState(() {
-                      enableTasks = value;
-                      displayTasks = value;
-                    });
-                    widget.prefs.setBool("TasksToggle", enableTasks);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Calendar"),
-                  value: enableCalendar, 
-                  onChanged: (value){
-                    setState(() {
-                      enableCalendar = value;
-                    });
-                    widget.prefs.setBool("CalendarToggle", enableCalendar);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Notes"),
-                  value: enableNotes, 
-                  onChanged: (value){
-                    setState(() {
-                      enableNotes = value;
-                    });
-                    widget.prefs.setBool("enableNotes", value);
-                  }
-                ),
-                TextButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }, 
-                  child: const Text("Save")
-                ),
-              ],
-            )
-          );
-        }
-      );
-    }
-  );
-}
-
-
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -430,74 +376,91 @@ class _launcherState extends State<launcher>{
                     //TODO: Allow changing widget order
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: SizedBox(
-                            height: 500,
-                            child: PageView(
-                              children: <Widget>[
-                                if (displayTasks == true)...[  
-                                  Visibility(
-                                    visible: displayTasks,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Tasks(widget.prefs),
-                                          ],
-                                        ),
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                          void enableCalendarWidget (value){
+                            setState(() {
+                              enableCalendar = value;     
+                            });
+                          }
+                          void enableTaskWidget (value){
+                            setState(() {
+                              enableTasks = value;
+                            });
+                          }
+                          void enableNotesWidget (value){
+                            setState(() {
+                              enableNotes = value;
+                            });
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                            child: SizedBox(
+                              height: 500,
+                              child: PageView(
+                                controller: _pageController,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 800,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Widgetoptions(widget.prefs,onEnableCalendarWidget: enableCalendarWidget ,onEnableNotesWidget: enableNotesWidget,onEnableTaskWidget: enableTaskWidget,),
+                                        ],
                                       ),
-                                    )
-                                  ),
-                                ] else... [],
-                                if (enableCalendar == true)...[  
-                                  Visibility(
-                                    visible: enableCalendar,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Calendar(widget.prefs)
-                                          ],
-                                        ),
-                                      ),
-                                    ))
-                                ] else... [],
-                                if (enableNotes == true)...[
-                                  Visibility(
-                                    visible: enableNotes,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Notes(widget.prefs)
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  )
-                                ] else ...[],
-                                if (enableCalendar == false || enableTasks == false || enableNotes == false)...[
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    child: const Center( 
-                                      child: Text("click here to add a widget!"),
                                     ),
-                                    onTap: ()  {
-                                      Navigator.pop(context);
-                                      widgetSelection();
-                                    },
                                   ),
-                                ] else ...[]
-                              ],
+                                  if (enableTasks == true)...[  
+                                    Visibility(
+                                      visible: enableTasks,
+                                      child: SizedBox(
+                                        height: 800,
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Tasks(widget.prefs),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ),
+                                  ] else... [],
+                                  if (enableCalendar == true)...[  
+                                    Visibility(
+                                      visible: enableCalendar,
+                                      child: SizedBox(
+                                        height: 800,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Calendar(widget.prefs)
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    )
+                                  ] else... [],
+                                  if (enableNotes == true)...[
+                                    Visibility(
+                                      visible: enableNotes,
+                                      child: SizedBox(
+                                      height: 800,
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Notes(widget.prefs)
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    )
+                                  ] else ...[],
+                                ],
+                              )
                             )
-                          )
-                        );
+                          );
+                        });
                       });
                     },
                   ),
