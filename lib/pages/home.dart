@@ -351,21 +351,7 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  void enableCalendarWidget (value){
-    setState(() {
-      enableCalendar = value;     
-    });
-  }
-  void enableTaskWidget (value){
-    setState(() {
-      enableTasks = value;
-    });
-  }
-  void enableNotesWidget (value){
-    setState(() {
-      enableNotes = value;
-    });
-  }
+
 
   void widgetSelection(){
     showDialog(context: context, builder: (BuildContext context){
@@ -447,113 +433,118 @@ class _launcherState extends State<launcher>{
                     //TODO: Allow changing widget order
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: SizedBox(
-                            height: 500,
-                            child: PageView(
-                              controller: _pageController,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 800,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Widgetoptions(widget.prefs,onEnableCalendarWidget: enableCalendarWidget ,onEnableNotesWidget: enableNotesWidget,onEnableTaskWidget: enableTaskWidget,),
-                                      ],
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                          void enableCalendarWidget (value){
+                            setState(() {
+                              enableCalendar = value;     
+                            });
+                          }
+                          void enableTaskWidget (value){
+                            setState(() {
+                              enableTasks = value;
+                            });
+                          }
+                          void enableNotesWidget (value){
+                            setState(() {
+                              enableNotes = value;
+                            });
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                            child: SizedBox(
+                              height: 500,
+                              child: PageView(
+                                controller: _pageController,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 800,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Widgetoptions(widget.prefs,onEnableCalendarWidget: enableCalendarWidget ,onEnableNotesWidget: enableNotesWidget,onEnableTaskWidget: enableTaskWidget,),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                if (enableTasks == true)...[  
-                                  Visibility(
-                                    visible: enableTasks,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: IconButton(
-                                                onPressed: (){
-                                                  _pageController.jumpToPage(0);
-                                                }, 
-                                                icon: const Icon(Icons.menu)
-                                              ) 
-                                            ),
-                                            Tasks(widget.prefs),
-                                            
-                                          ],
+                                  if (enableTasks == true)...[  
+                                    Visibility(
+                                      visible: enableTasks,
+                                      child: SizedBox(
+                                        height: 800,
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                  onPressed: (){
+                                                    _pageController.jumpToPage(0);
+                                                  }, 
+                                                  icon: const Icon(Icons.menu)
+                                                ) 
+                                              ),
+                                              Tasks(widget.prefs),
+                                            ],
+                                          ),
                                         ),
-                                      ),
+                                      )
+                                    ),
+                                  ] else... [],
+                                  if (enableCalendar == true)...[  
+                                    Visibility(
+                                      visible: enableCalendar,
+                                      child: SizedBox(
+                                        height: 800,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                  onPressed: (){
+                                                    _pageController.jumpToPage(0);
+                                                  }, 
+                                                  icon: const Icon(Icons.menu)
+                                                ) 
+                                              ),
+                                              Calendar(widget.prefs, onPressed: widgetSelection,)
+                                            ],
+                                          ),
+                                        ),
+                                      )
                                     )
-                                  ),
-                                ] else... [],
-                                if (enableCalendar == true)...[  
-                                  Visibility(
-                                    visible: enableCalendar,
-                                    child: SizedBox(
+                                  ] else... [],
+                                  if (enableNotes == true)...[
+                                    Visibility(
+                                      visible: enableNotes,
+                                      child: SizedBox(
                                       height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: IconButton(
-                                                onPressed: (){
-                                                  _pageController.jumpToPage(0);
-                                                }, 
-                                                icon: const Icon(Icons.menu)
-                                              ) 
-                                            ),
-                                            Calendar(widget.prefs, onPressed: widgetSelection,)
-                                          ],
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: IconButton(
+                                                  onPressed: (){
+                                                    _pageController.jumpToPage(0);
+                                                  }, 
+                                                  icon: const Icon(Icons.menu)
+                                                ) 
+                                              ),
+                                              Notes(widget.prefs)
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ))
-                                ] else... [],
-                                if (enableNotes == true)...[
-                                  Visibility(
-                                    visible: enableNotes,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: IconButton(
-                                                onPressed: (){
-                                                  _pageController.jumpToPage(0);
-                                                }, 
-                                                icon: const Icon(Icons.menu)
-                                              ) 
-                                            ),
-                                            Notes(widget.prefs)
-                                          ],
-                                        ),
-                                      ),
+                                      )
                                     )
-                                  )
-                                ] else ...[],
-                               // if (enableCalendar == false || enableTasks == false || enableNotes == false)...[
-                               //   GestureDetector(
-                               //     behavior: HitTestBehavior.opaque,
-                               //     child: const Center( 
-                               //       child: Text("click here to add a widget!"),
-                               //     ),
-                               //     onTap: ()  {
-                               //       Navigator.pop(context);
-                               //       widgetSelection();
-                               //     },
-                               //   ),
-                               // ] else ...[]
-                              ],
+                                  ] else ...[],
+                                ],
+                              )
                             )
-                          )
-                        );
+                          );
+                        });
                       });
                     },
                   ),
