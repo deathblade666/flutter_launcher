@@ -377,6 +377,7 @@ class _launcherState extends State<launcher>{
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                          List<Widget>? items = myWidgetKey.currentState?.getWidgets();
                           void enableCalendarWidget (value){
                             setState(() {
                               enableCalendar = value;     
@@ -398,8 +399,13 @@ class _launcherState extends State<launcher>{
                               height: 500,
                               child: PageView(
                                 controller: _pageController,
-                                children: <Widget>[
-                                  SizedBox(
+                                children: [
+                                  Widgetoptions(widget.prefs),
+                                  //if (items != null)... [
+                                    ...items!
+                                  //] else...[],
+                                ]
+                              /*    SizedBox(
                                     height: 800,
                                     child: Center(
                                       child: Column(
@@ -456,7 +462,7 @@ class _launcherState extends State<launcher>{
                                       )
                                     )
                                   ] else ...[],
-                                ],
+                                */
                               )
                             )
                           );

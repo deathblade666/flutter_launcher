@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
-  Calendar(this.prefs,{super.key});
+  Calendar(this.prefs, {Key? key}) : super(key: key);
   SharedPreferences prefs;
   @override
   State<Calendar> createState() => _CalendarState();

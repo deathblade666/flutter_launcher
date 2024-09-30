@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Notes extends StatefulWidget {
-  Notes(this.prefs,{super.key});
+  Notes(this.prefs, {Key? key}) : super(key: key);
   SharedPreferences prefs;
 
   @override
