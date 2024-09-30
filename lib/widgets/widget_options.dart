@@ -85,7 +85,7 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                 itemBuilder: (context, index,) {
                   return SwitchListTile(
                     key: ValueKey(items[index]),
-                    title: Text('${items[index]}'.split('-')[0]),
+                    title: Text('${items[index]}'.split("'")[1].split('-')[0]),
                     value: switchValues[index],
                     onChanged: (bool value) {
                       setState(() {

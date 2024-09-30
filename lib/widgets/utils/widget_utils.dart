@@ -15,9 +15,9 @@ WidgetList({required this.widgets, required this.prefs});
 
   List<Widget> getWidgets() {
     return [
-      Tasks(prefs, key: const ValueKey('tasks')),
-      Calendar(prefs,key: const ValueKey('calendar')),
-      Notes(prefs, key: const ValueKey('notes'))
+      Tasks(prefs, key: const ValueKey('Tasks')),
+      Calendar(prefs,key: const ValueKey('Calendar')),
+      Notes(prefs, key: const ValueKey('Notes'))
     ];
     
   }
@@ -32,22 +32,23 @@ WidgetList({required this.widgets, required this.prefs});
     String? jsonString = prefs.getString('widgets');
     if (jsonString != null) {
       List<String> widgetKeys = List<String>.from(jsonDecode(jsonString));
+      print(jsonString);
       widgets = widgetKeys.map((key) {
-        if (key == "[<'tasks'>]") {
-          return Tasks(prefs, key: const ValueKey('tasks'));
-        } else if (key == "[<'notes'>]") {
-          return Notes(prefs, key: const ValueKey('notes'));
-        } else if (key == "[<'calendar'>]") {
-          return Calendar(prefs, key: const ValueKey('calendar'));
+        if (key == "[<'Tasks'>]") {
+          return Tasks(prefs, key: const ValueKey('Tasks'));
+        } else if (key == "[<'Notes'>]") {
+          return Notes(prefs, key: const ValueKey('Notes'));
+        } else if (key == "[<'Calendar'>]") {
+          return Calendar(prefs, key: const ValueKey('Calendar'));
         } else {
           return null;
         }
       }).where((widget) => widget != null).cast<Widget>().toList();
     } else {
       widgets = [
-        Tasks(prefs, key: const ValueKey('tasks')),
-        Calendar(prefs, key: const ValueKey('calendar')),
-        Notes(prefs, key: const ValueKey('notes')),
+        Tasks(prefs, key: const ValueKey('Tasks')),
+        Calendar(prefs, key: const ValueKey('Calendar')),
+        Notes(prefs, key: const ValueKey('Notes')),
       ];
     }
   }
