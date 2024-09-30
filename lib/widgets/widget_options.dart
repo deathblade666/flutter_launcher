@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher/widgets/calendar.dart';
-import 'package:flutter_launcher/widgets/notes.dart';
-import 'package:flutter_launcher/widgets/tasks.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,14 +21,6 @@ class Widgetoptions extends StatefulWidget {
     */SharedPreferences prefs;
     final Function(List<Widget> items) onorderChange;
 
-  /*List<Widget> getWidgets() {
-    return [
-      Tasks(prefs, key: const ValueKey('tasks')),
-      Calendar(prefs,key: const ValueKey('calendar')),
-      Notes(prefs, key: const ValueKey('notes'))
-    ];
-  }*/
-
   @override
   State<Widgetoptions> createState() => _WidgetoptionsState();
 }
@@ -39,7 +28,7 @@ class Widgetoptions extends StatefulWidget {
 class _WidgetoptionsState extends State<Widgetoptions> {
   List<Widget> items = [];
   List<bool> switchValues = [false, false, false];
-  bool enableCalendar=false;
+  bool enableCalendar=true;
   bool enableTasks=false;
   bool enableNotes=false;
     
@@ -47,15 +36,15 @@ class _WidgetoptionsState extends State<Widgetoptions> {
   void initState() {
     loadPrefs();
     items = WidgetList(widgets: items, prefs: widget.prefs).getWidgets();
-    //widget.onorderChange(items);
     super.initState();
   }
 
-  void loadPrefs(){
+  void loadPrefs() async {
     widget.prefs.reload();
     bool? calendar = widget.prefs.getBool("CalendarToggle");
     bool? tasks = widget.prefs.getBool("TasksToggle");
     bool? notes = widget.prefs.getBool("enableNotes");
+    
     if (calendar != null){
       setState(() {
         enableCalendar = calendar;
@@ -71,6 +60,12 @@ class _WidgetoptionsState extends State<Widgetoptions> {
         enableNotes = notes;
       });
     }
+
+      WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
+      await widgets.loadWidgets();
+      setState(() {
+       items = widgets.widgets;
+      });
   }
 
   @override
@@ -83,9 +78,9 @@ class _WidgetoptionsState extends State<Widgetoptions> {
           SizedBox(
             height: 400,
             width: 400,
-            child: StatefulBuilder(builder: (BuildContext context, StateSetter setState){ 
-              return 
-             ReorderableListView.builder(
+            //TODO: Setup new toggles for widget
+            child: StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+              return ReorderableListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index,) {
                   return SwitchListTile(
@@ -110,9 +105,7 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                     final bool switchValue = switchValues.removeAt(oldIndex);
                     items.insert(newIndex, item);
                     switchValues.insert(newIndex, switchValue);
-                    print('Items List: $items');
-                    
-                    
+                    WidgetList(prefs: widget.prefs,widgets: items).saveWidgets();
                   });
                   widget.onorderChange(items);
                 },

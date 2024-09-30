@@ -37,7 +37,7 @@ class _NotesState extends State<Notes> {
           SizedBox(
             height: 450,
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: TextField(
                 controller: notesController,
                 expands: true,

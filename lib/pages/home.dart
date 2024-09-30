@@ -6,9 +6,6 @@ import 'dart:ui';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
-import 'package:flutter_launcher/widgets/calendar.dart';
-import 'package:flutter_launcher/widgets/notes.dart';
-import 'package:flutter_launcher/widgets/tasks.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
@@ -86,7 +83,7 @@ class _launcherState extends State<launcher>{
   bool showAddWidgettext = true;
   bool enableCalendar = false;
   bool enableNotes = false;
-  final PageController _pageController = PageController(initialPage: 1, keepPage: false); 
+  final PageController _pageController = PageController(initialPage: 1); 
   List<Widget> initialItems = [];
   var widgetProvider;
 
@@ -113,7 +110,7 @@ class _launcherState extends State<launcher>{
     focusOnSearch.addListener(focusListener);
   }
 
-  void loadPrefs() {
+  void loadPrefs() async {
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
@@ -203,9 +200,13 @@ class _launcherState extends State<launcher>{
     if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
       setState(() {
         searchHieght = 40;
-      });
-      
+      });     
     }
+    WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
+    await widgets.loadWidgets();
+    setState(() {
+     initialItems = widgets.widgets;
+    });
   }
 
   void fetchApps() async {
@@ -356,12 +357,6 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  void updatewidgetList (items) {
-    setState((){ 
-      initialItems=items;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -384,10 +379,12 @@ class _launcherState extends State<launcher>{
                         Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
                     ), 
-                    //TODO: Allow changing widget order
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                          void updatewidgetList (items){
+                            setState(() => initialItems=items);
+                          }
                           void enableCalendarWidget (value){
                             setState(() {
                               enableCalendar = value;     
@@ -410,7 +407,6 @@ class _launcherState extends State<launcher>{
                               child: PageView(
                                 controller: _pageController,
                                 children: [
-                                  Text('$initialItems'),
                                   Widgetoptions(widget.prefs, onorderChange: updatewidgetList),
                                   ...initialItems,
                                 ]
