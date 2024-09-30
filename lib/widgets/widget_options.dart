@@ -61,11 +61,11 @@ class _WidgetoptionsState extends State<Widgetoptions> {
       });
     }
 
-      WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
-      await widgets.loadWidgets();
-      setState(() {
+    WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
+    await widgets.loadWidgets();
+    setState(() {
        items = widgets.widgets;
-      });
+    });
   }
 
   @override

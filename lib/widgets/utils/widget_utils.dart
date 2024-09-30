@@ -44,7 +44,11 @@ WidgetList({required this.widgets, required this.prefs});
         }
       }).where((widget) => widget != null).cast<Widget>().toList();
     } else {
-      widgets = [];
+      widgets = [
+        Tasks(prefs, key: const ValueKey('tasks')),
+        Calendar(prefs, key: const ValueKey('calendar')),
+        Notes(prefs, key: const ValueKey('notes')),
+      ];
     }
   }
 }
