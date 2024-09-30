@@ -9,6 +9,7 @@ import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/notes.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -85,7 +86,9 @@ class _launcherState extends State<launcher>{
   bool showAddWidgettext = true;
   bool enableCalendar = false;
   bool enableNotes = false;
-  final PageController _pageController = PageController(initialPage: 1); 
+  final PageController _pageController = PageController(initialPage: 1, keepPage: false); 
+  List<Widget> initialItems = [];
+  var widgetProvider;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -105,6 +108,8 @@ class _launcherState extends State<launcher>{
     super.initState();
     fetchApps();
     loadPrefs();
+    widgetProvider = WidgetList(widgets: [], prefs: widget.prefs);
+    initialItems = widgetProvider.getWidgets();
     focusOnSearch.addListener(focusListener);
   }
 
@@ -351,6 +356,12 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
+  void updatewidgetList (items) {
+    setState((){ 
+      initialItems=items;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -377,7 +388,6 @@ class _launcherState extends State<launcher>{
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
-                          List<Widget>? items = myWidgetKey.currentState?.getWidgets();
                           void enableCalendarWidget (value){
                             setState(() {
                               enableCalendar = value;     
@@ -400,69 +410,10 @@ class _launcherState extends State<launcher>{
                               child: PageView(
                                 controller: _pageController,
                                 children: [
-                                  Widgetoptions(widget.prefs),
-                                  //if (items != null)... [
-                                    ...items!
-                                  //] else...[],
+                                  Text('$initialItems'),
+                                  Widgetoptions(widget.prefs, onorderChange: updatewidgetList),
+                                  ...initialItems,
                                 ]
-                              /*    SizedBox(
-                                    height: 800,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Widgetoptions(widget.prefs,onEnableCalendarWidget: enableCalendarWidget ,onEnableNotesWidget: enableNotesWidget,onEnableTaskWidget: enableTaskWidget,),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  if (enableTasks == true)...[  
-                                    Visibility(
-                                      visible: enableTasks,
-                                      child: SizedBox(
-                                        height: 800,
-                                        child: Center(
-                                          child: Column(
-                                            children: [
-                                              Tasks(widget.prefs),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ),
-                                  ] else... [],
-                                  if (enableCalendar == true)...[  
-                                    Visibility(
-                                      visible: enableCalendar,
-                                      child: SizedBox(
-                                        height: 800,
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Calendar(widget.prefs)
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    )
-                                  ] else... [],
-                                  if (enableNotes == true)...[
-                                    Visibility(
-                                      visible: enableNotes,
-                                      child: SizedBox(
-                                      height: 800,
-                                        child: Center(
-                                          child: Column(
-                                            children: [
-                                              Notes(widget.prefs)
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    )
-                                  ] else ...[],
-                                */
                               )
                             )
                           );

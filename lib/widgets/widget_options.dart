@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/notes.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final GlobalKey<_WidgetoptionsState> myWidgetKey = GlobalKey<_WidgetoptionsState>();
+
 
 class Widgetoptions extends StatefulWidget {
   Widgetoptions(
     this.prefs,
-    {/*required this.onEnableTaskWidget,
+    
+    {
+      required this.onorderChange,
+      /*required this.onEnableTaskWidget,
     required this.onEnableCalendarWidget,
     required this.onEnableNotesWidget,
     */super.key});
@@ -18,6 +22,7 @@ class Widgetoptions extends StatefulWidget {
     final Function(bool value) onEnableCalendarWidget;
     final Function(bool value) onEnableNotesWidget;
     */SharedPreferences prefs;
+    final Function(List<Widget> items) onorderChange;
 
   /*List<Widget> getWidgets() {
     return [
@@ -32,16 +37,6 @@ class Widgetoptions extends StatefulWidget {
 }
 
 class _WidgetoptionsState extends State<Widgetoptions> {
-  _WidgetoptionsState();
-
-  List<Widget> getWidgets() {
-    return [
-      Tasks(widget.prefs, key: const ValueKey('tasks')),
-      Calendar(widget.prefs,key: const ValueKey('calendar')),
-      Notes(widget.prefs, key: const ValueKey('notes'))
-    ];
-  }
-
   List<Widget> items = [];
   List<bool> switchValues = [false, false, false];
   bool enableCalendar=false;
@@ -51,7 +46,8 @@ class _WidgetoptionsState extends State<Widgetoptions> {
   @override
   void initState() {
     loadPrefs();
-    items = getWidgets();
+    items = WidgetList(widgets: items, prefs: widget.prefs).getWidgets();
+    //widget.onorderChange(items);
     super.initState();
   }
 
@@ -88,7 +84,8 @@ class _WidgetoptionsState extends State<Widgetoptions> {
             height: 400,
             width: 400,
             child: StatefulBuilder(builder: (BuildContext context, StateSetter setState){ 
-              return ReorderableListView.builder(
+              return 
+             ReorderableListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index,) {
                   return SwitchListTile(
@@ -99,6 +96,7 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                       setState(() {
                         switchValues[index] = value;
                       });
+                      widget.onorderChange(items);
                     },
                     enableFeedback: true,
                   );
@@ -112,10 +110,14 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                     final bool switchValue = switchValues.removeAt(oldIndex);
                     items.insert(newIndex, item);
                     switchValues.insert(newIndex, switchValue);
+                    print('Items List: $items');
+                    
+                    
                   });
+                  widget.onorderChange(items);
                 },
               );
-            })
+            }),
           ),
           const Text("TEst"),
           const Padding(padding: EdgeInsets.only(bottom: 15))
