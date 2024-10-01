@@ -14,15 +14,25 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
  - Navigate to a site directly from your home screen
  - Set Favorites for quick access (currently up to 4)
  - Modular UI, only show the UI elements you need/want
+ - 3 Custom Widgets
+   - Calendar
+   - Tasks
+   - Notes
 
 ### in Progress
 List of features that I'm actively working on implementing
- - [x] ~~Pinning Favorites~~
-   - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
- - Widget support
-   - Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones
+- Re-order Widgets
+  - The ability to set a custom order to the custom widgets.
+- Re-implement Settings
+  - due to some reliability issues with the long press I'll be looking to moving Settings.
+- Modular Code
+  - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is
+ - [x] ~~Pinning Favorites~~
+   - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
+ - [x] ~~Widget support~~
+   - ~~Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones~~
 
 ### Planned
 - Switch Search query for apps to Regex
@@ -33,7 +43,7 @@ This is a list of feature that I hope to accomplish but currently do not have th
 - WebCal?
 - Dynamic Date
   - have the date widget change depending factors such as, if media is play change to media controls
-
+- Native Widget Support (on back burner for now)
 ## Build
 
 ``
