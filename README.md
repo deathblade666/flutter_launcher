@@ -77,9 +77,9 @@ run ``flutter build apk``
 
 ## Showcase
 
-|Home screen | Widget Pane |
-|--|--|
-| ![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-34.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-19.png) |
+|Home screen | Favorites | Widget Pane |
+|--|--|--|
+| ![alt](https://github.com/deathblade666/flutter_launcher/blob/ff093da368df531a681971d2554e0317e3613f6c/screenshots/Screenshot%20from%202024-09-18%2014-40-34.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/78c59e7e86f6e0871a92862655a66f1970fc4fbf/screenshots/Screenshot%20from%202024-10-01%2019-55-52.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-19.png) |
 
 ## Widgets
 
