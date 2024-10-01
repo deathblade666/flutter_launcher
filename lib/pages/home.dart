@@ -7,11 +7,13 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
+import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -85,7 +87,8 @@ class _launcherState extends State<launcher>{
   bool enableNotes = false;
   final PageController _pageController = PageController(initialPage: 1); 
   List<Widget> initialItems = [];
-  var widgetProvider;
+  late WidgetList widgets = WidgetList(widgets: initialItems, prefs: widget.prefs);
+  List<bool> visibilityStates = [true, true, true, true];
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -105,8 +108,7 @@ class _launcherState extends State<launcher>{
     super.initState();
     fetchApps();
     loadPrefs();
-    widgetProvider = WidgetList(widgets: [], prefs: widget.prefs);
-    initialItems = widgetProvider.getWidgets();
+    initialItems = widgets.getWidgets();
     focusOnSearch.addListener(focusListener);
   }
 
@@ -382,23 +384,20 @@ class _launcherState extends State<launcher>{
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                          final visibilityState = Provider.of<WidgetVisibilityState>(context);
                           void updatewidgetList (items){
                             setState(() => initialItems=items);
                           }
-                          void enableCalendarWidget (value){
+                          void onToggleChange(int index) {
                             setState(() {
-                              enableCalendar = value;     
+                              visibilityStates[index] = !visibilityStates[index];
                             });
                           }
-                          void enableTaskWidget (value){
-                            setState(() {
-                              enableTasks = value;
-                            });
-                          }
-                          void enableNotesWidget (value){
-                            setState(() {
-                              enableNotes = value;
-                            });
+                          List<Widget> getVisibleWidgets() {
+                            return visibilityState.order
+                            .where((index) => visibilityState.visibility[index])
+                            .map((index) => initialItems[index])
+                            .toList();
                           }
                           return Padding(
                             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -407,8 +406,8 @@ class _launcherState extends State<launcher>{
                               child: PageView(
                                 controller: _pageController,
                                 children: [
-                                  Widgetoptions(widget.prefs, onorderChange: updatewidgetList),
-                                  ...initialItems,
+                                  Widgetoptions(widget.prefs, onorderChange: updatewidgetList, onToggleChange: (index) { visibilityState.toggleVisibility(index);},),
+                                  ...getVisibleWidgets(),
                                 ]
                               )
                             )

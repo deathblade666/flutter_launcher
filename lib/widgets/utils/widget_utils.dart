@@ -10,17 +10,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WidgetList {
  List<Widget> widgets = [];
  SharedPreferences prefs;
+ bool showTasks = true;
+  bool showCalendar = true;
+  bool showNotes = true;
 
 WidgetList({required this.widgets, required this.prefs});
 
   List<Widget> getWidgets() {
     return [
-      Tasks(prefs, key: const ValueKey('Tasks')),
-      Calendar(prefs,key: const ValueKey('Calendar')),
-      Notes(prefs, key: const ValueKey('Notes'))
+      Visibility(
+        visible: showTasks,
+        child: Tasks(prefs, key: const ValueKey('Tasks')),
+      ),
+      Visibility(
+        visible: showCalendar,
+        child: Calendar(prefs, key: const ValueKey('Calendar')),
+      ),
+      Visibility(
+        visible: showNotes,
+        child: Notes(prefs, key: const ValueKey('Notes')),
+      ),
     ];
-    
   }
+
+  void updateVisibility(widgetName, value) {
+    if (widgetName == "Tasks") showTasks = value;
+    if (widgetName == "Calendar") showCalendar = value;
+    if (widgetName == "Notes") showNotes = value;
+    print(widgetName);
+  }
+
+
 
   Future<void> saveWidgets() async {
     List<String> widgetKeys = widgets.map((widget) => widget.key.toString()).toList();
