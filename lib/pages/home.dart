@@ -477,12 +477,18 @@ class _launcherState extends State<launcher>{
                 },
                 onTapOutside: (value){
                   focusOnSearch.unfocus();
+                  if (_filteredItems.isEmpty ){
+                    setState(() {
+                      _searchController.clear();
+                      showAppList = false;
+                      hideMainGesture = true;
+                      hideDate = true;
+                    });
+                  } else {
                   setState(() {
                     _searchController.clear();
-                    showAppList = false;
-                    hideMainGesture = true;
-                    hideDate = true;
                   });
+                  }
                 },
                 onSubmitted: (String value) async {
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
@@ -512,18 +518,19 @@ class _launcherState extends State<launcher>{
                 },
                 controller: _searchController,
                 onTap: () {
-                  if (_searchController.text != ""){
+                  if (_searchController.text.isNotEmpty){
                     String s = _searchController.text;
                     setState(() {
                       _filteredItems = _app.where(
                         (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
-                        showAppList = true;
-                        hideDate = false;
-                        hideMainGesture = false;
+                      showAppList = true;
+                      hideDate = false;
+                      hideMainGesture = false;
                     });
-                  } else{
+                  } else {
                     setState(() {
+                      _filteredItems = _app;
                       showAppList = !showAppList;
                       hideDate = !hideDate;
                       hideMainGesture = !hideMainGesture;
@@ -542,10 +549,12 @@ class _launcherState extends State<launcher>{
                     child: ListTile(
                       onTap: () {
                         focusOnSearch.unfocus();
-                        _searchController.text = "";
+                        _searchController.clear();
                         InstalledApps.startApp(app.packageName);
                         setState(() {
                           showAppList = false;
+                          hideDate = true;
+                          hideMainGesture = true;
                         });
                       },
                       leading: app.icon != null
