@@ -81,7 +81,6 @@ class _launcherState extends State<launcher>{
   bool hideIcon2 = false;
   bool hideIcon3 = false;
   bool hideIcon4 = false;
-  final PageController _pageController = PageController(initialPage: 1); 
   List<Widget> initialItems = [];
   late WidgetList widgets = WidgetList(widgets: initialItems, prefs: widget.prefs);
   List<bool> visibilityStates = [true, true, true, true];
@@ -361,7 +360,9 @@ class _launcherState extends State<launcher>{
                     ), 
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter initState) { 
+                          List<Widget> visibleWidgets = [];
+                          
                           final visibilityState = Provider.of<WidgetVisibilityState>(context);
                           List<Widget> getVisibleWidgets() {
                             return visibilityState.order
@@ -369,6 +370,8 @@ class _launcherState extends State<launcher>{
                             .map((index) => initialItems[index])
                             .toList();
                           }
+                          initState(()=> visibleWidgets = getVisibleWidgets());
+                          PageController _pageController = PageController(initialPage: visibleWidgets.isEmpty ? 0 : 1); 
                           return Padding(
                             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                             child: SizedBox(
@@ -377,7 +380,7 @@ class _launcherState extends State<launcher>{
                                 controller: _pageController,
                                 children: [
                                   Widgetoptions(widget.prefs),
-                                  ...getVisibleWidgets(),
+                                  ...visibleWidgets,
                                 ]
                               )
                             )
@@ -474,6 +477,12 @@ class _launcherState extends State<launcher>{
                 },
                 onTapOutside: (value){
                   focusOnSearch.unfocus();
+                  setState(() {
+                    _searchController.clear();
+                    showAppList = false;
+                    hideMainGesture = true;
+                    hideDate = true;
+                  });
                 },
                 onSubmitted: (String value) async {
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
@@ -494,8 +503,8 @@ class _launcherState extends State<launcher>{
                     final Uri searchURL = Uri.parse(Search);
                     await launchUrl(searchURL);
                   }
-                  _searchController.clear();
                   setState(() {
+                    _searchController.clear();
                     showAppList = false;
                     hideMainGesture = true;
                     hideDate = true;
