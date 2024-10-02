@@ -484,10 +484,6 @@ class _launcherState extends State<launcher>{
                       hideMainGesture = true;
                       hideDate = true;
                     });
-                  } else {
-                  setState(() {
-                    _searchController.clear();
-                  });
                   }
                 },
                 onSubmitted: (String value) async {
