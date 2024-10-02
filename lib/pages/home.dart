@@ -81,10 +81,6 @@ class _launcherState extends State<launcher>{
   bool hideIcon2 = false;
   bool hideIcon3 = false;
   bool hideIcon4 = false;
-  bool enableTasks = false;
-  bool showAddWidgettext = true;
-  bool enableCalendar = false;
-  bool enableNotes = false;
   final PageController _pageController = PageController(initialPage: 1); 
   List<Widget> initialItems = [];
   late WidgetList widgets = WidgetList(widgets: initialItems, prefs: widget.prefs);
@@ -127,24 +123,6 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    bool? calendar = widget.prefs.getBool("CalendarToggle");
-    bool? tasks = widget.prefs.getBool("TasksToggle");
-    bool? notes = widget.prefs.getBool("enableNotes");
-    if (calendar != null){
-      setState(() {
-        enableCalendar = calendar;
-    });
-    }
-    if (tasks != null){
-      setState(() {
-        enableTasks = tasks;
-    });
-    }
-    if (notes != null){
-      setState(() {
-        enableNotes = notes;
-      });
-    }
     
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
@@ -385,14 +363,6 @@ class _launcherState extends State<launcher>{
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) { 
                           final visibilityState = Provider.of<WidgetVisibilityState>(context);
-                          void updatewidgetList (items){
-                            setState(() => initialItems=items);
-                          }
-                          void onToggleChange(int index) {
-                            setState(() {
-                              visibilityStates[index] = !visibilityStates[index];
-                            });
-                          }
                           List<Widget> getVisibleWidgets() {
                             return visibilityState.order
                             .where((index) => visibilityState.visibility[index])
@@ -406,7 +376,7 @@ class _launcherState extends State<launcher>{
                               child: PageView(
                                 controller: _pageController,
                                 children: [
-                                  Widgetoptions(widget.prefs, onorderChange: updatewidgetList, onToggleChange: (index) { visibilityState.toggleVisibility(index);},),
+                                  Widgetoptions(widget.prefs),
                                   ...getVisibleWidgets(),
                                 ]
                               )
