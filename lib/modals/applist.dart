@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher/pages/home.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 

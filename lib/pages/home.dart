@@ -1,7 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +8,10 @@ import 'package:flutter_launcher/modals/applist.dart';
 import 'package:flutter_launcher/modals/pageview.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
-import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
-import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
