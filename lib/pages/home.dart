@@ -395,7 +395,6 @@ class _launcherState extends State<launcher>{
                                     child: PageView(
                                       controller: _pageController,
                                       onPageChanged: (int page){
-                                        print(page);
                                         lastPage = page;
                                         widget.prefs.setInt("Page", page);
                                       },
