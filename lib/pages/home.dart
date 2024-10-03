@@ -566,6 +566,29 @@ class _launcherState extends State<launcher>{
                   return SizedBox(
                     height: 50,
                     child: ListTile(
+                      onLongPress: () async {
+                        double left = _tapPosition.dx -110;
+                        double top = _tapPosition.dy;
+                        double right = _tapPosition.dx ;
+                        await showMenu(
+                          context: context,
+                          position: RelativeRect.fromLTRB(left, top, right, 0,),
+                          items: [
+                            PopupMenuItem(
+                              child: const Text("App Settings"),
+                              onTap: () {
+                               InstalledApps.openSettings(app.packageName);
+                              },
+                            ),
+                            PopupMenuItem(
+                              child: const Text("Uninstall"),
+                              onTap: () {
+                               InstalledApps.uninstallApp(app.packageName);
+                              },
+                            )
+                          ]
+                        );
+                      },
                       onTap: () {
                         focusOnSearch.unfocus();
                         _searchController.clear();
