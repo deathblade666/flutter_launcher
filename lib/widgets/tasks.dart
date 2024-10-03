@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Tasks extends StatefulWidget {
-  Tasks(this.prefs,{super.key});
+  Tasks(this.prefs, {Key? key}) : super(key: key);
   SharedPreferences prefs;
+  
 
   @override
   State<Tasks> createState() => _TasksState();
