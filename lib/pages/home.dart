@@ -359,7 +359,14 @@ class _launcherState extends State<launcher>{
                       children: [ 
                         Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
-                    ), 
+                    ),
+                    onTap: (){
+                      showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                          return pages(widget.prefs);
+                          });
+                      });
+                    },
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
