@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/home.dart';
-import 'package:flutter_launcher/widgets/calendar_utils.dart';
+import 'package:flutter_launcher/widgets/utils/calendar_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
