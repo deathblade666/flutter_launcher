@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Notes extends StatefulWidget {
-  Notes(this.prefs,{super.key});
+  Notes(this.prefs, {Key? key}) : super(key: key);
   SharedPreferences prefs;
 
   @override
@@ -14,6 +14,7 @@ class _NotesState extends State<Notes> {
 
   @override
   void initState(){
+    super.initState();
     loadLastText();
   }
 
@@ -36,7 +37,7 @@ class _NotesState extends State<Notes> {
           SizedBox(
             height: 450,
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: TextField(
                 controller: notesController,
                 expands: true,

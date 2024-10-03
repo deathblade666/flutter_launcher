@@ -1,17 +1,19 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
-import 'package:flutter_launcher/widgets/calendar.dart';
-import 'package:flutter_launcher/widgets/notes.dart';
-import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
+import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
+import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -79,11 +81,10 @@ class _launcherState extends State<launcher>{
   bool hideIcon2 = false;
   bool hideIcon3 = false;
   bool hideIcon4 = false;
-  bool displayTasks = false;
-  bool enableTasks = false;
-  bool showAddWidgettext = true;
-  bool enableCalendar = false;
-  bool enableNotes = false;
+  List<Widget> initialItems = [];
+  late WidgetList widgets = WidgetList(widgets: initialItems, prefs: widget.prefs);
+  List<bool> visibilityStates = [true, true, true, true];
+  int lastPage = 0;
 
  focusListener(){
     if (focusOnSearch.hasFocus){
@@ -103,10 +104,11 @@ class _launcherState extends State<launcher>{
     super.initState();
     fetchApps();
     loadPrefs();
+    initialItems = widgets.getWidgets();
     focusOnSearch.addListener(focusListener);
   }
 
-  void loadPrefs() {
+  void loadPrefs() async {
     widget.prefs.reload();
     String? provider = widget.prefs.getString('provider');
     bool? toggleStats = widget.prefs.getBool('StatusBar');
@@ -121,25 +123,7 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    bool? calendar = widget.prefs.getBool("CalendarToggle");
-    bool? tasks = widget.prefs.getBool("TasksToggle");
-    bool? notes = widget.prefs.getBool("enableNotes");
-    if (calendar != null){
-      setState(() {
-        enableCalendar = calendar;
-    });
-    }
-    if (tasks != null){
-      setState(() {
-        enableTasks = tasks;
-        displayTasks = tasks;
-    });
-    }
-    if (notes != null){
-      setState(() {
-        enableNotes = notes;
-      });
-    }
+    int? restoreLastPage = widget.prefs.getInt("Page");
     
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
@@ -197,8 +181,18 @@ class _launcherState extends State<launcher>{
     if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
       setState(() {
         searchHieght = 40;
+      });     
+    }
+    if (restoreLastPage != null){
+      setState(() {
+        lastPage = restoreLastPage;
       });
     }
+    WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
+    await widgets.loadWidgets();
+    setState(() {
+     initialItems = widgets.widgets;
+    });
   }
 
   void fetchApps() async {
@@ -250,7 +244,7 @@ class _launcherState extends State<launcher>{
   void toggleStatusBar(toggleStats){
     if (toggleStats == true) {
       setState(() {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
       });
     } else if (toggleStats == false){
       setState(() {
@@ -349,62 +343,6 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  void widgetSelection(){
-    showDialog(context: context, builder: (BuildContext context){
-      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
-        return SizedBox( 
-          height: 200, 
-          width: 500,
-          child: AlertDialog(
-            title: const Text("Widgets"),
-              actions: [
-                SwitchListTile(
-                  title: const Text("Tasks"),
-                  value: enableTasks, 
-                  onChanged: (value) {                               
-                    setState(() {
-                      enableTasks = value;
-                      displayTasks = value;
-                    });
-                    widget.prefs.setBool("TasksToggle", enableTasks);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Calendar"),
-                  value: enableCalendar, 
-                  onChanged: (value){
-                    setState(() {
-                      enableCalendar = value;
-                    });
-                    widget.prefs.setBool("CalendarToggle", enableCalendar);
-                  }
-                ),
-                SwitchListTile(
-                  title: const Text("Notes"),
-                  value: enableNotes, 
-                  onChanged: (value){
-                    setState(() {
-                      enableNotes = value;
-                    });
-                    widget.prefs.setBool("enableNotes", value);
-                  }
-                ),
-                TextButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }, 
-                  child: const Text("Save")
-                ),
-              ],
-            )
-          );
-        }
-      );
-    }
-  );
-}
-
-
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -427,77 +365,50 @@ class _launcherState extends State<launcher>{
                         Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
                     ), 
-                    //TODO: Allow changing widget order
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: SizedBox(
-                            height: 500,
-                            child: PageView(
-                              children: <Widget>[
-                                if (displayTasks == true)...[  
-                                  Visibility(
-                                    visible: displayTasks,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Tasks(widget.prefs),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ),
-                                ] else... [],
-                                if (enableCalendar == true)...[  
-                                  Visibility(
-                                    visible: enableCalendar,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Calendar(widget.prefs)
-                                          ],
-                                        ),
-                                      ),
-                                    ))
-                                ] else... [],
-                                if (enableNotes == true)...[
-                                  Visibility(
-                                    visible: enableNotes,
-                                    child: SizedBox(
-                                      height: 800,
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Notes(widget.prefs)
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  )
-                                ] else ...[],
-                                if (enableCalendar == false || enableTasks == false || enableNotes == false)...[
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    child: const Center( 
-                                      child: Text("click here to add a widget!"),
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                          final visibilityState = Provider.of<WidgetVisibilityState>(context);
+
+                          Future<List<Widget>> getVisibleWidgets() async {
+                            return visibilityState.order
+                           .where((index) => visibilityState.visibility[index])
+                           .map((index) => initialItems[index])
+                           .toList();
+                          }
+
+                          return FutureBuilder<List<Widget>>(
+                            future: getVisibleWidgets(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Widgetoptions(widget.prefs);
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                List<Widget> visibleWidgets = snapshot.data ?? [];
+                                PageController _pageController = PageController(initialPage: lastPage);
+
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                  child: SizedBox(
+                                    height: 500,
+                                    child: PageView(
+                                      controller: _pageController,
+                                      onPageChanged: (int page){
+                                        lastPage = page;
+                                        widget.prefs.setInt("Page", page);
+                                      },
+                                      children: [
+                                        Widgetoptions(widget.prefs),
+                                        ...visibleWidgets,
+                                      ],
                                     ),
-                                    onTap: ()  {
-                                      Navigator.pop(context);
-                                      widgetSelection();
-                                    },
-                                  ),
-                                ] else ...[]
-                              ],
-                            )
-                          )
-                        );
+                                 ),
+                                );
+                              }
+                            }
+                          );
+                        });
                       });
                     },
                   ),
@@ -589,6 +500,14 @@ class _launcherState extends State<launcher>{
                 },
                 onTapOutside: (value){
                   focusOnSearch.unfocus();
+                  if (_filteredItems.isEmpty ){
+                    setState(() {
+                      _searchController.clear();
+                      showAppList = false;
+                      hideMainGesture = true;
+                      hideDate = true;
+                    });
+                  }
                 },
                 onSubmitted: (String value) async {
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
@@ -609,8 +528,8 @@ class _launcherState extends State<launcher>{
                     final Uri searchURL = Uri.parse(Search);
                     await launchUrl(searchURL);
                   }
-                  _searchController.clear();
                   setState(() {
+                    _searchController.clear();
                     showAppList = false;
                     hideMainGesture = true;
                     hideDate = true;
@@ -618,18 +537,19 @@ class _launcherState extends State<launcher>{
                 },
                 controller: _searchController,
                 onTap: () {
-                  if (_searchController.text != ""){
+                  if (_searchController.text.isNotEmpty){
                     String s = _searchController.text;
                     setState(() {
                       _filteredItems = _app.where(
                         (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
-                        showAppList = true;
-                        hideDate = false;
-                        hideMainGesture = false;
+                      showAppList = true;
+                      hideDate = false;
+                      hideMainGesture = false;
                     });
-                  } else{
+                  } else {
                     setState(() {
+                      _filteredItems = _app;
                       showAppList = !showAppList;
                       hideDate = !hideDate;
                       hideMainGesture = !hideMainGesture;
@@ -648,10 +568,12 @@ class _launcherState extends State<launcher>{
                     child: ListTile(
                       onTap: () {
                         focusOnSearch.unfocus();
-                        _searchController.text = "";
+                        _searchController.clear();
                         InstalledApps.startApp(app.packageName);
                         setState(() {
                           showAppList = false;
+                          hideDate = true;
+                          hideMainGesture = true;
                         });
                       },
                       leading: app.icon != null
