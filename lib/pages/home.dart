@@ -5,7 +5,8 @@ import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher/pages/modals/pageview.dart';
+import 'package:flutter_launcher/modals/applist.dart';
+import 'package:flutter_launcher/modals/pageview.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
@@ -245,6 +246,7 @@ class _launcherState extends State<launcher>{
       });
     }
   }
+
   void widgetToggle(widgetsEnabled) {
       setState(() {
         widgetVis = widgetsEnabled;
@@ -333,8 +335,12 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  Future<void> reloadAppList () async {
-    fetchApps();
+  void AppTapped (showAppList1, hideDate1, hideMainGesture1) {
+    setState(() {
+      showAppList = showAppList1;
+      hideDate = hideDate1;
+      hideMainGesture = hideMainGesture1;
+    });
 
   }
 
@@ -538,66 +544,7 @@ class _launcherState extends State<launcher>{
             Visibility(
               visible: showAppList,
               child: Expanded(
-                child: ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
-                  AppInfo app = _filteredItems[index];
-                  return SizedBox(
-                    height: 50,
-                    child: GestureDetector(
-                      onTapDown: (details){
-                        setState(() {
-                          _tapPosition = details.globalPosition;
-                        });
-                      },
-                      child: ListTile(
-                        onLongPress: () async {
-                          double left = _tapPosition.dx -110;
-                          double top = _tapPosition.dy;
-                          double right = _tapPosition.dx ;
-                          await showMenu(
-                            context: context,
-                            position: RelativeRect.fromLTRB(left, top, right, 0),
-                            items: [
-                              PopupMenuItem(
-                                child: const Text("App Settings"),
-                                onTap: () {
-                                 InstalledApps.openSettings(app.packageName);
-                                },
-                              ),
-                              PopupMenuItem(
-                                child: const Text("Uninstall"),
-                                onTap: () async {
-                                  bool? uninstall = await InstalledApps.uninstallApp(app.packageName);
-                                  if (uninstall == true){
-                                  setState(() {
-                                    showAppList = false;
-                                    hideDate = true;
-                                    hideMainGesture = true;
-                                  });
-                                  }
-                                }, 
-                              )
-                            ]
-                          );
-                        },
-                        onTap: () {
-                          focusOnSearch.unfocus();
-                          _searchController.clear();
-                          InstalledApps.startApp(app.packageName);
-                          setState(() {
-                            showAppList = false;
-                            hideDate = true;
-                            hideMainGesture = true;
-                          });
-                        },
-                        leading: app.icon != null
-                          ? Image.memory(app.icon!, height: 30,)
-                          : const Icon(Icons.android),
-                        title: Text(app.name),
-                      )
-                    )
-                  );
-                  
-                })
+                child: Applist(_searchController,focusOnSearch, _filteredItems,onTap: AppTapped ,)
               )
             ),
             const Padding(padding: EdgeInsets.all(3)),
