@@ -37,7 +37,6 @@ WidgetList({required this.widgets, required this.prefs});
     if (widgetName == "Tasks") showTasks = value;
     if (widgetName == "Calendar") showCalendar = value;
     if (widgetName == "Notes") showNotes = value;
-    print(widgetName);
   }
 
 
@@ -52,7 +51,6 @@ WidgetList({required this.widgets, required this.prefs});
     String? jsonString = prefs.getString('widgets');
     if (jsonString != null) {
       List<String> widgetKeys = List<String>.from(jsonDecode(jsonString));
-      print(jsonString);
       widgets = widgetKeys.map((key) {
         if (key == "[<'Tasks'>]") {
           return Tasks(prefs, key: const ValueKey('Tasks'));
