@@ -381,7 +381,7 @@ class _launcherState extends State<launcher>{
                             future: getVisibleWidgets(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const SizedBox.shrink(); // Return nothing while loading
+                                return Widgetoptions(widget.prefs);
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
