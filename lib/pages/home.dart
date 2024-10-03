@@ -565,44 +565,51 @@ class _launcherState extends State<launcher>{
                   AppInfo app = _filteredItems[index];
                   return SizedBox(
                     height: 50,
-                    child: ListTile(
-                      onLongPress: () async {
-                        double left = _tapPosition.dx -110;
-                        double top = _tapPosition.dy;
-                        double right = _tapPosition.dx ;
-                        await showMenu(
-                          context: context,
-                          position: RelativeRect.fromLTRB(left, top, right, 0,),
-                          items: [
-                            PopupMenuItem(
-                              child: const Text("App Settings"),
-                              onTap: () {
-                               InstalledApps.openSettings(app.packageName);
-                              },
-                            ),
-                            PopupMenuItem(
-                              child: const Text("Uninstall"),
-                              onTap: () {
-                               InstalledApps.uninstallApp(app.packageName);
-                              },
-                            )
-                          ]
-                        );
-                      },
-                      onTap: () {
-                        focusOnSearch.unfocus();
-                        _searchController.clear();
-                        InstalledApps.startApp(app.packageName);
+                    child: GestureDetector(
+                      onTapDown: (details){
                         setState(() {
-                          showAppList = false;
-                          hideDate = true;
-                          hideMainGesture = true;
+                          _tapPosition = details.globalPosition;
                         });
                       },
-                      leading: app.icon != null
-                        ? Image.memory(app.icon!, height: 30,)
-                        : const Icon(Icons.android),
-                      title: Text(app.name),
+                      child: ListTile(
+                        onLongPress: () async {
+                          double left = _tapPosition.dx -110;
+                          double top = _tapPosition.dy;
+                          double right = _tapPosition.dx ;
+                          await showMenu(
+                            context: context,
+                            position: RelativeRect.fromLTRB(left, top, right, 0),
+                            items: [
+                              PopupMenuItem(
+                                child: const Text("App Settings"),
+                                onTap: () {
+                                 InstalledApps.openSettings(app.packageName);
+                                },
+                              ),
+                              PopupMenuItem(
+                                child: const Text("Uninstall"),
+                                onTap: () {
+                                 InstalledApps.uninstallApp(app.packageName);
+                                }, 
+                              )
+                            ]
+                          );
+                        },
+                        onTap: () {
+                          focusOnSearch.unfocus();
+                          _searchController.clear();
+                          InstalledApps.startApp(app.packageName);
+                          setState(() {
+                            showAppList = false;
+                            hideDate = true;
+                            hideMainGesture = true;
+                          });
+                        },
+                        leading: app.icon != null
+                          ? Image.memory(app.icon!, height: 30,)
+                          : const Icon(Icons.android),
+                        title: Text(app.name),
+                      )
                     )
                   );
                 })
