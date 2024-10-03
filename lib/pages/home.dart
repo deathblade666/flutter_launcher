@@ -493,6 +493,15 @@ class _launcherState extends State<launcher>{
                     _filteredItems = _app.where(
                       (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
+                    if (value.isNotEmpty){
+                      showAppList = true;
+                      hideDate = false;
+                      hideMainGesture = false;
+                    } else {
+                      showAppList=false;
+                      hideDate = true;
+                      hideMainGesture = true;
+                     }
                   });
                 },
                 onTapOutside: (value){
