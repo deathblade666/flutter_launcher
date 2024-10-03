@@ -394,6 +394,8 @@ class _settingeMenuState extends State<settingeMenu> {
                       bool resettasks = false;
                       bool resetEvents = false;
                       bool resetUI = false;
+                      bool resetALL = false;
+                      bool resetNotes = false;
                       return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
                         return AlertDialog(
                           title: const Text("Select options to reset:"),
@@ -401,7 +403,7 @@ class _settingeMenuState extends State<settingeMenu> {
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              SwitchListTile(
+                             /* SwitchListTile(
                                  value: resetFavorites, 
                                  onChanged: (value){
                                    setState(() {
@@ -418,7 +420,7 @@ class _settingeMenuState extends State<settingeMenu> {
                                   });
                                 },
                                 title:  const Text("Search Engine")
-                              ),
+                              ),*/
                               SwitchListTile(
                                 value: resettasks, 
                                 onChanged: (value){
@@ -438,6 +440,15 @@ class _settingeMenuState extends State<settingeMenu> {
                                 title: const Text("Calendar Events"),
                               ),
                               SwitchListTile(
+                                value: resetNotes, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetNotes = value;
+                                  });
+                                },
+                                title: const Text("Notes"),
+                              ),
+                            /*  SwitchListTile(
                                 value: resetUI, 
                                 onChanged: (value){
                                   setState(() {
@@ -445,6 +456,21 @@ class _settingeMenuState extends State<settingeMenu> {
                                   });
                                 },
                                 title: const Text("UI Customizations"),
+                              ), */
+                              SwitchListTile(
+                                value: resetALL, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetALL = value;
+                                    resetUI = value;
+                                    resetEvents = value;
+                                    resettasks = value;
+                                    resetSearchEngine = value;
+                                    resetFavorites = value;
+                                    resetNotes = value;
+                                  });
+                                },
+                                title: const Text("RESET EVERYTHING"),
                               ),
                             ],
                           ),
@@ -460,16 +486,37 @@ class _settingeMenuState extends State<settingeMenu> {
                                 const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
                                 TextButton(
                                   onPressed: (){
-                                    widget.prefs.clear();
+                                    if (resetFavorites == true){
+                                      widget.prefs.remove("appIcon");
+                                      widget.prefs.remove("togglePin");
+                                      widget.prefs.remove("App1");
+                                      widget.prefs.remove("App2");
+                                      widget.prefs.remove("App3");
+                                      widget.prefs.remove("App4");
+                                      widget.prefs.remove("Pinned App1");
+                                      widget.prefs.remove("Pinned App2");
+                                      widget.prefs.remove("Pinned App3");
+                                      widget.prefs.remove("Pinned App4");
+                                    }else if (resetSearchEngine == true){
+                                      widget.prefs.remove("provider");
+                                    } else if (resettasks == true){
+                                      widget.prefs.remove("Tasks");
+                                      widget.prefs.remove("Restore Checkbox");
+                                    }  else if (resetUI){
+                                      widget.prefs.remove("StatusBar");
+                                      widget.prefs.remove("EnableWidgets");
+                                      widget.prefs.remove("togglePin");
+                                    } else if(resetEvents == true){
+                                      widget.prefs.remove("Events");
+                                    } else if (resetNotes == true){
+                                      widget.prefs.remove("Note");
+                                    }else if(resetALL == true){
+                                      widget.prefs.clear();
+                                    }
                                     Navigator.pop(context);
                                   }, 
-                                  child: TextButton(
-                                    onPressed: (){
-
-                                    },
-                                    child: const Text("RESET")
-                                  ),
-                                )
+                                  child:const Text("RESET")
+                                ),
                               ],
                             )
                           ],
