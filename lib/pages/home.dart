@@ -1,19 +1,17 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/modals/applist.dart';
+import 'package:flutter_launcher/modals/pageview.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
-import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
-import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -123,7 +121,6 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    int? restoreLastPage = widget.prefs.getInt("Page");
     
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
@@ -183,16 +180,6 @@ class _launcherState extends State<launcher>{
         searchHieght = 40;
       });     
     }
-    if (restoreLastPage != null){
-      setState(() {
-        lastPage = restoreLastPage;
-      });
-    }
-    WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
-    await widgets.loadWidgets();
-    setState(() {
-     initialItems = widgets.widgets;
-    });
   }
 
   void fetchApps() async {
@@ -255,6 +242,7 @@ class _launcherState extends State<launcher>{
       });
     }
   }
+
   void widgetToggle(widgetsEnabled) {
       setState(() {
         widgetVis = widgetsEnabled;
@@ -343,9 +331,14 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  Future<void> reloadAppList () async {
+  void AppTapped (showAppList1, hideDate1, hideMainGesture1) async {
+    setState(() {
+      showAppList = showAppList1;
+      hideDate = hideDate1;
+      hideMainGesture = hideMainGesture1;
+    });
+    await Future.delayed(const Duration(seconds: 3));
     fetchApps();
-
   }
 
   @override
@@ -369,50 +362,18 @@ class _launcherState extends State<launcher>{
                       children: [ 
                         Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
-                    ), 
+                    ),
+                    onTap: (){
+                      showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                          return pages(widget.prefs);
+                          });
+                      });
+                    },
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          final visibilityState = Provider.of<WidgetVisibilityState>(context);
-
-                          Future<List<Widget>> getVisibleWidgets() async {
-                            return visibilityState.order
-                           .where((index) => visibilityState.visibility[index])
-                           .map((index) => initialItems[index])
-                           .toList();
-                          }
-
-                          return FutureBuilder<List<Widget>>(
-                            future: getVisibleWidgets(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return Widgetoptions(widget.prefs);
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                List<Widget> visibleWidgets = snapshot.data ?? [];
-                                PageController _pageController = PageController(initialPage: lastPage);
-
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                  child: SizedBox(
-                                    height: 500,
-                                    child: PageView(
-                                      controller: _pageController,
-                                      onPageChanged: (int page){
-                                        lastPage = page;
-                                        widget.prefs.setInt("Page", page);
-                                      },
-                                      children: [
-                                        Widgetoptions(widget.prefs),
-                                        ...visibleWidgets,
-                                      ],
-                                    ),
-                                 ),
-                                );
-                              }
-                            }
-                          );
+                          return pages(widget.prefs);
                         });
                       });
                     },
@@ -571,7 +532,6 @@ class _launcherState extends State<launcher>{
                       }
                     });
                     if (showAppList == true){
-                      fetchApps();
                     }
                   }
                 },
@@ -580,66 +540,12 @@ class _launcherState extends State<launcher>{
             Visibility(
               visible: showAppList,
               child: Expanded(
-                child: ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
-                  AppInfo app = _filteredItems[index];
-                  return SizedBox(
-                    height: 50,
-                    child: GestureDetector(
-                      onTapDown: (details){
-                        setState(() {
-                          _tapPosition = details.globalPosition;
-                        });
-                      },
-                      child: ListTile(
-                        onLongPress: () async {
-                          double left = _tapPosition.dx -110;
-                          double top = _tapPosition.dy;
-                          double right = _tapPosition.dx ;
-                          await showMenu(
-                            context: context,
-                            position: RelativeRect.fromLTRB(left, top, right, 0),
-                            items: [
-                              PopupMenuItem(
-                                child: const Text("App Settings"),
-                                onTap: () {
-                                 InstalledApps.openSettings(app.packageName);
-                                },
-                              ),
-                              PopupMenuItem(
-                                child: const Text("Uninstall"),
-                                onTap: () async {
-                                  bool? uninstall = await InstalledApps.uninstallApp(app.packageName);
-                                  if (uninstall == true){
-                                  setState(() {
-                                    showAppList = false;
-                                    hideDate = true;
-                                    hideMainGesture = true;
-                                  });
-                                  }
-                                }, 
-                              )
-                            ]
-                          );
-                        },
-                        onTap: () {
-                          focusOnSearch.unfocus();
-                          _searchController.clear();
-                          InstalledApps.startApp(app.packageName);
-                          setState(() {
-                            showAppList = false;
-                            hideDate = true;
-                            hideMainGesture = true;
-                          });
-                        },
-                        leading: app.icon != null
-                          ? Image.memory(app.icon!, height: 30,)
-                          : const Icon(Icons.android),
-                        title: Text(app.name),
-                      )
-                    )
-                  );
-                  
-                })
+                child: Applist(
+                  _searchController,
+                  focusOnSearch, 
+                  _filteredItems,
+                  onTap: AppTapped
+                )
               )
             ),
             const Padding(padding: EdgeInsets.all(3)),
