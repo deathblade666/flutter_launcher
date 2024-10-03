@@ -343,6 +343,11 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
+  Future<void> reloadAppList () async {
+    fetchApps();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -488,24 +493,29 @@ class _launcherState extends State<launcher>{
                     _filteredItems = _app.where(
                       (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
-                      if (value.isNotEmpty){
-                        showAppList = true;
-                        hideDate = false;
-                        hideMainGesture = false;
-                      } else {
-                        showAppList=false;
-                        hideDate = true;
-                      }
-                    });
+                    if (value.isNotEmpty){
+                      showAppList = true;
+                      hideDate = false;
+                      hideMainGesture = false;
+                    } else {
+                      showAppList=false;
+                      hideDate = true;
+                     }
+                  });
                 },
                 onTapOutside: (value){
                   focusOnSearch.unfocus();
-                  if (_filteredItems.isEmpty ){
+                  if (_filteredItems.isEmpty){
                     setState(() {
                       _searchController.clear();
-                      showAppList = false;
-                      hideMainGesture = true;
+                      showAppList = !showAppList;
+                      if (showAppList == true){
+                        hideDate = false;
+                        hideMainGesture = false;
+                      } else if (showAppList == false){
                       hideDate = true;
+                      hideMainGesture = true;
+                      }
                     });
                   }
                 },
@@ -551,9 +561,17 @@ class _launcherState extends State<launcher>{
                     setState(() {
                       _filteredItems = _app;
                       showAppList = !showAppList;
-                      hideDate = !hideDate;
-                      hideMainGesture = !hideMainGesture;
+                      if (showAppList == true){
+                        hideDate = false;
+                        hideMainGesture = false;
+                      } else if (showAppList == false){
+                      hideDate = true;
+                      hideMainGesture = true;
+                      }
                     });
+                    if (showAppList == true){
+                      fetchApps();
+                    }
                   }
                 },
               )
@@ -588,8 +606,15 @@ class _launcherState extends State<launcher>{
                               ),
                               PopupMenuItem(
                                 child: const Text("Uninstall"),
-                                onTap: () {
-                                 InstalledApps.uninstallApp(app.packageName);
+                                onTap: () async {
+                                  bool? uninstall = await InstalledApps.uninstallApp(app.packageName);
+                                  if (uninstall == true){
+                                  setState(() {
+                                    showAppList = false;
+                                    hideDate = true;
+                                    hideMainGesture = true;
+                                  });
+                                  }
                                 }, 
                               )
                             ]
@@ -612,6 +637,7 @@ class _launcherState extends State<launcher>{
                       )
                     )
                   );
+                  
                 })
               )
             ),
