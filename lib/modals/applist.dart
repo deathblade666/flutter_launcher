@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/pages/home.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 
@@ -11,7 +12,7 @@ class Applist extends StatefulWidget {
     super.key
     }
   );
-  
+
   TextEditingController _searchController;
   FocusNode focusOnSearch;
   List<AppInfo> _filteredItems = [];
@@ -60,6 +61,12 @@ class _ApplistState extends State<Applist> {
                     child: const Text("App Settings"),
                     onTap: () {
                       InstalledApps.openSettings(app.packageName);
+                      setState(() {
+                          showAppList1 = false;
+                          hideDate1 = true;
+                          hideMainGesture1 = true;
+                        });
+                        widget.onTap(showAppList1, hideDate1, hideMainGesture1);
                     },
                   ),
                   PopupMenuItem(
@@ -83,7 +90,6 @@ class _ApplistState extends State<Applist> {
               widget.focusOnSearch.unfocus();
               widget._searchController.clear();
               InstalledApps.startApp(app.packageName);
-              
               setState(() {
                 showAppList1 = false;
                 hideDate1 = true;

@@ -335,13 +335,14 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
-  void AppTapped (showAppList1, hideDate1, hideMainGesture1) {
+  void AppTapped (showAppList1, hideDate1, hideMainGesture1) async {
     setState(() {
       showAppList = showAppList1;
       hideDate = hideDate1;
       hideMainGesture = hideMainGesture1;
     });
-
+    await Future.delayed(const Duration(seconds: 3));
+    fetchApps();
   }
 
   @override
@@ -535,7 +536,6 @@ class _launcherState extends State<launcher>{
                       }
                     });
                     if (showAppList == true){
-                      fetchApps();
                     }
                   }
                 },
@@ -544,7 +544,12 @@ class _launcherState extends State<launcher>{
             Visibility(
               visible: showAppList,
               child: Expanded(
-                child: Applist(_searchController,focusOnSearch, _filteredItems,onTap: AppTapped ,)
+                child: Applist(
+                  _searchController,
+                  focusOnSearch, 
+                  _filteredItems,
+                  onTap: AppTapped
+                )
               )
             ),
             const Padding(padding: EdgeInsets.all(3)),
