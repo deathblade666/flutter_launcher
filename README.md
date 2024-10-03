@@ -6,7 +6,7 @@
 
 Unname as of yet, this flutter project is an android launcher. The idea is to have a modern, minimalistic UI without compromising on access to data when you need it. Inspired by [KISS](https://github.com/Neamar/KISS/) and [Kvaesitso](https://github.com/MM2-0/Kvaesitso).
 
-## features
+## Features
 
 ### Current
  - Search and launch apps via return or tapping on the list item
@@ -19,14 +19,15 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
    - Tasks
    - Notes
 
-### in Progress
+### In Progress
 List of features that I'm actively working on implementing
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
 - Re-order Widgets
   - The ability to set a custom order to the custom widgets.
 - Re-implement Settings
-  - due to some reliability issues with the long press I'll be looking to moving Settings.
+  - ~~due to some reliability issues with the long press I'll be looking to moving Settings.~~ 
+  - This is to be reviewed as the issue should now be fixed but moving the settings menu may provider better UX
 - Modular Code
   - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is
  - [x] ~~Pinning Favorites~~
@@ -35,7 +36,7 @@ List of features that I'm actively working on implementing
    - ~~Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones~~
 
 ### Planned
-- Switch Search query for apps to Regex
+- Improved Search query for matching apps
 - Change amount of favorites to be more dynamic
 
 ### Future
@@ -44,6 +45,7 @@ This is a list of feature that I hope to accomplish but currently do not have th
 - Dynamic Date
   - have the date widget change depending factors such as, if media is play change to media controls
 - Native Widget Support (on back burner for now)
+
 ## Build
 
 ``
