@@ -12,6 +12,7 @@ import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
 import 'package:one_clock/one_clock.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -121,7 +122,7 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    
+
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
     }
@@ -179,7 +180,13 @@ class _launcherState extends State<launcher>{
       setState(() {
         searchHieght = 40;
       });     
+
     }
+    WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
+    await widgets.loadWidgets();
+    setState(() {
+     initialItems = widgets.widgets;
+    });
   }
 
   void fetchApps() async {

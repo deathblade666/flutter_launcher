@@ -24,9 +24,8 @@ class _TasksState extends State<Tasks> {
 
  @override
  void initState(){
-    super.initState();
+  super.initState();
   RestoreTasks();
-
  }
 
  void RestoreTasks (){
