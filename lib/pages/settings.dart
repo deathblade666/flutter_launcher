@@ -389,57 +389,139 @@ class _settingeMenuState extends State<settingeMenu> {
                 TextButton(
                   onPressed: () {
                     showDialog(context: context, builder: (BuildContext context){
-                      return AlertDialog(
-                        title: const Text("The following will be lost the next time the app reloads:"),
-                        actionsAlignment: MainAxisAlignment.start,
-                        actions: [
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Favorites"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Custom searxh Engine"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Tasks"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- Calendar Events"),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("- UI Customizations"),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 15, bottom: 15),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text("Do you wish to continue?"),
-                            ),
-                          ),
-                          Row(
+                      bool resetFavorites = false;
+                      bool resetSearchEngine = false;
+                      bool resettasks = false;
+                      bool resetEvents = false;
+                      bool resetUI = false;
+                      bool resetALL = false;
+                      bool resetNotes = false;
+                      return StatefulBuilder(builder: (BuildContext context, StateSetter setState){
+                        return AlertDialog(
+                          title: const Text("Select options to reset:"),
+                          actionsAlignment: MainAxisAlignment.start,
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextButton(
-                                onPressed: (){
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("Cancel")
+                             /* SwitchListTile(
+                                 value: resetFavorites, 
+                                 onChanged: (value){
+                                   setState(() {
+                                     resetFavorites = value;
+                                   });
+                                 },
+                                 title: const Text("Favorites"),
                               ),
-                              const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
-                              TextButton(
-                                onPressed: (){
-                                  widget.prefs.clear();
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("YES, RESET ALL APP DATA"),
-                              )
+                              SwitchListTile(
+                                value: resetSearchEngine,
+                                onChanged: (value){
+                                  setState(() {
+                                    resetSearchEngine = value;
+                                  });
+                                },
+                                title:  const Text("Search Engine")
+                              ),*/
+                              SwitchListTile(
+                                value: resettasks, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resettasks = value;
+                                  });
+                                },
+                                title: const Text("Tasks"),
+                              ),
+                              SwitchListTile(
+                                value: resetEvents, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetEvents = value;
+                                  });
+                                },
+                                title: const Text("Calendar Events"),
+                              ),
+                              SwitchListTile(
+                                value: resetNotes, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetNotes = value;
+                                  });
+                                },
+                                title: const Text("Notes"),
+                              ),
+                            /*  SwitchListTile(
+                                value: resetUI, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetUI = value;
+                                  });
+                                },
+                                title: const Text("UI Customizations"),
+                              ), */
+                              SwitchListTile(
+                                value: resetALL, 
+                                onChanged: (value){
+                                  setState(() {
+                                    resetALL = value;
+                                    resetUI = value;
+                                    resetEvents = value;
+                                    resettasks = value;
+                                    resetSearchEngine = value;
+                                    resetFavorites = value;
+                                    resetNotes = value;
+                                  });
+                                },
+                                title: const Text("RESET EVERYTHING"),
+                              ),
                             ],
-                          )
-                        ],
-                      );
+                          ),
+                          actions: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  }, 
+                                  child: const Text("Cancel")
+                                ),
+                                const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
+                                TextButton(
+                                  onPressed: (){
+                                    if (resetFavorites == true){
+                                      widget.prefs.remove("appIcon");
+                                      widget.prefs.remove("togglePin");
+                                      widget.prefs.remove("App1");
+                                      widget.prefs.remove("App2");
+                                      widget.prefs.remove("App3");
+                                      widget.prefs.remove("App4");
+                                      widget.prefs.remove("Pinned App1");
+                                      widget.prefs.remove("Pinned App2");
+                                      widget.prefs.remove("Pinned App3");
+                                      widget.prefs.remove("Pinned App4");
+                                    }else if (resetSearchEngine == true){
+                                      widget.prefs.remove("provider");
+                                    } else if (resettasks == true){
+                                      widget.prefs.remove("Tasks");
+                                      widget.prefs.remove("Restore Checkbox");
+                                    }  else if (resetUI){
+                                      widget.prefs.remove("StatusBar");
+                                      widget.prefs.remove("EnableWidgets");
+                                      widget.prefs.remove("togglePin");
+                                    } else if(resetEvents == true){
+                                      widget.prefs.remove("Events");
+                                    } else if (resetNotes == true){
+                                      widget.prefs.remove("Note");
+                                    }else if(resetALL == true){
+                                      widget.prefs.clear();
+                                    }
+                                    Navigator.pop(context);
+                                  }, 
+                                  child:const Text("RESET")
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+                      });
                     });
                   },
                   child: const Text("Reset"),
@@ -460,82 +542,3 @@ class _settingeMenuState extends State<settingeMenu> {
     );     
   }
 }
-            
-            
-               //   const Align(
-               //     alignment: Alignment.centerLeft, 
-               //     child: Padding(
-              //        padding: EdgeInsets.only(left: 13),
-               //       child: Text("Select a Quick Access App"),
-                //      ) 
-                    
-                //  ),
-                //  const Expanded(child: Padding(padding: EdgeInsets.only(right: 1))),
-               //   GestureDetector(
-               // child: Container(
-                //  height: 50,
-                //  width: 50,
-                //  decoration: BoxDecoration(
-                //    border: Border.all(
-                //      color: Theme.of(context).colorScheme.onSurface
-                 //   )
-                 // ),
-                //),
-                //onTap: (){
-                //  showDialog(context: context, builder: (BuildContext context){
-                //    return  
-                    //AlertDialog(
-                    //  title: Text("Pin app to Search Bar"),
-                    //  actions: [
-                    //    SizedBox(
-                    //      height: 300,
-                    //      width: 300,
-                    //      child: ListView.builder(shrinkWrap: true, itemCount: widget._app.length, itemBuilder: (context, index){
-                    //        AppInfo app = widget._app[index];
-                    //        return Container(
-                    //          height: 50,
-                    //          child: ListTile(
-                    //            onTap: () {
-                    //              final String appName = app.packageName;
-                    //              widget.prefs.setString("Pinned App", appName);
-                    //              if (app.icon != null){
-                    //                var encodedIcon = base64Encode(app.icon!);
-                    //                widget.prefs.setString("appIcon", encodedIcon);
-                    //              }
-                    //              widget.onPinnedApp(appName);
-                    //              Navigator.pop(context);
-                    //            },
-                    //          leading: app.icon != null
-                    //            ? Image.memory(app.icon!, height: 30,)
-                    //            : const Icon(Icons.android),
-                    //          title: Text(app.name),
-                    //          )
-                    //        );
-                    //      })
-                    //    ),
-                    //  ],
-                  //  ); 
-                 // });
-                //},
-             // ),
-             // const Padding(padding: EdgeInsets.only(right: 30)),
-           // ],
-          //),
-        //),
-              
-                
-                
-            //Visibility(
-             // visible: pinApp,
-              //child: 
-                 // Column(
-                   // children: [
-                      //const Text("Select your Favorite Apps"),
-                      
-            
-            
-              
-              
-         //   );
-              //    }//);),
-          
