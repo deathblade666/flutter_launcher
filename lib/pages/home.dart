@@ -1,14 +1,13 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/modals/applist.dart';
+import 'package:flutter_launcher/modals/pageview.dart';
 import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
-import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
-import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
@@ -123,8 +122,7 @@ class _launcherState extends State<launcher>{
     String? appName2 = widget.prefs.getString("Pinned App2");
     String? appName3 = widget.prefs.getString("Pinned App3");
     String? appName4 = widget.prefs.getString("Pinned App4");
-    int? restoreLastPage = widget.prefs.getInt("Page");
-    
+
     if (togglePinApp != null){
       pinAppToggle(togglePinApp);
     }
@@ -182,11 +180,7 @@ class _launcherState extends State<launcher>{
       setState(() {
         searchHieght = 40;
       });     
-    }
-    if (restoreLastPage != null){
-      setState(() {
-        lastPage = restoreLastPage;
-      });
+
     }
     WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
     await widgets.loadWidgets();
@@ -255,6 +249,7 @@ class _launcherState extends State<launcher>{
       });
     }
   }
+
   void widgetToggle(widgetsEnabled) {
       setState(() {
         widgetVis = widgetsEnabled;
@@ -343,6 +338,16 @@ class _launcherState extends State<launcher>{
     appIcon = appIconrestored;
   }
 
+  void AppTapped (showAppList1, hideDate1, hideMainGesture1) async {
+    setState(() {
+      showAppList = showAppList1;
+      hideDate = hideDate1;
+      hideMainGesture = hideMainGesture1;
+    });
+    await Future.delayed(const Duration(seconds: 3));
+    fetchApps();
+  }
+
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
@@ -364,50 +369,18 @@ class _launcherState extends State<launcher>{
                       children: [ 
                         Icon(Icons.keyboard_arrow_up, size: 30,),
                       ],
-                    ), 
+                    ),
+                    onTap: (){
+                      showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                          return pages(widget.prefs);
+                          });
+                      });
+                    },
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          final visibilityState = Provider.of<WidgetVisibilityState>(context);
-
-                          Future<List<Widget>> getVisibleWidgets() async {
-                            return visibilityState.order
-                           .where((index) => visibilityState.visibility[index])
-                           .map((index) => initialItems[index])
-                           .toList();
-                          }
-
-                          return FutureBuilder<List<Widget>>(
-                            future: getVisibleWidgets(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const SizedBox.shrink(); // Return nothing while loading
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                List<Widget> visibleWidgets = snapshot.data ?? [];
-                                PageController _pageController = PageController(initialPage: lastPage);
-
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                  child: SizedBox(
-                                    height: 500,
-                                    child: PageView(
-                                      controller: _pageController,
-                                      onPageChanged: (int page){
-                                        lastPage = page;
-                                        widget.prefs.setInt("Page", page);
-                                      },
-                                      children: [
-                                        Widgetoptions(widget.prefs),
-                                        ...visibleWidgets,
-                                      ],
-                                    ),
-                                 ),
-                                );
-                              }
-                            }
-                          );
+                          return pages(widget.prefs);
                         });
                       });
                     },
@@ -488,24 +461,30 @@ class _launcherState extends State<launcher>{
                     _filteredItems = _app.where(
                       (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
                       ).toList();
-                      if (value.isNotEmpty){
-                        showAppList = true;
-                        hideDate = false;
-                        hideMainGesture = false;
-                      } else {
-                        showAppList=false;
-                        hideDate = true;
-                      }
-                    });
+                    if (value.isNotEmpty){
+                      showAppList = true;
+                      hideDate = false;
+                      hideMainGesture = false;
+                    } else {
+                      showAppList=false;
+                      hideDate = true;
+                      hideMainGesture = true;
+                     }
+                  });
                 },
                 onTapOutside: (value){
                   focusOnSearch.unfocus();
-                  if (_filteredItems.isEmpty ){
+                  if (_filteredItems.isEmpty){
                     setState(() {
                       _searchController.clear();
-                      showAppList = false;
-                      hideMainGesture = true;
+                      showAppList = !showAppList;
+                      if (showAppList == true){
+                        hideDate = false;
+                        hideMainGesture = false;
+                      } else if (showAppList == false){
                       hideDate = true;
+                      hideMainGesture = true;
+                      }
                     });
                   }
                 },
@@ -551,9 +530,16 @@ class _launcherState extends State<launcher>{
                     setState(() {
                       _filteredItems = _app;
                       showAppList = !showAppList;
-                      hideDate = !hideDate;
-                      hideMainGesture = !hideMainGesture;
+                      if (showAppList == true){
+                        hideDate = false;
+                        hideMainGesture = false;
+                      } else if (showAppList == false){
+                      hideDate = true;
+                      hideMainGesture = true;
+                      }
                     });
+                    if (showAppList == true){
+                    }
                   }
                 },
               )
@@ -561,28 +547,12 @@ class _launcherState extends State<launcher>{
             Visibility(
               visible: showAppList,
               child: Expanded(
-                child: ListView.builder( reverse: true, shrinkWrap: true, itemCount: _filteredItems.length, itemBuilder: (context, index){
-                  AppInfo app = _filteredItems[index];
-                  return SizedBox(
-                    height: 50,
-                    child: ListTile(
-                      onTap: () {
-                        focusOnSearch.unfocus();
-                        _searchController.clear();
-                        InstalledApps.startApp(app.packageName);
-                        setState(() {
-                          showAppList = false;
-                          hideDate = true;
-                          hideMainGesture = true;
-                        });
-                      },
-                      leading: app.icon != null
-                        ? Image.memory(app.icon!, height: 30,)
-                        : const Icon(Icons.android),
-                      title: Text(app.name),
-                    )
-                  );
-                })
+                child: Applist(
+                  _searchController,
+                  focusOnSearch, 
+                  _filteredItems,
+                  onTap: AppTapped
+                )
               )
             ),
             const Padding(padding: EdgeInsets.all(3)),
