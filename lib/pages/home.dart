@@ -456,11 +456,10 @@ class _launcherState extends State<launcher>{
                 ),
                 elevation: const WidgetStatePropertyAll(0.0),
                 onChanged: (String value) async {
-                  String s = _searchController.text;
+                  String s = _searchController.text.toLowerCase();
+                  RegExp regex = RegExp(s.split('').join('.*'), caseSensitive: false);
                   setState(() {
-                    _filteredItems = _app.where(
-                      (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
-                      ).toList();
+                    _filteredItems = _app.where((_app) => regex.hasMatch(_app.name.toLowerCase())).toList();
                     if (value.isNotEmpty){
                       showAppList = true;
                       hideDate = false;
