@@ -32,7 +32,7 @@ class _pagesState extends State<pages> {
       await Future.delayed(const Duration(milliseconds: 1));
       setState(()  {
         lastPage = restoreLastPage!;
-        _pageController.jumpToPage(lastPage);
+        _pageController.jumpToPage(1);
       });
     }
   }
