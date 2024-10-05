@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
+import 'package:installed_apps/app_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +33,7 @@ class _pagesState extends State<pages> {
     if (restoreLastPage != 0){
       await Future.delayed(const Duration(milliseconds: 1));
       setState(()  {
-        lastPage = restoreLastPage!;
+        //lastPage = restoreLastPage!;
         _pageController.jumpToPage(1);
       });
     }
@@ -49,6 +51,7 @@ class _pagesState extends State<pages> {
     }
     _pageController = PageController(initialPage: lastPage);
   
+    List<AppInfo> _app = [];
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SizedBox(
@@ -60,7 +63,14 @@ class _pagesState extends State<pages> {
             widget.prefs.setInt("Page", page);
           },
           children: [
-            Widgetoptions(widget.prefs),
+            PageView(
+              scrollDirection: Axis.vertical,
+              children: [
+                //Widgetoptions(widget.prefs),
+                settingeMenu(widget.prefs, _app,)
+              ],
+            ),
+            
             ...getVisibleWidgets(),
           ],
         ),

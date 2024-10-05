@@ -30,17 +30,18 @@ class _WidgetoptionsState extends State<Widgetoptions> {
   @override
   Widget build(BuildContext context) {
     return SizedBox( 
-      height: 500, 
+      height: 210, 
+      width: 350,
       child: Column(
         children: [
           const Text("Widgets", textScaler: TextScaler.linear(1.5)),
           SizedBox(
-            height: 400,
-            width: 400,
+            height: 160,
             child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 final visibilityState = Provider.of<WidgetVisibilityState>(context);
                 return ReorderableListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: visibilityState.order.length,
                   itemBuilder: (context, index) {
                     int widgetIndex = visibilityState.order[index];
