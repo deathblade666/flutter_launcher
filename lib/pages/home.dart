@@ -490,9 +490,11 @@ class _launcherState extends State<launcher>{
                 onSubmitted: (String value) async {
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
                   String userInput = _searchController.text.toLowerCase();
-                  List<AppInfo> matchedApps = apps.where(
+                  RegExp regex = RegExp(userInput.split('').join('.*'), caseSensitive: false);
+                  List<AppInfo> matchedApps = /*apps.where(
                     (app) => app.name.toLowerCase().contains(userInput),
-                    ).toList();
+                    ).toList();*/
+                    apps.where((app) => regex.hasMatch(app.name.toLowerCase())).toList();
 
                   if (matchedApps.isNotEmpty) {
                     InstalledApps.startApp(matchedApps.first.packageName);
