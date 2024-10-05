@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/notes.dart';
 import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/webview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WidgetList {
@@ -18,18 +19,10 @@ WidgetList({required this.widgets, required this.prefs});
 
   List<Widget> getWidgets() {
     return [
-      Visibility(
-        visible: showTasks,
-        child: Tasks(prefs, key: const ValueKey('Tasks')),
-      ),
-      Visibility(
-        visible: showCalendar,
-        child: Calendar(prefs, key: const ValueKey('Calendar')),
-      ),
-      Visibility(
-        visible: showNotes,
-        child: Notes(prefs, key: const ValueKey('Notes')),
-      ),
+      Tasks(prefs, key: const ValueKey('Tasks')),
+      Calendar(prefs, key: const ValueKey('Calendar')),
+      Notes(prefs, key: const ValueKey('Notes')),
+      Webview(prefs),
     ];
   }
 

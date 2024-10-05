@@ -3,9 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class WidgetVisibilityState with ChangeNotifier {
-  List<bool> _visibility = [false, false, false];
-  List<int> _order = [0, 1, 2];
-  List<String> _names = ["Tasks", "Calendar", "Notes"];
+  List<bool> _visibility = [false, false, false, false];
+  List<int> _order = [0, 1, 2, 3];
+  List<String> _names = ["Tasks", "Calendar", "Notes", "WebView"];
   List<bool> get visibility => _visibility;
   List<int> get order => _order;
   List<String> get names => _names;

@@ -28,7 +28,7 @@ class _pagesState extends State<pages> {
 
   void loadPrefs()async{
     int? restoreLastPage = widget.prefs.getInt("Page");
-    if (restoreLastPage != 0){
+    if (restoreLastPage != null){
       await Future.delayed(const Duration(milliseconds: 1));
       setState(()  {
         lastPage = restoreLastPage!;
