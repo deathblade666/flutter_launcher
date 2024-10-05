@@ -33,7 +33,6 @@ class _pagesState extends State<pages> {
     if (restoreLastPage != 0){
       await Future.delayed(const Duration(milliseconds: 1));
       setState(()  {
-        //lastPage = restoreLastPage!;
         _pageController.jumpToPage(1);
       });
     }
@@ -63,14 +62,7 @@ class _pagesState extends State<pages> {
             widget.prefs.setInt("Page", page);
           },
           children: [
-            PageView(
-              scrollDirection: Axis.vertical,
-              children: [
-                //Widgetoptions(widget.prefs),
-                settingeMenu(widget.prefs, _app,)
-              ],
-            ),
-            
+            settingeMenu(widget.prefs, _app,),
             ...getVisibleWidgets(),
           ],
         ),
