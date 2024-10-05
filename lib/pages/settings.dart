@@ -192,13 +192,18 @@ class _settingeMenuState extends State<settingeMenu> {
       physics: const ScrollPhysics(),
       child: 
       SizedBox(
-        height: 800,
+        height: 700,
         child: 
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(padding: EdgeInsets.only(top: 20)),
-          const Text("UI Options", textScaler: TextScaler.linear(1.3),),
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Padding(padding: EdgeInsets.only(left: 15, top: 1),
+            child: Text("UI Options", textScaler: TextScaler.linear(1.5)),
+            ),
+          ),
+          //const Divider(endIndent: 290, indent: 10,),
           SwitchListTile(
             value: widgetsEnabled,
             title: const Text("Enable Widgets"),
@@ -210,8 +215,8 @@ class _settingeMenuState extends State<settingeMenu> {
               widget.prefs.setBool('EnableWidgets', value);
             }
           ),
+          const Text("Widget Order"),
           Widgetoptions(widget.prefs),
-          Divider(),
           SwitchListTile(
             value: statusBarToggle, 
             onChanged: (value) {
@@ -225,7 +230,7 @@ class _settingeMenuState extends State<settingeMenu> {
             title: const Text("Hide Status Bar"),
           ),
           SwitchListTile(
-            title: const Text("Toggle Favorites"),
+            title: const Text("Enable Favorites"),
             value: pinApp, 
             onChanged: (value){
               bool togglePinApp = value;
@@ -236,7 +241,7 @@ class _settingeMenuState extends State<settingeMenu> {
               widget.prefs.setBool("togglePin", value);
             }
             ),
-          const Divider(),
+          //const Divider(),
           Visibility(
             visible: pinApp,
             child: const Text("Favorites", textScaler: TextScaler.linear(1.3),)
@@ -302,11 +307,15 @@ class _settingeMenuState extends State<settingeMenu> {
           ),
           Visibility(
             visible: pinApp,
-            child: const Divider(),
+            child: const Divider(endIndent: 290, indent: 5,),
           ),
-          const Center(
-            child: Text("Search Options", textScaler: TextScaler.linear(1.3),)
+          const Align(alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text("Search Options", textScaler: TextScaler.linear(1.5)),
+            ),
           ),
+          //const Divider(endIndent: 250, indent: 10,),
           TextButton(
             onPressed: () {
               widget.prefs.reload();
@@ -349,15 +358,18 @@ class _settingeMenuState extends State<settingeMenu> {
               });
             }, 
             child: const Align(
-              alignment: Alignment.centerLeft, 
+              alignment: Alignment.center, 
               child: Text("Set Custom Search Provider")
             )
           ),
-          const Divider(),
+          //const Divider(),
           const Align(
-            alignment: Alignment.center,
-            child: Text("Gesture Options", textScaler: TextScaler.linear(1.3),),
+            alignment: Alignment.topLeft,
+            child: Padding(padding: EdgeInsets.only(left: 15),
+            child: Text("Gesture Options", textScaler: TextScaler.linear(1.5)),
+            )
           ),
+          //const Divider(endIndent: 240, indent: 10,),
           const Padding(padding: EdgeInsets.only(top: 15)),
           const Row(
             children: [
@@ -391,7 +403,7 @@ class _settingeMenuState extends State<settingeMenu> {
             ]
           ),
           const Expanded(child: Padding(padding: EdgeInsets.only(bottom: 1))),
-          const Divider(),
+          //const Divider(),
           Row(
             children: [
               TextButton(

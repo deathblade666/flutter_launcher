@@ -33,6 +33,9 @@ class _pagesState extends State<pages> {
     if (restoreLastPage != 0){
       await Future.delayed(const Duration(milliseconds: 1));
       setState(()  {
+        if (restoreLastPage != null){
+          lastPage = restoreLastPage;
+        }
         _pageController.jumpToPage(1);
       });
     }
