@@ -458,11 +458,10 @@ class _launcherState extends State<launcher>{
                 ),
                 elevation: const WidgetStatePropertyAll(0.0),
                 onChanged: (String value) async {
-                  String s = _searchController.text;
+                  String s = _searchController.text.toLowerCase();
+                  RegExp regex = RegExp(s.split('').join('.*'), caseSensitive: false);
                   setState(() {
-                    _filteredItems = _app.where(
-                      (_app) => _app.name.toLowerCase().contains(s.toLowerCase()),
-                      ).toList();
+                    _filteredItems = _app.where((_app) => regex.hasMatch(_app.name.toLowerCase())).toList();
                     if (value.isNotEmpty){
                       showAppList = true;
                       hideDate = false;
@@ -493,9 +492,11 @@ class _launcherState extends State<launcher>{
                 onSubmitted: (String value) async {
                   List<AppInfo> apps = await InstalledApps.getInstalledApps();
                   String userInput = _searchController.text.toLowerCase();
-                  List<AppInfo> matchedApps = apps.where(
+                  RegExp regex = RegExp(userInput.split('').join('.*'), caseSensitive: false);
+                  List<AppInfo> matchedApps = /*apps.where(
                     (app) => app.name.toLowerCase().contains(userInput),
-                    ).toList();
+                    ).toList();*/
+                    apps.where((app) => regex.hasMatch(app.name.toLowerCase())).toList();
 
                   if (matchedApps.isNotEmpty) {
                     InstalledApps.startApp(matchedApps.first.packageName);
