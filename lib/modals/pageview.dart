@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/pages/settings.dart';
+import 'package:flutter_launcher/utils/utils.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
@@ -8,8 +9,15 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class pages extends StatefulWidget {
-  pages(this.prefs,{super.key});
+  pages(this.prefs,{
+    required this.Toggles,
+    required this.apps,
+    super.key
+    }
+  );
   SharedPreferences prefs;
+  final HomeToggles Toggles;
+  List<AppInfo> apps = [];
 
   @override
   State<pages> createState() => _pagesState();
@@ -53,7 +61,7 @@ class _pagesState extends State<pages> {
     }
     _pageController = PageController(initialPage: lastPage);
   
-    List<AppInfo> _app = [];
+    
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SizedBox(
@@ -65,7 +73,7 @@ class _pagesState extends State<pages> {
             widget.prefs.setInt("Page", page);
           },
           children: [
-            settingeMenu(widget.prefs, _app,),
+            settingeMenu(widget.prefs, widget.apps, Toggles: widget.Toggles),
             ...getVisibleWidgets(),
           ],
         ),

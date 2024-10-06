@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_launcher/modals/applist.dart';
 import 'package:flutter_launcher/modals/pageview.dart';
 import 'package:flutter_launcher/pages/settings.dart';
+import 'package:flutter_launcher/utils/utils.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -235,6 +236,7 @@ class _launcherState extends State<launcher>{
   }
 
   void toggleStatusBar(toggleStats){
+    print(toggleStats);
     if (toggleStats == true) {
       setState(() {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
@@ -372,14 +374,34 @@ class _launcherState extends State<launcher>{
                     onTap: (){
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          return pages(widget.prefs);
-                          });
+                          return pages(
+                            widget.prefs, 
+                            Toggles: HomeToggles(
+                              pinAppToggle: pinAppToggle, 
+                              pinnedApp: pinnedApp, 
+                              searchProvider: searchProvider, 
+                              toggleStatusBar: toggleStatusBar, 
+                              widgetToggle: widgetToggle,
+                            ),
+                            apps: _app,
+                          );
+                        });
                       });
                     },
                     onVerticalDragStart: (details) {
                       showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          return pages(widget.prefs);
+                          return pages(
+                            widget.prefs, 
+                            Toggles: HomeToggles(
+                              pinAppToggle: pinAppToggle, 
+                              pinnedApp: pinnedApp, 
+                              searchProvider: searchProvider, 
+                              toggleStatusBar: toggleStatusBar, 
+                              widgetToggle: widgetToggle,
+                            ),
+                            apps: _app,
+                          );
                         });
                       });
                     },
@@ -603,7 +625,17 @@ class _launcherState extends State<launcher>{
                     if (widgetVis == false){
                     showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
                         return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          return pages(widget.prefs);
+                          return pages(
+                            widget.prefs, 
+                            Toggles: HomeToggles(
+                              pinAppToggle: pinAppToggle, 
+                              pinnedApp: pinnedApp, 
+                              searchProvider: searchProvider, 
+                              toggleStatusBar: toggleStatusBar, 
+                              widgetToggle: widgetToggle,
+                            ),
+                            apps: _app,
+                          );
                         });
                       });
                     }

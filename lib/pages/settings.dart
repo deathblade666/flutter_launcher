@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_launcher/utils/utils.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,14 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable, camel_case_types
 class settingeMenu extends StatefulWidget {
-  settingeMenu(this.prefs, this._app,{  this.onClear,  this.ontogglePinApp, this.onPinnedApp , this.enableWidgets,  this.onStatusBarToggle, this.onProviderSet,super.key});
-  final void Function(String provider)? onProviderSet;
-  final void Function(bool toggleStats)? onStatusBarToggle;
-  final void Function(bool widgetsEnabled)? enableWidgets;
-  final void Function(String appName, int appNumber)? onPinnedApp;
-  final void Function(bool togglePinApp)? ontogglePinApp;
-  final void Function(String appName, int appNumber)? onClear;
+  settingeMenu(
+    this.prefs, this._app,{
+      required this.Toggles,
+      super.key
+    }
+  );
   SharedPreferences prefs;
+  final HomeToggles Toggles;
   final List<AppInfo> _app;
   
 
@@ -119,28 +120,28 @@ class _settingeMenuState extends State<settingeMenu> {
                   if (appNumber == 1){
                     final String appName = app.packageName;
                     widget.prefs.setString("Pinned App1", appName);
-                    widget.onPinnedApp!(appName, appNumber);
+                    widget.Toggles.pinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon = app.icon;
                     });
                   } else if (appNumber == 2){
                     final String appName = app.packageName;
                     widget.prefs.setString("Pinned App2", appName);
-                    widget.onPinnedApp!(appName, appNumber);
+                    widget.Toggles.pinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon2 = app.icon;
                     });
                   } else if (appNumber == 3){
                     final String appName = app.packageName;
                     widget.prefs.setString("Pinned App3", appName);
-                    widget.onPinnedApp!(appName, appNumber);
+                    widget.Toggles.pinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon3 = app.icon;
                     });
                   }else if (appNumber == 4){
                     final String appName = app.packageName;
                     widget.prefs.setString("Pinned App4", appName);
-                    widget.onPinnedApp!(appName, appNumber);
+                    widget.Toggles.pinnedApp(appName, appNumber);
                     setState(() {
                       applicationIcon4 = app.icon;
                     });
@@ -165,7 +166,7 @@ class _settingeMenuState extends State<settingeMenu> {
               widget.prefs.remove("appIcon$appNumber");
               widget.prefs.remove("Pinned App$appNumber");
               String appName = "";
-              widget.onClear!(appName, appNumber);
+              widget.Toggles.pinnedApp(appName, appNumber);
               setState(() {
                 if (appNumber == 1){
                 applicationIcon = null;
@@ -241,7 +242,7 @@ class _settingeMenuState extends State<settingeMenu> {
                               TextButton(
                                 onPressed: () {
                                   String provider = searchProvider.text;
-                                  widget.onProviderSet!(provider);
+                                  widget.Toggles.searchProvider(provider);
                                   widget.prefs.setString("provider", provider);
                                   Navigator.pop(context);
                                 }, 
@@ -264,7 +265,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 setState(() {
                   statusBarToggle = !statusBarToggle;
                 });
-                widget.onStatusBarToggle!(toggleStats);
+                widget.Toggles.toggleStatusBar(toggleStats);
                 widget.prefs.setBool('StatusBar', value);
               },
               title: const Text("Hide Status Bar"),
@@ -278,7 +279,7 @@ class _settingeMenuState extends State<settingeMenu> {
                   setState(() {
                     widgetsEnabled = !widgetsEnabled;
                   });
-                  widget.enableWidgets!(widgetsEnabled);
+                  widget.Toggles.widgetToggle(widgetsEnabled);
                   widget.prefs.setBool('EnableWidgets', value);
                 },
               ),
@@ -296,7 +297,7 @@ class _settingeMenuState extends State<settingeMenu> {
                   setState(() {
                     pinApp = !pinApp;
                   });
-                  widget.ontogglePinApp!(togglePinApp);
+                  widget.Toggles.pinAppToggle(togglePinApp);
                   widget.prefs.setBool("togglePin", value);
                 }
               ),
