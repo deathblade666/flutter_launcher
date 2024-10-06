@@ -34,12 +34,13 @@ class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
   bool statusBarToggle = false;
   bool widgetsEnabled = true;
-  bool pinApp = true;
+  bool pinApp = false;
   var applicationIcon;
   var applicationIcon2;
   var applicationIcon3;
   var applicationIcon4;
   var appIconrestored;
+  ExpansionTileController widgetTileController = ExpansionTileController();
 
   @override
   initState(){
@@ -273,6 +274,10 @@ class _settingeMenuState extends State<settingeMenu> {
             ExpansionTile(        //TODO: retain expanded state
               title: const Text("Widgets"),
               subtitle: const Text("Press for widget selection"),
+              onExpansionChanged: (value){
+                widget.prefs.setBool("WidgetExpanded", value);
+              },
+              controller: widgetTileController,
               trailing: Switch(
                 value: widgetsEnabled, 
                 onChanged: (value) {
