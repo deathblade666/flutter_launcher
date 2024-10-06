@@ -391,8 +391,6 @@ class _settingeMenuState extends State<settingeMenu> {
                 Padding(padding: EdgeInsets.only(top: 10))
               ],
             ),
-            const Padding(padding: EdgeInsets.only(top: 100)),
-            //const Expanded(child: Padding(padding: EdgeInsets.only(bottom: 1))),
             Row(
               children: [
                 TextButton(
