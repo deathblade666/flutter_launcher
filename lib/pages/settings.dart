@@ -42,6 +42,7 @@ class _settingeMenuState extends State<settingeMenu> {
   var appIconrestored;
   ExpansionTileController widgetTileController = ExpansionTileController();
   ExpansionTileController favoritesTileController = ExpansionTileController();
+  ExpansionTileController gestureTileController = ExpansionTileController();
 
   @override
   initState(){
@@ -192,6 +193,9 @@ class _settingeMenuState extends State<settingeMenu> {
 
   @override
   Widget build(BuildContext context) {
+    bool widgetonexpanded = false;
+    bool favoritesonexpanded = false;
+    bool gesturesonexpanded = false;
     return SingleChildScrollView(
       physics: const ScrollPhysics(),
       child: 
@@ -273,17 +277,43 @@ class _settingeMenuState extends State<settingeMenu> {
               title: const Text("Hide Status Bar"),
             ),
             ExpansionTile(        //TODO: retain expanded state
-              title: const Text("Widgets"),
-              subtitle: const Text("Press for widget selection"),
+              title: Row(
+                children: [
+                  const Text("Widgets"),
+                  if (widgetonexpanded == true)...[
+                    const Icon(Icons.keyboard_arrow_up_outlined)
+                  ] else if (widgetonexpanded == false)...[
+                    const Icon(Icons.keyboard_arrow_down_outlined)
+                  ]
+                  
+                ]
+              ),
+              subtitle: const Text("Press to select dedired widgets and set their order"),
               controller: widgetTileController,
+              onExpansionChanged: (value){
+                if (value == true){
+                  setState(() {
+                    widgetonexpanded = true;
+                  });
+                }
+                if (value == false){
+                  setState(() {
+                    widgetonexpanded = false;
+                  });
+                }
+              },
               trailing: Switch(
                 value: widgetsEnabled, 
                 onChanged: (value) {
                   setState(() {
                     if (value == true){
-                      widgetTileController.expand();
+                      setState(() {
+                        widgetTileController.expand();
+                      });
                     } if (value == false && widgetTileController.isExpanded){
-                      widgetTileController.collapse();
+                      setState(() {
+                        widgetTileController.collapse();
+                      });
                     }
                     widgetsEnabled = !widgetsEnabled;
                   });
@@ -296,7 +326,28 @@ class _settingeMenuState extends State<settingeMenu> {
               ],
             ),
             ExpansionTile(        //TODO: retain expanded state
-              title: const Text("Favorites"),
+              title: Row(
+                children: [
+                  const Text("Favorites"),
+                  if (favoritesonexpanded == true)...[
+                    const Icon(Icons.keyboard_arrow_up_outlined)
+                  ] else if (favoritesonexpanded == false)...[
+                    const Icon(Icons.keyboard_arrow_down_outlined)
+                  ]
+                ]
+              ),
+              onExpansionChanged: (value){
+                if (value == true){
+                  setState(() {
+                    favoritesonexpanded = true;
+                  });
+                }
+                if (value == false){
+                  setState(() {
+                    favoritesonexpanded = false;
+                  });
+                }
+              },
               subtitle: const Text("Press to set favorites"),
               controller: favoritesTileController,
               trailing: Switch(
@@ -367,9 +418,32 @@ class _settingeMenuState extends State<settingeMenu> {
                 const Padding(padding: EdgeInsets.only(top: 10))
               ]
             ),
-            const ExpansionTile(        //TODO: retain expanded state
-              title: Text("Gestures"),
-              children: [
+            ExpansionTile(        //TODO: retain expanded state
+              title: Row(
+                children: [
+                  const Text("Gestures"),
+                  if (gesturesonexpanded == true)...[
+                    const Icon(Icons.keyboard_arrow_up_outlined)
+                  ] else if (gesturesonexpanded == false)...[
+                    const Icon(Icons.keyboard_arrow_down_outlined)
+                  ]
+                ]
+              ),
+              onExpansionChanged: (value){
+                if (value == true){
+                  setState(() {
+                    gesturesonexpanded = true;
+                  });
+                }
+                if (value == false){
+                  setState(() {
+                    gesturesonexpanded = false;
+                  });
+                }
+              },
+              controller: gestureTileController,
+              showTrailingIcon: false,
+              children: const [
                 Row(
                   children: [
                     Padding(padding: EdgeInsets.only(right: 25)),
