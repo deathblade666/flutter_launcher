@@ -41,6 +41,7 @@ class _settingeMenuState extends State<settingeMenu> {
   var applicationIcon4;
   var appIconrestored;
   ExpansionTileController widgetTileController = ExpansionTileController();
+  ExpansionTileController favoritesTileController = ExpansionTileController();
 
   @override
   initState(){
@@ -274,14 +275,16 @@ class _settingeMenuState extends State<settingeMenu> {
             ExpansionTile(        //TODO: retain expanded state
               title: const Text("Widgets"),
               subtitle: const Text("Press for widget selection"),
-              onExpansionChanged: (value){
-                widget.prefs.setBool("WidgetExpanded", value);
-              },
               controller: widgetTileController,
               trailing: Switch(
                 value: widgetsEnabled, 
                 onChanged: (value) {
                   setState(() {
+                    if (value == true){
+                      widgetTileController.expand();
+                    } if (value == false && widgetTileController.isExpanded){
+                      widgetTileController.collapse();
+                    }
                     widgetsEnabled = !widgetsEnabled;
                   });
                   widget.Toggles.widgetToggle(widgetsEnabled);
@@ -295,11 +298,17 @@ class _settingeMenuState extends State<settingeMenu> {
             ExpansionTile(        //TODO: retain expanded state
               title: const Text("Favorites"),
               subtitle: const Text("Press to set favorites"),
+              controller: favoritesTileController,
               trailing: Switch(
                 value: pinApp, 
                 onChanged: (value){
                   bool togglePinApp = value;
                   setState(() {
+                    if (value == true){
+                      favoritesTileController.expand();
+                    } else if (value == false && favoritesTileController.isExpanded){
+                      favoritesTileController.collapse();
+                    }
                     pinApp = !pinApp;
                   });
                   widget.Toggles.pinAppToggle(togglePinApp);
