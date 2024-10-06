@@ -43,6 +43,10 @@ class _settingeMenuState extends State<settingeMenu> {
   ExpansionTileController widgetTileController = ExpansionTileController();
   ExpansionTileController favoritesTileController = ExpansionTileController();
   ExpansionTileController gestureTileController = ExpansionTileController();
+      bool widgetonexpanded = false;
+    bool favoritesonexpanded = false;
+    bool gesturesonexpanded = false;
+  
 
   @override
   initState(){
@@ -193,9 +197,7 @@ class _settingeMenuState extends State<settingeMenu> {
 
   @override
   Widget build(BuildContext context) {
-    bool widgetonexpanded = false;
-    bool favoritesonexpanded = false;
-    bool gesturesonexpanded = false;
+
     return SingleChildScrollView(
       physics: const ScrollPhysics(),
       child: 
@@ -280,27 +282,18 @@ class _settingeMenuState extends State<settingeMenu> {
               title: Row(
                 children: [
                   const Text("Widgets"),
-                  if (widgetonexpanded == true)...[
+                  if (widgetonexpanded == true)
                     const Icon(Icons.keyboard_arrow_up_outlined)
-                  ] else if (widgetonexpanded == false)...[
-                    const Icon(Icons.keyboard_arrow_down_outlined)
-                  ]
-                  
+                   else
+                    const Icon(Icons.keyboard_arrow_down_outlined),
                 ]
               ),
               subtitle: const Text("Press to select dedired widgets and set their order"),
               controller: widgetTileController,
-              onExpansionChanged: (value){
-                if (value == true){
-                  setState(() {
-                    widgetonexpanded = true;
-                  });
-                }
-                if (value == false){
-                  setState(() {
-                    widgetonexpanded = false;
-                  });
-                }
+              onExpansionChanged: (value) {
+                setState(() {
+                  widgetonexpanded = value;
+                });
               },
               trailing: Switch(
                 value: widgetsEnabled, 

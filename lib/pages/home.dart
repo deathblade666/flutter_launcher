@@ -6,7 +6,6 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/modals/applist.dart';
 import 'package:flutter_launcher/modals/pageview.dart';
-import 'package:flutter_launcher/pages/settings.dart';
 import 'package:flutter_launcher/utils/utils.dart';
 import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
 import 'package:installed_apps/app_info.dart';
