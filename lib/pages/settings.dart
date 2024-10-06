@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+//TODO: Fix all the functions!!
 
 // ignore: must_be_immutable, camel_case_types
 class settingeMenu extends StatefulWidget {
@@ -193,53 +194,52 @@ class _settingeMenuState extends State<settingeMenu> {
       child: 
       SizedBox(
         height: 700,
-        child: 
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text("Settings", textScaler: TextScaler.linear(1.5),),
-          SwitchListTile(
-            value: statusBarToggle, 
-            onChanged: (value) {
-              bool toggleStats = value;
-              setState(() {
-                statusBarToggle = !statusBarToggle;
-              });
-              widget.onStatusBarToggle!(toggleStats);
-              widget.prefs.setBool('StatusBar', value);
-            },
-            title: const Text("Hide Status Bar"),
-          ),
-          ExpansionTile(
-            title: const Text("Widgets"),
-            subtitle: const Text("Press for widget selection"),
-            trailing: Switch(
-              value: widgetsEnabled, 
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Settings", textScaler: TextScaler.linear(1.5),),
+            SwitchListTile(
+              value: statusBarToggle, 
               onChanged: (value) {
+                bool toggleStats = value;
                 setState(() {
-                  widgetsEnabled = !widgetsEnabled;
+                  statusBarToggle = !statusBarToggle;
                 });
-                widget.enableWidgets!(widgetsEnabled);
-                widget.prefs.setBool('EnableWidgets', value);
+                widget.onStatusBarToggle!(toggleStats);
+                widget.prefs.setBool('StatusBar', value);
               },
+              title: const Text("Hide Status Bar"),
             ),
-            children: [
-              Widgetoptions(widget.prefs),
-            ],
-          ),
-          ExpansionTile(
+            ExpansionTile(        //TODO: retain expanded state
+              title: const Text("Widgets"),
+              subtitle: const Text("Press for widget selection"),
+              trailing: Switch(
+                value: widgetsEnabled, 
+                onChanged: (value) {
+                  setState(() {
+                    widgetsEnabled = !widgetsEnabled;
+                  });
+                  widget.enableWidgets!(widgetsEnabled);
+                  widget.prefs.setBool('EnableWidgets', value);
+                },
+              ),
+              children: [
+                Widgetoptions(widget.prefs),
+              ],
+            ),
+            ExpansionTile(        //TODO: retain expanded state
               title: const Text("Favorites"),
               subtitle: const Text("Press to set favorites"),
               trailing: Switch(
                 value: pinApp, 
                 onChanged: (value){
-                    bool togglePinApp = value;
-                    setState(() {
-                      pinApp = !pinApp;
-                    });
-                    widget.ontogglePinApp!(togglePinApp);
-                    widget.prefs.setBool("togglePin", value);
-                  }
+                  bool togglePinApp = value;
+                  setState(() {
+                    pinApp = !pinApp;
+                  });
+                  widget.ontogglePinApp!(togglePinApp);
+                  widget.prefs.setBool("togglePin", value);
+                }
               ),
               children: [
                 Row(
@@ -352,7 +352,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 ),
               ],
             ),
-            const ExpansionTile(
+            const ExpansionTile(        //TODO: retain expanded state
               title: Text("Gestures"),
               children: [
                 Row(
@@ -391,8 +391,8 @@ class _settingeMenuState extends State<settingeMenu> {
                 Padding(padding: EdgeInsets.only(top: 10))
               ],
             ),
-            const Padding(padding: EdgeInsets.only(top: 15)),
-            const Expanded(child: Padding(padding: EdgeInsets.only(bottom: 1))),
+            const Padding(padding: EdgeInsets.only(top: 100)),
+            //const Expanded(child: Padding(padding: EdgeInsets.only(bottom: 1))),
             Row(
               children: [
                 TextButton(
