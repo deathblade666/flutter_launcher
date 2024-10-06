@@ -1,4 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
 
@@ -16,10 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-
-
-// ignore: must_be_immutable, camel_case_types
 class launcher extends StatefulWidget {
   launcher(this.prefs,{super.key});
   SharedPreferences prefs;
@@ -32,10 +27,7 @@ class launcher extends StatefulWidget {
   void onClosed(){
   
   }
-  
 
-
-// ignore: camel_case_types
 class _launcherState extends State<launcher>{
   bool enabeBottom = true;
   bool showAppList = false;
@@ -53,26 +45,19 @@ class _launcherState extends State<launcher>{
   String weekDay = formatDate(DateTime.now(),[DD,]);
   String monthDay = formatDate(DateTime.now(),[MM, ' ', d]);
   String engine = "";
-  // ignore: prefer_typing_uninitialized_variables
   var _tapPosition;
   bool widgetVis = true;
   String pinnedAppInfo = "";
   String pinnedAppInfo2 = "";
   String pinnedAppInfo3 = "";
   String pinnedAppInfo4 = "";
-  // ignore: prefer_typing_uninitialized_variables
   var appIconrestored;
-  // ignore: prefer_typing_uninitialized_variables
   var appIcon;
-  // ignore: prefer_typing_uninitialized_variables
   var appIcon2;
-  // ignore: prefer_typing_uninitialized_variables
   var appIcon3;
-  // ignore: prefer_typing_uninitialized_variables
   var appIcon4;
   bool noAppPinned = false;
   double searchHieght = 40;
-  // ignore: prefer_typing_uninitialized_variables
   var appNumber;
   String appName ="";
   bool hideIcon1 = false;
@@ -197,7 +182,6 @@ class _launcherState extends State<launcher>{
     });
   }
 
-  // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
   void enableSheet(DragStartDetails) {
     setState(() {
       enabeBottom = !enabeBottom;
@@ -235,7 +219,6 @@ class _launcherState extends State<launcher>{
   }
 
   void toggleStatusBar(toggleStats){
-    print(toggleStats);
     if (toggleStats == true) {
       setState(() {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
@@ -333,7 +316,6 @@ class _launcherState extends State<launcher>{
     }
   }
 
-  // ignore: avoid_types_as_parameter_names, non_constant_identifier_names
   void restoreAppIcon(Uint8List){
     appIcon = appIconrestored;
   }
@@ -522,7 +504,6 @@ class _launcherState extends State<launcher>{
                       final Uri url = Uri.parse(inputURL);
                       await launchUrl(url);
                   } else { 
-                    // ignore: non_constant_identifier_names
                     String Search = "https://$engine$userInput";
                     final Uri searchURL = Uri.parse(Search);
                     await launchUrl(searchURL);

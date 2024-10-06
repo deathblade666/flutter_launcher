@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 
@@ -9,9 +8,6 @@ import 'package:flutter_launcher/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//TODO: Fix all the functions!!
-
-// ignore: must_be_immutable, camel_case_types
 class settingeMenu extends StatefulWidget {
   settingeMenu(
     this.prefs, this._app,{
@@ -29,7 +25,6 @@ class settingeMenu extends StatefulWidget {
   State<settingeMenu> createState() => _settingeMenuState();
 }
 
-// ignore: camel_case_types
 class _settingeMenuState extends State<settingeMenu> {
   TextEditingController searchProvider = TextEditingController();
   bool statusBarToggle = false;
@@ -278,7 +273,7 @@ class _settingeMenuState extends State<settingeMenu> {
               },
               title: const Text("Hide Status Bar"),
             ),
-            ExpansionTile(        //TODO: retain expanded state
+            ExpansionTile(
               title: Row(
                 children: [
                   const Text("Widgets"),
@@ -318,7 +313,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 Widgetoptions(widget.prefs),
               ],
             ),
-            ExpansionTile(        //TODO: retain expanded state
+            ExpansionTile(
               title: Row(
                 children: [
                   const Text("Favorites"),
@@ -411,7 +406,7 @@ class _settingeMenuState extends State<settingeMenu> {
                 const Padding(padding: EdgeInsets.only(top: 10))
               ]
             ),
-            ExpansionTile(        //TODO: retain expanded state
+            ExpansionTile(
               title: Row(
                 children: [
                   const Text("Gestures"),

@@ -32,10 +32,8 @@ class _WidgetoptionsState extends State<Widgetoptions> {
     return SizedBox( 
       height: 180, 
       width: 350,
-      //color: Theme.of(context).colorScheme.onInverseSurface,
       child: Column(
         children: [
-          //const Text("Widgets", textScaler: TextScaler.linear(1.5)),
           SizedBox(
             height: 160,
             child: StatefulBuilder(
@@ -67,7 +65,6 @@ class _WidgetoptionsState extends State<Widgetoptions> {
               }
             )
           ),
-          //const Padding(padding: EdgeInsets.only(bottom: 15))
         ],
       )
     );

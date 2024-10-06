@@ -4,7 +4,6 @@ class HomeToggles{
   final void Function(bool widgetsEnabled) widgetToggle;
   final void Function(String appName, int appNumber) pinnedApp;
   final void Function(bool togglePinApp) pinAppToggle;
-  //final void Function(String appName, int appNumber)? onClear;
 
   HomeToggles({
     required this.pinAppToggle,
