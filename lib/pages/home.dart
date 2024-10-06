@@ -600,7 +600,14 @@ class _launcherState extends State<launcher>{
                     });
                   },
                   onLongPress: () async {
-                    double left = _tapPosition.dx - 110;
+                    if (widgetVis == false){
+                    showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
+                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                          return pages(widget.prefs);
+                        });
+                      });
+                    }
+                    /*double left = _tapPosition.dx - 110;
                     double top = _tapPosition.dy;
                     double right = _tapPosition.dx;
                     await showMenu(
@@ -617,7 +624,7 @@ class _launcherState extends State<launcher>{
                           },
                         )
                       ]
-                    );
+                    );*/
                   },
                   onTap: (){
                     focusOnSearch.unfocus();

@@ -55,6 +55,7 @@ class _WidgetoptionsState extends State<Widgetoptions> {
                           visibilityState.toggleVisibility(widgetIndex);
                         });
                       },
+                      secondary: Icon(Icons.menu_outlined),
                     );
                   },
                   onReorder: (int oldIndex, int newIndex) {
