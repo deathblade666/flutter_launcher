@@ -197,7 +197,66 @@ class _settingeMenuState extends State<settingeMenu> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Settings", textScaler: TextScaler.linear(1.5),),
+            const Text("Settings", textScaler: TextScaler.linear(1.5)),
+            Row(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text("Search Engine", textScaler: TextScaler.linear(1.2)),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    widget.prefs.reload();
+                    String? engine = widget.prefs.getString("provider");
+                    engine ??= "duckduckgo.com/?q=";
+                    showDialog(context: context, builder: (BuildContext context){
+                      return AlertDialog(
+                        title: const Text("Enter Search Provider URL", style: TextStyle(fontSize: 15),),
+                        actions: [
+                          Row(
+                            children: [
+                              Text(
+                                "example:""\n$engine", 
+                                style: const TextStyle(fontSize: 12), 
+                                textAlign: TextAlign.left
+                              ),
+                            ],
+                          ),
+                          TextField(
+                            controller: searchProvider,
+                          ),
+                          Row(
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }, 
+                                child: const Text("Cancel")
+                              ),
+                              const Expanded(
+                                child: Padding(padding: EdgeInsets.only(right: 1)
+                                )
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  String provider = searchProvider.text;
+                                  widget.onProviderSet!(provider);
+                                  widget.prefs.setString("provider", provider);
+                                  Navigator.pop(context);
+                                }, 
+                                child: const Text("Save")
+                              ),
+                            ],
+                          ),
+                        ]
+                      );
+                    });
+                  }, 
+                  child: const Text("Set Search Engine") 
+                ),
+              ],
+            ),
             SwitchListTile(
               value: statusBarToggle, 
               onChanged: (value) {
@@ -292,65 +351,6 @@ class _settingeMenuState extends State<settingeMenu> {
                 ),
                 const Padding(padding: EdgeInsets.only(top: 10))
               ]
-            ),
-            Row(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 15, top: 10),
-                  child: Text("Search Engine"),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    widget.prefs.reload();
-                    String? engine = widget.prefs.getString("provider");
-                    engine ??= "duckduckgo.com/?q=";
-                    showDialog(context: context, builder: (BuildContext context){
-                      return AlertDialog(
-                        title: const Text("Enter Search Provider URL", style: TextStyle(fontSize: 15),),
-                        actions: [
-                          Row(
-                            children: [
-                              Text(
-                                "example:""\n$engine", 
-                                style: const TextStyle(fontSize: 12), 
-                                textAlign: TextAlign.left
-                              ),
-                            ],
-                          ),
-                          TextField(
-                            controller: searchProvider,
-                          ),
-                          Row(
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("Cancel")
-                              ),
-                              const Expanded(
-                                child: Padding(padding: EdgeInsets.only(right: 1)
-                                )
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  String provider = searchProvider.text;
-                                  widget.onProviderSet!(provider);
-                                  widget.prefs.setString("provider", provider);
-                                  Navigator.pop(context);
-                                }, 
-                                child: const Text("Save")
-                              ),
-                            ],
-                          ),
-                        ]
-                      );
-                    });
-                  }, 
-                  child: const Text("Set Custom Search Provider")
-                ),
-              ],
             ),
             const ExpansionTile(        //TODO: retain expanded state
               title: Text("Gestures"),
