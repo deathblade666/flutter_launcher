@@ -38,9 +38,13 @@ class _settingeMenuState extends State<settingeMenu> {
   ExpansionTileController widgetTileController = ExpansionTileController();
   ExpansionTileController favoritesTileController = ExpansionTileController();
   ExpansionTileController gestureTileController = ExpansionTileController();
-      bool widgetonexpanded = false;
-    bool favoritesonexpanded = false;
-    bool gesturesonexpanded = false;
+  bool widgetonexpanded = false;
+  bool favoritesonexpanded = false;
+  bool gesturesonexpanded = false;
+  bool calDavOnExpanded = false;
+  TextEditingController calDavUserController = TextEditingController();
+  TextEditingController calDavPassController = TextEditingController();
+  TextEditingController calDavServerController = TextEditingController();
   
 
   @override
@@ -58,7 +62,19 @@ class _settingeMenuState extends State<settingeMenu> {
     String? settingAppIcon2 = widget.prefs.getString("appIcon2");
     String? settingAppIcon3 = widget.prefs.getString("appIcon3");
     String? settingAppIcon4 = widget.prefs.getString("appIcon4");
-
+    String? calDavUser = widget.prefs.getString("CalDavUser");
+    String? calDavPass = widget.prefs.getString("CalDavPass");
+    String? calDavServer = widget.prefs.getString("CalDavServer");
+    
+    if (calDavServer != null){
+      calDavServerController.text = calDavServer;
+    }
+    if (calDavPass != null){
+      calDavPassController.text = calDavPass;
+    }
+    if (calDavUser != null){
+      calDavUserController.text = calDavUser;
+    }
     if (settingAppIcon1 != null){
       appIconrestored = base64Decode(settingAppIcon1);
       var iconAsList1 = Uint8List.fromList(appIconrestored);
@@ -148,7 +164,6 @@ class _settingeMenuState extends State<settingeMenu> {
                       applicationIcon4 = app.icon;
                     });
                   }
-                  
                   if (app.icon != null){
                     var encodedIcon = base64Encode(app.icon!);
                     widget.prefs.setString("appIcon$appNumber", encodedIcon);
@@ -197,7 +212,7 @@ class _settingeMenuState extends State<settingeMenu> {
       physics: const ScrollPhysics(),
       child: 
       SizedBox(
-        height: 700,
+        height: 900,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -283,7 +298,7 @@ class _settingeMenuState extends State<settingeMenu> {
                     const Icon(Icons.keyboard_arrow_down_outlined),
                 ]
               ),
-              subtitle: const Text("Press to select dedired widgets and set their order"),
+              subtitle: const Text("Press to select desired widgets and set their order"),
               controller: widgetTileController,
               onExpansionChanged: (value) {
                 setState(() {
@@ -311,6 +326,66 @@ class _settingeMenuState extends State<settingeMenu> {
               ),
               children: [
                 Widgetoptions(widget.prefs),
+                ExpansionTile(
+                  showTrailingIcon: false,
+                  title: Row(
+                    children: [
+                      const Text("CalDAV"),
+                      if (calDavOnExpanded == true)...[
+                        const Icon(Icons.keyboard_arrow_up_outlined)
+                      ] else if (calDavOnExpanded == false)...[
+                        const Icon(Icons.keyboard_arrow_down_outlined)
+                      ]
+                    ]
+                  ),
+                  onExpansionChanged: (value){
+                    if (value == true){
+                      setState(() {
+                        calDavOnExpanded = true;
+                      });
+                    }
+                    if (value == false){
+                      setState(() {
+                        calDavOnExpanded = false;
+                      });
+                    }
+                  },
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: TextField(
+                        controller: calDavServerController,
+                        decoration: const InputDecoration(labelText: "Server Address"),
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: TextField(
+                        controller: calDavUserController,
+                        decoration: const InputDecoration(labelText: "UserName"),
+                        obscuringCharacter: '*',
+                        obscureText: true,
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: TextField(
+                        controller: calDavPassController,
+                        decoration: const InputDecoration(labelText: "Password"),
+                        obscuringCharacter: '*',
+                        obscureText: true,
+                      )
+                    ),
+                    TextButton(
+                      onPressed: (){
+                        widget.prefs.setString("CalDavServer", calDavServerController.text);
+                        widget.prefs.setString("CalDavUser", calDavUserController.text);
+                        widget.prefs.setString("CalDavPass", calDavPassController.text);
+                      }, 
+                      child: const Text("Save")
+                    ),
+                  ],
+                ),
               ],
             ),
             ExpansionTile(
