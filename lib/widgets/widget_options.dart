@@ -40,7 +40,7 @@ class _WidgetoptionsState extends State<Widgetoptions> {
               builder: (BuildContext context, StateSetter setState) {
                 final visibilityState = Provider.of<WidgetVisibilityState>(context);
                 return ReorderableListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                 // physics: const NeverScrollableScrollPhysics(),
                   itemCount: visibilityState.order.length,
                   itemBuilder: (context, index) {
                     int widgetIndex = visibilityState.order[index];
