@@ -15,8 +15,8 @@ class CheckList extends StatefulWidget {
 
 
 class _TasksState extends State<CheckList> {
-  List<String> tasks = [];
-  List<bool> selectedTask = [];
+  List<String> checkItems = [];
+  List<bool> selectedItems = [];
   List<String> restoreCheckboxes = [];
   final TextEditingController _taskController = TextEditingController();
   FocusNode taskInputField = FocusNode();
@@ -30,16 +30,16 @@ class _TasksState extends State<CheckList> {
 
  void RestoreTasks (){
   widget.prefs.reload();
-  List<String>? restoredTasks = widget.prefs.getStringList("Tasks");
+  List<String>? restoredCheckItems = widget.prefs.getStringList("checkItems");
   List<String>? restoreCheckboxesOnLoad = widget.prefs.getStringList("Restore Checkbox");
-  if (restoredTasks != null) {
+  if (restoredCheckItems != null) {
     setState(() {
-      tasks = restoredTasks;
+      checkItems = restoredCheckItems;
     });  
   }
   if (restoreCheckboxesOnLoad != null) {
     setState(() {
-      restoreCheckboxesOnLoad.forEach((item) => item == "true" ? selectedTask.add(true) : selectedTask.add(false));
+      restoreCheckboxesOnLoad.forEach((item) => item == "true" ? selectedItems.add(true) : selectedItems.add(false));
       restoreCheckboxes = restoreCheckboxesOnLoad;
     });
     
@@ -60,22 +60,22 @@ class _TasksState extends State<CheckList> {
         children: [
           SizedBox(
             height: 400,
-            child: ListView.builder(itemCount: tasks.length ,itemBuilder: (context, index) {
+            child: ListView.builder(itemCount: checkItems.length ,itemBuilder: (context, index) {
                 return SizedBox(
                   height: 50,
                   child: CheckboxListTile(
-                    title: Text(tasks[index]),
-                    value: selectedTask[index],
+                    title: Text(checkItems[index]),
+                    value: selectedItems[index],
                     onChanged: (value) {
                       setState(() {
-                        selectedTask[index] = value!;
+                        selectedItems[index] = value!;
                         if (value == true){
-                          tasks.remove(tasks[index]);
-                          selectedTask.remove(selectedTask[index]);
+                          checkItems.remove(checkItems[index]);
+                          selectedItems.remove(selectedItems[index]);
                           restoreCheckboxes.remove(restoreCheckboxes[index]);
                         }
                       });
-                      widget.prefs.setStringList("Tasks", tasks);
+                      widget.prefs.setStringList("checkItems", checkItems);
                       widget.prefs.setStringList("Restore Checkbox", restoreCheckboxes);
                     },
                   )
@@ -98,14 +98,14 @@ class _TasksState extends State<CheckList> {
               setState(() {
                 if (_taskController.text.isNotEmpty) {
                   taskInputField.requestFocus();
-                 tasks.add(_taskController.text);
-                 selectedTask.add(false);
+                 checkItems.add(_taskController.text);
+                 selectedItems.add(false);
                  restoreCheckboxes.add("false");
                  _taskController.clear();
 
                 }
               });
-              widget.prefs.setStringList("Tasks", tasks);
+              widget.prefs.setStringList("checkItems", checkItems);
               widget.prefs.setStringList("Restore Checkbox", restoreCheckboxes);
             },
           ),
