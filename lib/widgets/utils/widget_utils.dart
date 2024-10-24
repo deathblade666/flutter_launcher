@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/widgets/calendar.dart';
 import 'package:flutter_launcher/widgets/notes.dart';
-import 'package:flutter_launcher/widgets/tasks.dart';
+import 'package:flutter_launcher/widgets/checklist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WidgetList {
@@ -20,7 +20,7 @@ WidgetList({required this.widgets, required this.prefs});
     return [
       Visibility(
         visible: showTasks,
-        child: Tasks(prefs, key: const ValueKey('Tasks')),
+        child: CheckList(prefs, key: const ValueKey('CheckList')),
       ),
       Visibility(
         visible: showCalendar,
@@ -34,7 +34,7 @@ WidgetList({required this.widgets, required this.prefs});
   }
 
   void updateVisibility(widgetName, value) {
-    if (widgetName == "Tasks") showTasks = value;
+    if (widgetName == "CheckList") showTasks = value;
     if (widgetName == "Calendar") showCalendar = value;
     if (widgetName == "Notes") showNotes = value;
   }
@@ -52,8 +52,8 @@ WidgetList({required this.widgets, required this.prefs});
     if (jsonString != null) {
       List<String> widgetKeys = List<String>.from(jsonDecode(jsonString));
       widgets = widgetKeys.map((key) {
-        if (key == "[<'Tasks'>]") {
-          return Tasks(prefs, key: const ValueKey('Tasks'));
+        if (key == "[<'CheckList'>]") {
+          return CheckList(prefs, key: const ValueKey('CheckList'));
         } else if (key == "[<'Notes'>]") {
           return Notes(prefs, key: const ValueKey('Notes'));
         } else if (key == "[<'Calendar'>]") {
@@ -64,7 +64,7 @@ WidgetList({required this.widgets, required this.prefs});
       }).where((widget) => widget != null).cast<Widget>().toList();
     } else {
       widgets = [
-        Tasks(prefs, key: const ValueKey('Tasks')),
+        CheckList(prefs, key: const ValueKey('CheckList')),
         Calendar(prefs, key: const ValueKey('Calendar')),
         Notes(prefs, key: const ValueKey('Notes')),
       ];
