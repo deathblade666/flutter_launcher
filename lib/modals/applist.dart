@@ -49,6 +49,8 @@ class _ApplistState extends State<Applist> {
           },
           child: ListTile(
             onLongPress: () async {
+              widget._searchController.clear();
+              widget.focusOnSearch.unfocus();
               double left = _tapPosition.dx -110;
               double top = _tapPosition.dy;
               double right = _tapPosition.dx ;
