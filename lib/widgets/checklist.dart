@@ -3,18 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Tasks extends StatefulWidget {
-  Tasks(this.prefs, {Key? key}) : super(key: key);
+class CheckList extends StatefulWidget {
+  CheckList(this.prefs, {Key? key}) : super(key: key);
   SharedPreferences prefs;
   
 
   @override
-  State<Tasks> createState() => _TasksState();
+  State<CheckList> createState() => _TasksState();
 }
 
 
 
-class _TasksState extends State<Tasks> {
+class _TasksState extends State<CheckList> {
   List<String> tasks = [];
   List<bool> selectedTask = [];
   List<String> restoreCheckboxes = [];
@@ -86,7 +86,7 @@ class _TasksState extends State<Tasks> {
           child:
           TextField(
             decoration: const InputDecoration(
-                labelText: 'Enter a task',
+                labelText: 'Enter an Item',
                 border: OutlineInputBorder(),
             ),
             controller: _taskController,
