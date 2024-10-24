@@ -474,6 +474,7 @@ class _launcherState extends State<launcher>{
                   });
                 },
                 onTapOutside: (value){
+                  fetchApps();
                   focusOnSearch.unfocus();
                   if (_filteredItems.isEmpty){
                     setState(() {
@@ -518,6 +519,7 @@ class _launcherState extends State<launcher>{
                 },
                 controller: _searchController,
                 onTap: () {
+                  //fetchApps();
                   if (_searchController.text.isNotEmpty){
                     String s = _searchController.text;
                     setState(() {
@@ -536,6 +538,7 @@ class _launcherState extends State<launcher>{
                         hideDate = false;
                         hideMainGesture = false;
                       } else if (showAppList == false){
+                        fetchApps();
                       hideDate = true;
                       hideMainGesture = true;
                       }
@@ -553,7 +556,7 @@ class _launcherState extends State<launcher>{
                   _searchController,
                   focusOnSearch, 
                   _filteredItems,
-                  onTap: AppTapped
+                  onTap: AppTapped,
                 )
               )
             ),
@@ -648,6 +651,7 @@ class _launcherState extends State<launcher>{
                       await platform.invokeMethod('openNotificationShade');
                     } else if (details.delta.dy < sensitivity) {
                       focusOnSearch.requestFocus();
+                      fetchApps();
                     }
                   },
                   onHorizontalDragUpdate: (details) {
