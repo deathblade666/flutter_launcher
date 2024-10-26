@@ -36,7 +36,7 @@ List of features that I'm actively working on implementing
  - Modular Code
    - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is - Ongoing
  - Improved Search query for matching apps
-   - ~~Search to capture spcial characters in app names (i.e. F-droid). ~~
+   - ~~Search to capture spcial characters in app names (i.e. F-droid).~~
    - Search currently will query for any character in any app name in any position or pattern - May need to remove this peice for improved UX
  - Ways to make the app listing update more reliably
 
