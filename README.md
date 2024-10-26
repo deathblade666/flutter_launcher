@@ -14,37 +14,22 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
  - Navigate to a site directly from your home screen
  - Set Favorites for quick access (currently up to 4)
  - Modular UI, only show the UI elements you need/want
- - 3 Custom Widgets
+   - show/hide bottom widget pull bar
+   - show/hide favorites
+   - show/hide system status bar
+ - Custom Widgets
    - Calendar
-   - Tasks
+     - Create events
+     - Modify events
+   - Checklist
+     - simple checklist
    - Notes
+     - create quick notes without ever leaving your homescreen
+ - Custom Widget order
+ - uninstall apps
+ - easily access system settings for specific apps
 
-### In Progress
-List of features that I'm actively working on implementing
- - Set custom Gesture controls
-   - Current plan is just for right and left swipe, but could expand as development continues
-- Re-order Widgets
-  - The ability to set a custom order to the custom widgets.
-- Re-implement Settings
-  - ~~due to some reliability issues with the long press I'll be looking to moving Settings.~~ 
-  - This is to be reviewed as the issue should now be fixed but moving the settings menu may provider better UX
-- Modular Code
-  - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is
- - [x] ~~Pinning Favorites~~
-   - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
- - [x] ~~Widget support~~
-   - ~~Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones~~
-
-### Planned
-- Improved Search query for matching apps
-- Change amount of favorites to be more dynamic
-
-### Future
-This is a list of feature that I hope to accomplish but currently do not have the knowledge to do so
-- WebCal?
-- Dynamic Date
-  - have the date widget change depending factors such as, if media is play change to media controls
-- Native Widget Support (on back burner for now)
+To see planned feature and what is currently working on checkout the [Project](https://github.com/users/deathblade666/projects/2).
 
 ## Build
 
@@ -85,7 +70,7 @@ run ``flutter build apk``
 
 ## Widgets
 
-|Tasks|Calendar|Notes|
+|Checklist|Calendar|Notes|
 |--|--|--|
 | ![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-33.png)| ![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-37.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-42.png)|
 
