@@ -21,7 +21,7 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
    - Calendar
      - Create events
      - Modify events
-   - Tasks
+   - Checklist
      - simple checklist
    - Notes
      - create quick notes without ever leaving your homescreen
@@ -44,7 +44,6 @@ List of features that I'm actively working on implementing
  
  - Change amount of favorites to be more dynamic
  - Expand Calendar Widget functionality to include date ranges and reoccuring events
- - changing Tasks widget name to Checklist
  - Re-implement task widget
    - Reoccuring tasks
    - notifications? 
@@ -55,6 +54,7 @@ List of features that I'm actively working on implementing
    - have the date widget change depending factors such as, if media is play change to media controls
 
 ### Completed
+ - [x] ~~changing Tasks widget name to Checklist~~
  - [x] Re-order Widgets
    - ~~The ability to set a custom order to the custom widgets.~~
  - [x] Re-implement Settings
@@ -109,7 +109,7 @@ run ``flutter build apk``
 
 ## Widgets
 
-|Tasks|Calendar|Notes|
+|Checklist|Calendar|Notes|
 |--|--|--|
 | ![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-33.png)| ![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-37.png)|![alt](https://github.com/deathblade666/flutter_launcher/blob/a054e8bca7eca378aa405f4b28598edd9a0fde42/screenshots/Screenshot%20from%202024-10-01%2019-46-42.png)|
 
