@@ -27,7 +27,7 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
      - create quick notes without ever leaving your homescreen
  - Custom Widget order
  - uninstall apps
- - easily access system settings for specifica apps
+ - easily access system settings for specific apps
 
 ### In Progress
 List of features that I'm actively working on implementing
@@ -55,9 +55,9 @@ List of features that I'm actively working on implementing
 
 ### Completed
  - [x] ~~changing Tasks widget name to Checklist~~
- - [x] Re-order Widgets
+ - [x] ~~Re-order Widgets~~
    - ~~The ability to set a custom order to the custom widgets.~~
- - [x] Re-implement Settings
+ - [x] ~~Re-implement Settings~~
    - ~~due to some reliability issues with the long press I'll be looking to moving Settings.~~ 
    - ~~This is to be reviewed as the issue should now be fixed but moving the settings menu may provider better UX~~
  - [x] ~~Pinning Favorites~~
