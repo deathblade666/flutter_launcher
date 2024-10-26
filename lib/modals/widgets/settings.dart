@@ -3,8 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_launcher/utils/utils.dart';
-import 'package:flutter_launcher/widgets/widget_options.dart';
+import 'package:flutter_launcher/modals/widgets/utils/favorites.dart';
+import 'package:flutter_launcher/utils/ui_toggles.dart';
+import 'package:flutter_launcher/modals/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -363,9 +364,14 @@ class _settingeMenuState extends State<settingeMenu> {
                         ? Image.memory(applicationIcon!, height: 30,)
                         : const Icon(Icons.add),
                       onTap: (){
+                        showDialog(context: context, builder: (BuildContext context){
+                          return AlertDialog.adaptive(
+                            content: Text('${FavoriteApps(widget.prefs).favorites.length}'),
+                          );
+                        });
                         int appNumber = 1;
                         widget.prefs.setInt("App1", 1);
-                        setfavorites(appNumber);
+                        //setfavorites(appNumber);
                       }
                     ),
                     const Padding(padding: EdgeInsets.only(right:20)),
