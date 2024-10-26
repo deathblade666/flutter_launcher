@@ -14,37 +14,61 @@ Unname as of yet, this flutter project is an android launcher. The idea is to ha
  - Navigate to a site directly from your home screen
  - Set Favorites for quick access (currently up to 4)
  - Modular UI, only show the UI elements you need/want
- - 3 Custom Widgets
+   - show/hide bottom widget pull bar
+   - show/hide favorites
+   - show/hide system status bar
+ - Custom Widgets
    - Calendar
+     - Create events
+     - Modify events
    - Tasks
+     - simple checklist
    - Notes
+     - create quick notes without ever leaving your homescreen
+ - Custom Widget order
+ - uninstall apps
+ - easily access system settings for specifica apps
 
 ### In Progress
 List of features that I'm actively working on implementing
  - Set custom Gesture controls
    - Current plan is just for right and left swipe, but could expand as development continues
-- Re-order Widgets
-  - The ability to set a custom order to the custom widgets.
-- Re-implement Settings
-  - ~~due to some reliability issues with the long press I'll be looking to moving Settings.~~ 
-  - This is to be reviewed as the issue should now be fixed but moving the settings menu may provider better UX
-- Modular Code
-  - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is
+ - Modular Code
+   - No user fracing stuff here but plan on reorganizing the code base where everything that could be standalone is - Ongoing
+ - Improved Search query for matching apps
+   - ~~Search to capture spcial characters in app names (i.e. F-droid). ~~
+   - Search currently will query for any character in any app name in any position or pattern - May need to remove this peice for improved UX
+ - Ways to make the app listing update more reliably
+
+### Up Next
+ 
+ - Change amount of favorites to be more dynamic
+ - Expand Calendar Widget functionality to include date ranges and reoccuring events
+ - changing Tasks widget name to Checklist
+ - Re-implement task widget
+   - Reoccuring tasks
+   - notifications? 
+ - Caldav/device calendars
+   - using Caldav would provide the ability to connect to a Caldav server for calendar sync
+   - accessing the device calendars would allow for sync based on pre-exsisting methods from calendars already on your device
+ - Dynamic Date
+   - have the date widget change depending factors such as, if media is play change to media controls
+
+### Completed
+ - [x] Re-order Widgets
+   - ~~The ability to set a custom order to the custom widgets.~~
+ - [x] Re-implement Settings
+   - ~~due to some reliability issues with the long press I'll be looking to moving Settings.~~ 
+   - ~~This is to be reviewed as the issue should now be fixed but moving the settings menu may provider better UX~~
  - [x] ~~Pinning Favorites~~
    - ~~Currently when you pin a favorite it populates all four fields, this will be fixed in the future~~
  - [x] ~~Widget support~~
    - ~~Seems native widgets are a bit out of the question (cant find any resources on how to implemnt) so designing some custom ones~~
 
-### Planned
-- Improved Search query for matching apps
-- Change amount of favorites to be more dynamic
-
 ### Future
-This is a list of feature that I hope to accomplish but currently do not have the knowledge to do so
-- WebCal?
-- Dynamic Date
-  - have the date widget change depending factors such as, if media is play change to media controls
-- Native Widget Support (on back burner for now)
+This is a list of feature that I hope to accomplish but not completel sure if doable due to language restirctions
+ - App shortcuts
+ - Native Widget Support (on back burner for now)
 
 ## Build
 
