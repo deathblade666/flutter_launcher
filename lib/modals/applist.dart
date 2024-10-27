@@ -77,7 +77,7 @@ class _ApplistState extends State<Applist> {
                     onTap: () {
                       List<String> favoriteApps = widget.prefs.getStringList("FavoritesAppsList") ?? [];
                       setState(() {
-                        favoriteApps.add(app.name);
+                        favoriteApps.add(app.packageName);
                         widget.prefs.setStringList("FavoritesAppsList", favoriteApps);
                       });
                     },

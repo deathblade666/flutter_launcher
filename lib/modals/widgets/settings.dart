@@ -364,11 +364,11 @@ class _settingeMenuState extends State<settingeMenu> {
                         ? Image.memory(applicationIcon!, height: 30,)
                         : const Icon(Icons.add),
                       onTap: (){
-                        showDialog(context: context, builder: (BuildContext context){
+                       /* showDialog(context: context, builder: (BuildContext context){
                           return AlertDialog.adaptive(
                             content: Text('${FavoriteApps(widget.prefs).favorites.length}'),
                           );
-                        });
+                        });*/
                         int appNumber = 1;
                         widget.prefs.setInt("App1", 1);
                         //setfavorites(appNumber);

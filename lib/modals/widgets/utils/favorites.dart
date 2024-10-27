@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:installed_apps/app_info.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoriteApps extends StatefulWidget {
-  FavoriteApps(this.prefs, {super.key});
+  FavoriteApps(
+    this.prefs, 
+    {
+      required this.favoritApps,
+      super.key
+    }
+  );
   List<String> favorites = [];
+  List<AppInfo> favoritApps = [];
   SharedPreferences prefs;
 
   @override
@@ -34,29 +42,32 @@ class _FavoriteAppsState extends State<FavoriteApps> {
   Widget build(BuildContext context) {
     const int maxItems = 8;
     
-    return SizedBox(
-      height: 30,
-      child: ListView.builder(
-        itemCount: (widget.favorites.length > maxItems) ? maxItems : widget.favorites.length,
-        scrollDirection: Axis.horizontal,
-        //physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            child: IconButton(
-              icon: const Icon(Icons.circle),
-              onPressed: () {},
-            ),
-            onLongPress: () {
-              List<String> favorites = widget.prefs.getStringList("FavoritesAppsList") ?? [];
-              setState(() {
-                favorites.remove(widget.favorites[index]);
-                widget.favorites.removeAt(index);
-                widget.prefs.setStringList("FavoritesAppsList", favorites);
-              });
+    return ListView.builder(
+      itemCount: (widget.favorites.length > maxItems) ? maxItems : widget.favorites.length,
+      scrollDirection: Axis.horizontal,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final application= widget.favoritApps[index];
+        return GestureDetector(
+          child: IconButton(
+            icon:  application.icon != null
+              ? Image.memory(application.icon!, height: 30)
+              : const Icon(Icons.add),
+            onPressed: () {
+              InstalledApps.startApp(application.packageName);
             },
-          );
-        },
-      )
+          ),
+          onLongPress: () {
+            List<String> favorites = widget.prefs.getStringList("FavoritesAppsList") ?? [];
+            setState(() {
+              favorites.remove(widget.favorites[index]);
+              widget.favorites.removeAt(index);
+              print('$index');
+              widget.prefs.setStringList("FavoritesAppsList", favorites);
+            });
+          },
+        );
+      },
     );
   }
 }
