@@ -3,8 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_launcher/utils/utils.dart';
-import 'package:flutter_launcher/widgets/widget_options.dart';
+import 'package:flutter_launcher/modals/widgets/utils/favorites.dart';
+import 'package:flutter_launcher/utils/ui_toggles.dart';
+import 'package:flutter_launcher/modals/widgets/widget_options.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -273,6 +274,18 @@ class _settingeMenuState extends State<settingeMenu> {
               },
               title: const Text("Hide Status Bar"),
             ),
+            SwitchListTile(
+              title: const Text("Favorites"),
+              value: pinApp, 
+              onChanged: (value){
+                bool togglePinApp = value;
+                setState(() {
+                  pinApp = !pinApp;
+                });
+                widget.Toggles.pinAppToggle(togglePinApp);
+                widget.prefs.setBool("togglePin", value);
+              }
+            ),
             ExpansionTile(
               title: Row(
                 children: [
@@ -312,99 +325,6 @@ class _settingeMenuState extends State<settingeMenu> {
               children: [
                 Widgetoptions(widget.prefs),
               ],
-            ),
-            ExpansionTile(
-              title: Row(
-                children: [
-                  const Text("Favorites"),
-                  if (favoritesonexpanded == true)...[
-                    const Icon(Icons.keyboard_arrow_up_outlined)
-                  ] else if (favoritesonexpanded == false)...[
-                    const Icon(Icons.keyboard_arrow_down_outlined)
-                  ]
-                ]
-              ),
-              onExpansionChanged: (value){
-                if (value == true){
-                  setState(() {
-                    favoritesonexpanded = true;
-                  });
-                }
-                if (value == false){
-                  setState(() {
-                    favoritesonexpanded = false;
-                  });
-                }
-              },
-              subtitle: const Text("Press to set favorites"),
-              controller: favoritesTileController,
-              trailing: Switch(
-                value: pinApp, 
-                onChanged: (value){
-                  bool togglePinApp = value;
-                  setState(() {
-                    if (value == true){
-                      favoritesTileController.expand();
-                    } else if (value == false && favoritesTileController.isExpanded){
-                      favoritesTileController.collapse();
-                    }
-                    pinApp = !pinApp;
-                  });
-                  widget.Toggles.pinAppToggle(togglePinApp);
-                  widget.prefs.setBool("togglePin", value);
-                }
-              ),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      child: applicationIcon != null
-                        ? Image.memory(applicationIcon!, height: 30,)
-                        : const Icon(Icons.add),
-                      onTap: (){
-                        int appNumber = 1;
-                        widget.prefs.setInt("App1", 1);
-                        setfavorites(appNumber);
-                      }
-                    ),
-                    const Padding(padding: EdgeInsets.only(right:20)),
-                    GestureDetector(
-                      child: applicationIcon2 != null
-                        ? Image.memory(applicationIcon2!, height: 30,)
-                        : const Icon(Icons.add),
-                      onTap: (){
-                        int appNumber = 2;
-                        widget.prefs.setInt("App2", 2);
-                        setfavorites(appNumber);
-                      },
-                    ),
-                    const Padding(padding: EdgeInsets.only(right:20)),
-                    GestureDetector(
-                      child: applicationIcon3 != null
-                        ? Image.memory(applicationIcon3!, height: 30,)
-                        : const Icon(Icons.add),
-                      onTap: (){
-                        int appNumber = 3;
-                        widget.prefs.setInt("App3", 3);
-                        setfavorites(appNumber);
-                      },
-                    ),
-                    const Padding(padding: EdgeInsets.only(right:20)),
-                    GestureDetector(
-                      child: applicationIcon4 != null
-                        ? Image.memory(applicationIcon4!, height: 30,)
-                        : const Icon(Icons.add),
-                      onTap: (){
-                        int appNumber = 4;
-                        widget.prefs.setInt("App4", 4);
-                        setfavorites(appNumber);
-                      },
-                    ),
-                  ]
-                ),
-                const Padding(padding: EdgeInsets.only(top: 10))
-              ]
             ),
             ExpansionTile(
               title: Row(

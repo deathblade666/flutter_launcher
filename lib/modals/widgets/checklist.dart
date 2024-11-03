@@ -102,7 +102,6 @@ class _TasksState extends State<CheckList> {
                  selectedItems.add(false);
                  restoreCheckboxes.add("false");
                  _taskController.clear();
-
                 }
               });
               widget.prefs.setStringList("checkItems", checkItems);

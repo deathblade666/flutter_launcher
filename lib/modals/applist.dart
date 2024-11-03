@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher/modals/widgets/utils/favorites.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Applist extends StatefulWidget {
   Applist(
     this._searchController, 
     this.focusOnSearch, 
     this._filteredItems,
+    this.prefs,
     {required this.onTap,
     super.key
     }
   );
 
   TextEditingController _searchController;
+  SharedPreferences prefs;
   FocusNode focusOnSearch;
   List<AppInfo> _filteredItems = [];
   final Function(bool? showAppList,bool? hideDate, bool? hideMainGesture) onTap;
@@ -66,6 +70,16 @@ class _ApplistState extends State<Applist> {
                           hideMainGesture1 = true;
                         });
                         widget.onTap(showAppList1, hideDate1, hideMainGesture1);
+                    },
+                  ),
+                  PopupMenuItem(
+                    child: const Text("Add to Favorites"),
+                    onTap: () {
+                      List<String> favoriteApps = widget.prefs.getStringList("FavoritesAppsList") ?? [];
+                      setState(() {
+                        favoriteApps.add(app.packageName);
+                        widget.prefs.setStringList("FavoritesAppsList", favoriteApps);
+                      });
                     },
                   ),
                   PopupMenuItem(

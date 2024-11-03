@@ -5,8 +5,9 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/modals/applist.dart';
 import 'package:flutter_launcher/modals/pageview.dart';
-import 'package:flutter_launcher/utils/utils.dart';
-import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
+import 'package:flutter_launcher/modals/widgets/utils/favorites.dart';
+import 'package:flutter_launcher/utils/ui_toggles.dart';
+import 'package:flutter_launcher/modals/widgets/utils/widget_utils.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
@@ -191,17 +192,22 @@ class _launcherState extends State<launcher>{
   void pinAppToggle (togglePinApp){
     setState(() {
       noAppPinned = togglePinApp;
-      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false){
-        searchHieght = 40;
-      } else if (noAppPinned == true && widgetVis == false) {
+      print("Favorites: $noAppPinned");
+      print("Widgets: $widgetVis");
+      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false && widgetVis == false){
         searchHieght = 57;
+      } else if (noAppPinned == true && widgetVis == false) {
+        searchHieght = 80;
       } else if (widgetVis == true && noAppPinned == false) {
-        searchHieght = 40;
+        searchHieght = 37;
       } else if (noAppPinned == true && widgetVis == true) {
         searchHieght = 87;
       } else {
-        searchHieght = 40;
+        searchHieght = 20;
       }
+      print("Favorites: $noAppPinned");
+      print("Widgets: $widgetVis");
+      print("Search hieght: $searchHieght");
     });
   }
 
@@ -239,12 +245,15 @@ class _launcherState extends State<launcher>{
         if (noAppPinned == true && widgetVis == true) {
           searchHieght = 87;
         } else if (noAppPinned == false && widgetVis == true) {
-          searchHieght = 40;
+          searchHieght = 37;
         } else if (widgetVis == false && noAppPinned == true) {
           searchHieght = 57;
         } else {
-          searchHieght = 40;
+          searchHieght = 20;
         }
+        print("Favorites: $noAppPinned");
+      print("Widgets: $widgetVis");
+      print("Search hieght: $searchHieght");
       });
   }
 
@@ -390,54 +399,12 @@ class _launcherState extends State<launcher>{
                 ),
                 Visibility(
                   visible: noAppPinned,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Visibility(
-                        visible: hideIcon1,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo);
-                          },
-                          icon: appIcon != null 
-                            ? Image.memory(appIcon, height: 30,)
-                            : const Icon(Icons.android),
-                        ), 
-                      ),
-                      Visibility(
-                        visible: hideIcon2,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo2);
-                          },
-                          icon: appIcon2 != null 
-                            ? Image.memory(appIcon2, height: 30,)
-                            : const Icon(Icons.android),
-                        ), 
-                      ),
-                      Visibility(
-                        visible: hideIcon3,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo3);
-                          },
-                          icon: appIcon3 != null 
-                            ? Image.memory(appIcon3, height: 30,)
-                            : const Icon(Icons.android),
-                        ),
-                      ),
-                      Visibility(
-                        visible: hideIcon4,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo4);
-                          },
-                          icon: appIcon4 != null 
-                            ? Image.memory(appIcon4, height: 30,)
-                            : const Icon(Icons.android_outlined),
-                        ),
-                      ), 
-                    ],
+                  child: SizedBox(
+                    height: 50, 
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: FavoriteApps(widget.prefs, favoritApps: _app,),
+                    )
                   )
                 )
               ]
@@ -553,6 +520,7 @@ class _launcherState extends State<launcher>{
                   _searchController,
                   focusOnSearch, 
                   _filteredItems,
+                  widget.prefs,
                   onTap: AppTapped
                 )
               )
