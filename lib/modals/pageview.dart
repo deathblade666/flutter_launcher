@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher/pages/settings.dart';
-import 'package:flutter_launcher/utils/utils.dart';
-import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
-import 'package:flutter_launcher/widgets/utils/widgetchangenotifier.dart';
+import 'package:flutter_launcher/modals/widgets/settings.dart';
+import 'package:flutter_launcher/utils/ui_toggles.dart';
+import 'package:flutter_launcher/modals/widgets/utils/widget_utils.dart';
+import 'package:flutter_launcher/modals/widgets/utils/widgetchangenotifier.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

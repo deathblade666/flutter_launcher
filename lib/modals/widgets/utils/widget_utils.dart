@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher/widgets/calendar.dart';
-import 'package:flutter_launcher/widgets/notes.dart';
-import 'package:flutter_launcher/widgets/checklist.dart';
+import 'package:flutter_launcher/modals/widgets/calendar.dart';
+import 'package:flutter_launcher/modals/widgets/notes.dart';
+import 'package:flutter_launcher/modals/widgets/checklist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WidgetList {

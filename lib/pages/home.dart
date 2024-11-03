@@ -5,8 +5,10 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher/modals/applist.dart';
 import 'package:flutter_launcher/modals/pageview.dart';
-import 'package:flutter_launcher/utils/utils.dart';
-import 'package:flutter_launcher/widgets/utils/widget_utils.dart';
+import 'package:flutter_launcher/modals/widgets/utils/favorites.dart';
+import 'package:flutter_launcher/utils/bottomsheet.dart';
+import 'package:flutter_launcher/utils/ui_toggles.dart';
+import 'package:flutter_launcher/modals/widgets/utils/widget_utils.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +31,7 @@ class launcher extends StatefulWidget {
   }
 
 class _launcherState extends State<launcher>{
+  //late double searchHeight; 
   bool enabeBottom = true;
   bool showAppList = false;
   final TextEditingController _searchController = TextEditingController();
@@ -57,7 +60,7 @@ class _launcherState extends State<launcher>{
   var appIcon3;
   var appIcon4;
   bool noAppPinned = false;
-  double searchHieght = 40;
+  double searchHieght = 0.0;
   var appNumber;
   String appName ="";
   bool hideIcon1 = false;
@@ -89,6 +92,12 @@ class _launcherState extends State<launcher>{
     loadPrefs();
     initialItems = widgets.getWidgets();
     focusOnSearch.addListener(focusListener);
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Calculate initial height here instead
+    updateSearchHeight();
   }
 
   void loadPrefs() async {
@@ -160,12 +169,6 @@ class _launcherState extends State<launcher>{
       var iconAsList = Uint8List.fromList(appIconrestored);
       restoreAppIcon(iconAsList);
     }
-    if (togglePinApp == true && appName4 == null && appName2 == null && appName3 == null && appName1 == null){
-      setState(() {
-        searchHieght = 40;
-      });     
-
-    }
     WidgetList widgets = WidgetList(widgets: [], prefs: widget.prefs);
     await widgets.loadWidgets();
     setState(() {
@@ -191,17 +194,7 @@ class _launcherState extends State<launcher>{
   void pinAppToggle (togglePinApp){
     setState(() {
       noAppPinned = togglePinApp;
-      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false){
-        searchHieght = 40;
-      } else if (noAppPinned == true && widgetVis == false) {
-        searchHieght = 57;
-      } else if (widgetVis == true && noAppPinned == false) {
-        searchHieght = 40;
-      } else if (noAppPinned == true && widgetVis == true) {
-        searchHieght = 87;
-      } else {
-        searchHieght = 40;
-      }
+      updateSearchHeight();
     });
   }
 
@@ -234,87 +227,66 @@ class _launcherState extends State<launcher>{
   }
 
   void widgetToggle(widgetsEnabled) {
-      setState(() {
-        widgetVis = widgetsEnabled;
-        if (noAppPinned == true && widgetVis == true) {
-          searchHieght = 87;
-        } else if (noAppPinned == false && widgetVis == true) {
-          searchHieght = 40;
-        } else if (widgetVis == false && noAppPinned == true) {
-          searchHieght = 57;
-        } else {
-          searchHieght = 40;
-        }
-      });
+    setState(() {
+      widgetVis = widgetsEnabled;
+      updateSearchHeight();
+    });
   }
 
   void pinnedApp(String appName, int appNumber) async {
-      if (appNumber == 1 && appName != ""){
-        AppInfo app = await InstalledApps.getAppInfo(appName);
-        setState(() {
-          pinnedAppInfo = appName;
-          appIcon = app.icon;
-          hideIcon1 = true;
-        });
-      } else if (appNumber == 2 && appName != "") {
-        AppInfo app = await InstalledApps.getAppInfo(appName);
-        setState(() {
-          pinnedAppInfo2 = appName;
-          appIcon2 = app.icon;
-          hideIcon2 = true;
-        });
-      } else if (appNumber == 3 && appName != ""){
-        AppInfo app = await InstalledApps.getAppInfo(appName);
-        setState(() {
-          pinnedAppInfo3 = appName;
-          appIcon3 = app.icon;
-          hideIcon3 = true;
-        });
-      } else if (appNumber == 4 && appName != ""){
-        AppInfo app = await InstalledApps.getAppInfo(appName);
-        setState(() {
-          pinnedAppInfo4 = appName;
-          appIcon4 = app.icon;
-          hideIcon4 = true;
-        });
-      }else {
-        if (appNumber == 1 && appName == ""){
-          setState(() {
-            appIcon = null;
-            hideIcon1 = false;
-          });
-        } else if (appNumber == 2 && appName == ""){
-          setState(() {
-            appIcon2 = null;
-            hideIcon2 = false;
-          });
-        } else if (appNumber == 3 && appName == ""){
-          setState(() {
-            appIcon3 = null;
-            hideIcon3 = false;
-          });
-        } else if (appNumber == 4 && appName == ""){
-          setState(() {
-            appIcon4 = null;
-            hideIcon4 = false;
-          });
-        }
-      }
-      if (widgetVis == true && noAppPinned == true){
-        setState(() {
-          searchHieght = 87;
-        }); 
-      }else if (noAppPinned == true && widgetVis == false){
-        setState(() {
-          searchHieght = 57;
-        });
-      }
-      if (noAppPinned == true && hideIcon1 == false && hideIcon2 == false && hideIcon3 == false && hideIcon4 == false){
+    if (appNumber == 1 && appName != ""){
+      AppInfo app = await InstalledApps.getAppInfo(appName);
       setState(() {
-        searchHieght = 40;
+        pinnedAppInfo = appName;
+        appIcon = app.icon;
+        hideIcon1 = true;
       });
+    } else if (appNumber == 2 && appName != "") {
+      AppInfo app = await InstalledApps.getAppInfo(appName);
+      setState(() {
+        pinnedAppInfo2 = appName;
+        appIcon2 = app.icon;
+        hideIcon2 = true;
+      });
+    } else if (appNumber == 3 && appName != ""){
+      AppInfo app = await InstalledApps.getAppInfo(appName);
+      setState(() {
+        pinnedAppInfo3 = appName;
+        appIcon3 = app.icon;
+        hideIcon3 = true;
+      });
+    } else if (appNumber == 4 && appName != ""){
+      AppInfo app = await InstalledApps.getAppInfo(appName);
+      setState(() {
+        pinnedAppInfo4 = appName;
+        appIcon4 = app.icon;
+        hideIcon4 = true;
+      });
+    } else {
+      if (appNumber == 1 && appName == ""){
+        setState(() {
+          appIcon = null;
+          hideIcon1 = false;
+        });
+      } else if (appNumber == 2 && appName == ""){
+        setState(() {
+          appIcon2 = null;
+          hideIcon2 = false;
+        });
+      } else if (appNumber == 3 && appName == ""){
+        setState(() {
+          appIcon3 = null;
+          hideIcon3 = false;
+        });
+      } else if (appNumber == 4 && appName == ""){
+        setState(() {
+          appIcon4 = null;
+          hideIcon4 = false;
+        });
+      }
     }
   }
+  
 
   void restoreAppIcon(Uint8List){
     appIcon = appIconrestored;
@@ -330,117 +302,102 @@ class _launcherState extends State<launcher>{
     fetchApps();
   }
 
+  void updateSearchHeight() {
+    setState(() {
+      searchHieght = BottomSheetLayoutHelper.calculateSearchPadding(
+        context: context,
+        isArrowVisible: widgetVis,
+        isFavoritesVisible: noAppPinned,
+        hasApps: noAppPinned,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return  SafeArea(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
-        bottomSheet: BottomSheet(
-          onClosing: onClosed, 
-          builder: (BuildContext context){
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Visibility(
-                  visible: widgetVis,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [ 
-                        Icon(Icons.keyboard_arrow_up, size: 30,),
-                      ],
+        bottomSheet: LayoutBuilder(
+          builder: (context, constraints) {
+            final dynamicHeight = BottomSheetLayoutHelper.calculateSearchPadding(
+              context: context,
+              isArrowVisible: widgetVis,
+              isFavoritesVisible: noAppPinned,
+              hasApps: noAppPinned,
+            );
+            searchHieght = dynamicHeight; 
+            return BottomSheet(
+              onClosing: onClosed,
+              builder: (BuildContext context) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Visibility(
+                      visible: widgetVis,
+                      maintainSize: false,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [ 
+                            Icon(Icons.keyboard_arrow_up, size: 30),
+                          ],
+                        ),
+                        onTap: () { 
+                          showModalBottomSheet<void>(
+                            isScrollControlled: true,
+                            showDragHandle: true,
+                            context: context, 
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                                return pages(
+                                  widget.prefs, 
+                                  Toggles: HomeToggles(
+                                    pinAppToggle: pinAppToggle, 
+                                    pinnedApp: pinnedApp, 
+                                    searchProvider: searchProvider, 
+                                    toggleStatusBar: toggleStatusBar, 
+                                    widgetToggle: widgetToggle,
+                                  ),
+                                  apps: _app,
+                                );
+                              });
+                            }
+                          );
+                        },
+                        onVerticalDragStart: (details) {
+                          showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
+                            return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                              return pages(
+                                widget.prefs, 
+                                Toggles: HomeToggles(
+                                  pinAppToggle: pinAppToggle, 
+                                  pinnedApp: pinnedApp, 
+                                  searchProvider: searchProvider, 
+                                  toggleStatusBar: toggleStatusBar, 
+                                  widgetToggle: widgetToggle,
+                                ),
+                                apps: _app,
+                              );
+                            });
+                          });
+                        },
+                      ),
                     ),
-                    onTap: (){
-                      showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          return pages(
-                            widget.prefs, 
-                            Toggles: HomeToggles(
-                              pinAppToggle: pinAppToggle, 
-                              pinnedApp: pinnedApp, 
-                              searchProvider: searchProvider, 
-                              toggleStatusBar: toggleStatusBar, 
-                              widgetToggle: widgetToggle,
-                            ),
-                            apps: _app,
-                          );
-                        });
-                      });
-                    },
-                    onVerticalDragStart: (details) {
-                      showModalBottomSheet<void>(isScrollControlled: true ,showDragHandle: true ,context: context, builder: (BuildContext context) {
-                        return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                          return pages(
-                            widget.prefs, 
-                            Toggles: HomeToggles(
-                              pinAppToggle: pinAppToggle, 
-                              pinnedApp: pinnedApp, 
-                              searchProvider: searchProvider, 
-                              toggleStatusBar: toggleStatusBar, 
-                              widgetToggle: widgetToggle,
-                            ),
-                            apps: _app,
-                          );
-                        });
-                      });
-                    },
-                  ),
-                ),
-                Visibility(
-                  visible: noAppPinned,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Visibility(
-                        visible: hideIcon1,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo);
-                          },
-                          icon: appIcon != null 
-                            ? Image.memory(appIcon, height: 30,)
-                            : const Icon(Icons.android),
-                        ), 
+                    Visibility(
+                      visible: noAppPinned,
+                      maintainSize: false,
+                      child: Container(
+                        height: 30,
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: FavoriteApps(widget.prefs, favoritApps: _app),
                       ),
-                      Visibility(
-                        visible: hideIcon2,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo2);
-                          },
-                          icon: appIcon2 != null 
-                            ? Image.memory(appIcon2, height: 30,)
-                            : const Icon(Icons.android),
-                        ), 
-                      ),
-                      Visibility(
-                        visible: hideIcon3,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo3);
-                          },
-                          icon: appIcon3 != null 
-                            ? Image.memory(appIcon3, height: 30,)
-                            : const Icon(Icons.android),
-                        ),
-                      ),
-                      Visibility(
-                        visible: hideIcon4,
-                        child: IconButton(
-                          onPressed: () {
-                            InstalledApps.startApp(pinnedAppInfo4);
-                          },
-                          icon: appIcon4 != null 
-                            ? Image.memory(appIcon4, height: 30,)
-                            : const Icon(Icons.android_outlined),
-                        ),
-                      ), 
-                    ],
-                  )
-                )
-              ]
+                    ),
+                  ]
+                );
+              }
             );
           }
         ),
@@ -553,6 +510,7 @@ class _launcherState extends State<launcher>{
                   _searchController,
                   focusOnSearch, 
                   _filteredItems,
+                  widget.prefs,
                   onTap: AppTapped
                 )
               )
