@@ -11,8 +11,8 @@ class FavoriteApps extends StatefulWidget {
       super.key
     }
   );
-  List<String> favorites = [];
-  List<AppInfo> favoritApps = [];
+  List favorites = [];
+  List favoritApps = [];
   SharedPreferences prefs;
 
   @override
@@ -30,7 +30,7 @@ class _FavoriteAppsState extends State<FavoriteApps> {
   }
   
   void loadPrefs(){
-    List<String>? items = widget.prefs.getStringList("FavoritesAppsList");
+    List? items = widget.prefs.getStringList("FavoritesAppsList");
     if (items != null){
       setState(() {
         widget.favorites = items;
@@ -41,33 +41,56 @@ class _FavoriteAppsState extends State<FavoriteApps> {
   @override
   Widget build(BuildContext context) {
     const int maxItems = 8;
+    final int itemCount = (widget.favorites.length > maxItems) ? maxItems : widget.favorites.length;
     
-    return ListView.builder(
-      itemCount: (widget.favorites.length > maxItems) ? maxItems : widget.favorites.length,
-      scrollDirection: Axis.horizontal,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final application= widget.favoritApps[index];
-        return GestureDetector(
-          child: IconButton(
-            icon:  application.icon != null
-              ? Image.memory(application.icon!, height: 30)
-              : const Icon(Icons.add),
-            onPressed: () {
-              InstalledApps.startApp(application.packageName);
-            },
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+        ),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(itemCount, (index) {
+              final application = widget.favoritApps[index];
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                child: GestureDetector(
+                  child: IconButton(
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
+                    ),
+                    padding: EdgeInsets.zero,
+                    icon: application.icon != null
+                      ? Image.memory(
+                          application.icon!,
+                          height: 30,
+                          width: 30,
+                          fit: BoxFit.contain,
+                        )
+                      : const Icon(Icons.add),
+                    onPressed: () {
+                      InstalledApps.startApp(application.packageName);
+                    },
+                  ),
+                  onLongPress: () {
+                    List<String> favorites = widget.prefs.getStringList("FavoritesAppsList") ?? [];
+                    setState(() {
+                      favorites.remove(widget.favorites[index]);
+                      widget.favorites.removeAt(index);
+                      widget.favoritApps.remove(index);
+                      widget.prefs.setStringList("FavoritesAppsList", favorites);
+                    });
+                  },
+                ),
+              );
+            }),
           ),
-          onLongPress: () {
-            List<String> favorites = widget.prefs.getStringList("FavoritesAppsList") ?? [];
-            setState(() {
-              favorites.remove(widget.favorites[index]);
-              widget.favorites.removeAt(index);
-              print('$index');
-              widget.prefs.setStringList("FavoritesAppsList", favorites);
-            });
-          },
-        );
-      },
+        ),
+      ),
     );
   }
 }
